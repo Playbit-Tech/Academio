@@ -38,7 +38,7 @@ Progress: [███████░░░░░░░░░░░░░░░░
 | # | Phase | Plans | Status | Completed |
 |---|-------|-------|--------|-----------|
 | 1 | Foundation (BaseModel + UUID) | 1/1 | ✅ Complete | 2026-06-30 |
-| 2 | Core Model UUID Conversion | 0/1 | ⏳ Pending | - |
+| 2 | Core Model UUID Conversion | 0/2 | 🔵 Planned | - |
 | 3 | All Models UUID Conversion | 0/1 | ⏳ Pending | - |
 | 4 | SQL→GORM + Fresh DB | 0/1 | ⏳ Pending | - |
 | 5 | API Compatibility Layer | 0/1 | ⏳ Pending | - |
@@ -68,7 +68,7 @@ Progress: [███████░░░░░░░░░░░░░░░░
 - `internal/database/migrations/school/school.go` — pgcrypto extension migration (tenant)
 
 ### Pending Todos
-- Phase 2: Convert core models (School, User, Role, Tenant) to use UUIDs
+- Phase 2: Wire schoolUUID into JWT tokens, add UUID repository methods, harden SchoolConnection model
 - Phase 3: Convert all ~95 remaining model structs
 - Phase 4: Convert ~81 SQL migrations to GORM AutoMigrate + create fresh DB
 - Phase 5: API compatibility layer for UUID/int ID coexistence

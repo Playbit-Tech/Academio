@@ -39,10 +39,13 @@ Phase 1 (Foundation)
 - Dual-ID pattern: uint (existing) + uuid (new) during transition
 
 ### Phase 2: Core Models
-- School model: add UUID, update references
-- User, Role models: add UUID, update auth middleware
-- Tenant model: add UUID, align with ConnectionManager
-- Repository updates for core models
+- **Goal:** Complete UUID auth flow (schoolUUID in JWT), add UUID lookup methods to core repositories, add UUID to SchoolConnection
+- **Plans:** 2 plans (Wave 1 → Wave 2)
+- **Status:** 🔵 Ready for execution
+
+Plans:
+- [ ] 02-01-PLAN.md — UUID Auth Flow (TokenService schoolUUID, FindByUUID in AuthRepository)
+- [ ] 02-02-PLAN.md — Core Repository UUID + SchoolConnection (depends on 02-01)
 
 ### Phase 3: All Models
 - Academic: Student, Teacher, Class, Subject, Level, Session, Attendance

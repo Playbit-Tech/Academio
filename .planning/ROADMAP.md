@@ -9,7 +9,7 @@ Transform SchoolCare v2 from single-database row-level isolation (SchoolID scopi
 - [ ] **Phase 1: Core Database Setup** - Encryption service, schema enhancements, connection manager, and repository factory
 - [ ] **Phase 2: Repository Layer Refactoring** - All 39 modules' repositories accept tenant DB connections via factory pattern
 - [ ] **Phase 3: Migration System** - Core vs school migration directories and tenant migration tools
-- [ ] **Phase 4: Enhanced Auth & Tenant Resolution** - JWT → tenant DB resolution with enhanced error handling
+- [x] **Phase 4: Enhanced Auth & Tenant Resolution** - JWT → tenant DB resolution with enhanced error handling (completed 2026-06-30)
 - [ ] **Phase 5: Backup & Recovery System** - Automated backup (pg_dump + S3) and point-in-time restore
 - [ ] **Phase 6: Testing & Validation** - Comprehensive integration, load, security testing and documentation
 
@@ -81,8 +81,8 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 04-01: TenantResolutionService (JWT → tenant DB resolution)
-- [ ] 04-02: Enhanced error handling + tenant-aware logging
+- [x] 04-01: TenantResolutionService (JWT → tenant DB resolution)
+- [x] 04-02: Enhanced error handling + tenant-aware logging
 **UI hint**: no
 
 ### Phase 5: Backup & Recovery System
@@ -130,6 +130,6 @@ Plans:
 | 1. Core Database Setup | 4/4 | ✅ Complete | 2026-06-29 |
 | 2. Repository Layer Refactoring | 3/3 | ✅ Complete | 2026-06-30 |
 | 3. Migration System | 3/3 | ✅ Complete | 2026-06-30 |
-| 4. Enhanced Auth & Tenant Resolution | 0/1 | Planned    |  |
+| 4. Enhanced Auth & Tenant Resolution | 2/2 | ✅ Complete | 2026-06-30 |
 | 5. Backup & Recovery System | 0/2 | Not started | - |
 | 6. Testing & Validation | 0/4 | Not started | - |

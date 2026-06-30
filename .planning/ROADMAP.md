@@ -46,9 +46,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 02-01: Refactor all repositories to accept tenant DB via factory interface
-- [ ] 02-02: Update all services with tenant context injection
-- [ ] 02-03: Tenant context middleware + enhanced auth middleware
+- [x] 02-01: Tenant context middleware + factory accessors
+- [x] 02-02: Handler updates (middleware-based, minimal changes)
+- [x] 02-03: Router wiring (middleware registration, factory init)
 **UI hint**: no
 
 ### Phase 3: Migration System
@@ -128,7 +128,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Core Database Setup | 4/4 | ✅ Complete | 2026-06-29 |
-| 2. Repository Layer Refactoring | 0/3 | Not started | - |
+| 2. Repository Layer Refactoring | 3/3 | ✅ Complete | 2026-06-30 |
 | 3. Migration System | 0/3 | Not started | - |
 | 4. Enhanced Auth & Tenant Resolution | 0/2 | Not started | - |
 | 5. Backup & Recovery System | 0/2 | Not started | - |

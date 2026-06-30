@@ -13,9 +13,9 @@
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| GSD-R5 | Make all repositories accept tenant DB connections via factory | Pending |
-| GSD-R6 | Update service layer with tenant context injection | Pending |
-| GSD-R7 | Tenant context middleware + enhanced auth middleware | Pending |
+| GSD-R5 | Make all repositories accept tenant DB connections via factory | ✅ Complete |
+| GSD-R6 | Update service layer with tenant context injection | ✅ Complete |
+| GSD-R7 | Tenant context middleware + enhanced auth middleware | ✅ Complete |
 
 ## Phase 3: Migration System
 
@@ -53,9 +53,9 @@
 | GSD-R2 | Phase 1 | ✅ Complete |
 | GSD-R3 | Phase 1 | ✅ Complete |
 | GSD-R4 | Phase 1 | ✅ Complete |
-| GSD-R5 | Phase 2 | Pending |
-| GSD-R6 | Phase 2 | Pending |
-| GSD-R7 | Phase 2 | Pending |
+| GSD-R5 | Phase 2 | ✅ Complete |
+| GSD-R6 | Phase 2 | ✅ Complete |
+| GSD-R7 | Phase 2 | ✅ Complete |
 | GSD-R8 | Phase 3 | Pending |
 | GSD-R9 | Phase 3 | Pending |
 | GSD-R10 | Phase 4 | Pending |

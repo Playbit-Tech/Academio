@@ -1,82 +1,44 @@
 ---
 gsd_roadmap_version: 1.0
 milestone: v2.0
-status: planning
+status: active
 created: 2026-06-30
 ---
 
 # Roadmap: SchoolCare Database Transformation
 
-## Milestone Summary
+## Milestones
 
-| # | Phase | Focus | Est. Effort |
-|---|-------|-------|-------------|
-| 1 | Foundation | Enhanced BaseModel, UUID utilities, pgcrypto | Medium |
-| 2 | Core Models | School, User, Role, Tenant UUID conversion | Medium |
-| 3 | All Models | Academic, LMS, CBA, Financial, HR, Admin (~95 structs) | Large |
-| 4 | SQL→GORM Cleanup | Convert ~81 SQL migrations to AutoMigrate, fresh DB | Large |
-| 5 | API Compatibility | Accept both UUID and int IDs, update handlers | Medium |
-| 6 | Validation & Rollout | Integration tests, staged switch-over, old DB decommission | Medium |
+- ✅ **v2.0-alpha — Foundation** — Phases 1-2 (shipped 2026-06-30)
+- 🚧 **v2.0-beta — Full Conversion** — Phases 3-6 (in progress)
 
-## Execution Order
+## Phases
 
-```
-Phase 1 (Foundation)
-  └── Phase 2 (Core Models) — depends on Phase 1
-        └── Phase 3 (All Models) — depends on Phase 2 pattern
-              └── Phase 4 (SQL→GORM + Fresh DB) — depends on Phase 3
-                    └── Phase 5 (API Compatibility) — depends on Phase 3
-                          └── Phase 6 (Validation & Rollout) — depends on all
-```
+<details>
+<summary>✅ v2.0-alpha — Foundation (Phases 1-2) — SHIPPED 2026-06-30</summary>
 
-## Phase Details
+- [x] **Phase 1: Foundation** (1 plan — BaseModel, UUID utilities, pgcrypto) — completed 2026-06-30
+- [x] **Phase 2: Core Models** (2 plans — UUID Auth Flow + Core Repo UUID Methods) — completed 2026-06-30
 
-### Phase 1: Foundation
-- Add UUID field to BaseModel alongside existing uint ID
-- Create `Model` and `TenantAwareModel` interfaces
-- UUID utility functions (GenerateUUID, ParseUUID)
-- Pgcrypto extension setup
-- Dual-ID pattern: uint (existing) + uuid (new) during transition
+</details>
 
-### Phase 2: Core Models
-- **Goal:** Complete UUID auth flow (schoolUUID in JWT), add UUID lookup methods to core repositories, add UUID to SchoolConnection
-- **Plans:** 2 plans (Wave 1 → Wave 2)
-- **Status:** 🔵 Ready for execution
+### 🚧 v2.0-beta — Full Conversion (In Progress)
 
-Plans:
-- [ ] 02-01-PLAN.md — UUID Auth Flow (TokenService schoolUUID, FindByUUID in AuthRepository)
-- [ ] 02-02-PLAN.md — Core Repository UUID + SchoolConnection (depends on 02-01)
+- [ ] **Phase 3: All Models** (1 plan) — Convert ~95 remaining model structs to UUID
+- [ ] **Phase 4: SQL→GORM + Fresh DB** (1 plan) — Convert ~81 SQL migrations to AutoMigrate
+- [ ] **Phase 5: API Compatibility** (1 plan) — Accept both UUID and int IDs
+- [ ] **Phase 6: Validation & Rollout** (1 plan) — Staged switch-over, old DB decommission
 
-### Phase 3: All Models
-- Academic: Student, Teacher, Class, Subject, Level, Session, Attendance
-- LMS: Course, Lesson, Assignment, Submission, Grade
-- CBA: Question, Paper, Answer, Score
-- Financial: Fee, Bill, Payment, Invoice, Transaction
-- HR: Staff, Leave, Payroll, Appraisal
-- Administrative: Inventory, Library, Hostel, Transport
-- Everything else (~95 structs total)
+## Progress
 
-### Phase 4: SQL→GORM + Fresh DB
-- Convert all ~81 remaining SQL migrations to GORM AutoMigrate
-- Remove SQL migration files
-- Update ReusableMigrator to use AutoMigrate where possible
-- Create `schoolcare_core` database
-- Run all GORM migrations against fresh DB
-- Validate schema matches expected structure
-
-### Phase 5: API Compatibility
-- Route params accept both UUID and int IDs
-- Query params compatible with both formats
-- Request body parsing handles both
-- Response format consistency
-- Middleware updates for UUID-based auth
-
-### Phase 6: Validation & Rollout
-- Integration tests for UUID-backed API endpoints
-- Cross-tenant isolation verification with UUIDs
-- Performance benchmarking (UUID vs int)
-- Staged switch-over (pilot → limited → full)
-- Old database backup and decommissioning
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|---------------|--------|-----------|
+| 1. Foundation | v2.0-alpha | 1/1 | ✅ Complete | 2026-06-30 |
+| 2. Core Models | v2.0-alpha | 2/2 | ✅ Complete | 2026-06-30 |
+| 3. All Models | v2.0-beta | 0/1 | ⏳ Pending | - |
+| 4. SQL→GORM + Fresh DB | v2.0-beta | 0/1 | ⏳ Pending | - |
+| 5. API Compatibility | v2.0-beta | 0/1 | ⏳ Pending | - |
+| 6. Validation & Rollout | v2.0-beta | 0/1 | ⏳ Pending | - |
 
 ## Dependencies
 

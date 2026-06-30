@@ -95,11 +95,11 @@ Plans:
   3. `RestoreService.RestoreTenantBackup(schoolID, backupID)` downloads the backup from S3, validates the archive checksum, restores to the school's database, and verifies data integrity by running a pre-defined validation query set
   4. Point-in-time recovery is supported by listing available backups for a school; recovery time objective (RTO) < 1 hour and recovery point objective (RPO) < 15 minutes
   5. All backup/restore operations are logged with duration, size, and status; concurrent restore operations are prevented
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: BackupService (pg_dump, S3 upload, scheduling)
-- [ ] 05-02: RestoreService (point-in-time recovery, validation)
+- [ ] 05-01-PLAN.md — BackupService infrastructure (S3Config, S3BackupStorage, pg_dump, S3 upload, Asynq scheduling, retention)
+- [ ] 05-02-PLAN.md — RestoreService (backup listing, S3 download, pg_restore, validation queries, API endpoints)
 **UI hint**: no
 
 ### Phase 6: Testing & Validation

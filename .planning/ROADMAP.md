@@ -64,9 +64,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 03-01: Split migrations into core/ and school/ directories
-- [ ] 03-02: MigrationService (apply, rollback, status tracking)
-- [ ] 03-03: Tenant migration tools (MigrateAllTenants, parallel, CLI)
+- [x] 03-01: Split migrations into core/ and school/ directories
+- [x] 03-02: MigrationService (apply, rollback, status tracking)
+- [x] 03-03: Tenant migration tools (MigrateAllTenants, parallel, CLI)
 **UI hint**: no
 
 ### Phase 4: Enhanced Auth & Tenant Resolution
@@ -129,7 +129,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Core Database Setup | 4/4 | ✅ Complete | 2026-06-29 |
 | 2. Repository Layer Refactoring | 3/3 | ✅ Complete | 2026-06-30 |
-| 3. Migration System | 0/3 | Not started | - |
+| 3. Migration System | 3/3 | ✅ Complete | 2026-06-30 |
 | 4. Enhanced Auth & Tenant Resolution | 0/2 | Not started | - |
 | 5. Backup & Recovery System | 0/2 | Not started | - |
 | 6. Testing & Validation | 0/4 | Not started | - |

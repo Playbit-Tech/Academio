@@ -21,8 +21,8 @@
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| GSD-R8 | Core vs school migration directories + MigrationService | Pending |
-| GSD-R9 | Tenant migration tools (MigrateAllTenants, parallel migration, status tracking) | Pending |
+| GSD-R8 | Core vs school migration directories + MigrationService | ✅ Complete |
+| GSD-R9 | Tenant migration tools (MigrateAllTenants, parallel migration, status tracking) | ✅ Complete |
 
 ## Phase 4: Enhanced Auth & Tenant Resolution
 
@@ -56,8 +56,8 @@
 | GSD-R5 | Phase 2 | ✅ Complete |
 | GSD-R6 | Phase 2 | ✅ Complete |
 | GSD-R7 | Phase 2 | ✅ Complete |
-| GSD-R8 | Phase 3 | Pending |
-| GSD-R9 | Phase 3 | Pending |
+| GSD-R8 | Phase 3 | ✅ Complete |
+| GSD-R9 | Phase 3 | ✅ Complete |
 | GSD-R10 | Phase 4 | Pending |
 | GSD-R11 | Phase 4 | Pending |
 | GSD-R12 | Phase 5 | Pending |

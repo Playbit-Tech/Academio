@@ -1,90 +1,75 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: completed
-stopped_at: Phase 6 complete
-last_updated: "2026-06-30T16:45:00Z"
-last_activity: 2026-06-30 -- Phase 6 complete, milestone v1.0 finished
+milestone: v2.0
+milestone_name: database-transformation
+status: executing
+stopped_at: Phase 1 complete
+last_updated: "2026-06-30T16:55:00Z"
+last_activity: 2026-06-30 -- Phase 1 (Foundation) complete, v2.0 in progress
 progress:
   total_phases: 6
-  completed_phases: 6
-  total_plans: 4
-  completed_plans: 4
-  percent: 100
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
+  percent: 17
 ---
 
 # Project State
 
 ## Project Reference
 
-See: multi_tenant_db_migration_plan.md (updated 2026-06-29)
+See: .planning/PROJECT.md (v2.0 — Database Transformation)
 
-**Core value:** Transform SchoolCare v2 from single-database row-level isolation to database-per-tenant architecture with dynamic connection management, credential encryption, and enterprise-grade backup/recovery.
+**Core value:** Transform SchoolCare database from hybrid SQL/GORM uint IDs to unified GORM-based system with UUID primary keys, enhanced base models, and clean schema.
 
-**Current focus:** Milestone v1.0 complete — all 6 phases delivered
+**Current focus:** Phase 1 (Foundation) — ✅ Complete
 
 ## Current Position
 
-Phase: 6 (testing-validation) — COMPLETE
-Plan: 4 of 4
-Status: Milestone v1.0 finished
-Last activity: 2026-06-30 -- Phase 6 complete
+Milestone: v2.0 (database-transformation) — EXECUTING
+Phase: 1 of 6 (Foundation)
+Status: Phase 1 complete, Phase 2 next
+Last activity: 2026-06-30 -- Phase 1 delivered
 
-Progress: [████████████████████████████████████████████████] 100% (6 of 6 phases complete)
+Progress: [███████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 17% (1 of 6 phases)
 
 ## Phase Status
 
-| Phase | Plans | Status | Completed |
-|-------|-------|--------|-----------|
-| 1. Core Database Setup | 4/4 | ✅ Complete | 2026-06-29 |
-| 2. Repository Layer Refactoring | 3/3 | ✅ Complete | 2026-06-30 |
-| 3. Migration System | 3/3 | ✅ Complete | 2026-06-30 |
-| 4. Enhanced Auth & Tenant Resolution | 2/2 | ✅ Complete | 2026-06-30 |
-| 5. Backup & Recovery System | 2/2 | ✅ Complete | 2026-06-30 |
-| 6. Testing & Validation | 4/4 | ✅ Complete | 2026-06-30 |
+| # | Phase | Plans | Status | Completed |
+|---|-------|-------|--------|-----------|
+| 1 | Foundation (BaseModel + UUID) | 1/1 | ✅ Complete | 2026-06-30 |
+| 2 | Core Model UUID Conversion | 0/1 | ⏳ Pending | - |
+| 3 | All Models UUID Conversion | 0/1 | ⏳ Pending | - |
+| 4 | SQL→GORM + Fresh DB | 0/1 | ⏳ Pending | - |
+| 5 | API Compatibility Layer | 0/1 | ⏳ Pending | - |
+| 6 | Validation & Rollout | 0/1 | ⏳ Pending | - |
 
 ## Performance Metrics
 
 **Velocity:**
-
-- Total plans completed: 14
-- Average duration: ~1 session per phase
-- Total execution time: ~3 sessions
+- Phase 1 completed in single session
+- Foundation laid for all ~105 struct UUID conversion
 
 ## Accumulated Context
 
-### Decisions
+### Decisions (v2.0)
 
-- [Phase 1-6]: Migration follows 6-phase plan: Foundation → Refactoring → Migration Tooling → Auth Enhancement → Backup/Recovery → Testing
-- [All Phases]: Backward compatibility is mandatory — existing SchoolID-based row isolation must continue working throughout migration
-- [All Phases]: The migration is solo-developer + agent workflow — no team ceremonies, no resource planning artifacts
-- [Phase 1]: AES-256-GCM chosen for credential encryption; never store plaintext DB passwords in schools table
-- [Phase 1]: `SchoolConnection` model reads from `schools` table (owned by Laravel); `DatabaseConnection` table is separate for direct Go-managed connections
-- [Phase 1]: `sync.Map` for in-memory connection cache (no external dependency for hot path); health checks evict stale connections
-- [Phase 2]: All repositories accept `*gorm.DB` parameter — instantiated via `RepositoryFactory` with school ID, not direct `New*Repository(coreDB)` calls
-- [Phase 2]: Tenant context extracted from JWT by middleware, stored in Gin request context, propagated to service layer
-- [Phase 3]: Migration directories split: `migrations/core/` for shared schema, `migrations/school/` for per-tenant schema
-- [Phase 3]: `MigrateAllTenants()` iterates all active schools in parallel with configurable concurrency
-- [Phase 4]: `TenantResolutionService` resolves JWT → tenant DB with Redis-cached TenantContext (5-min TTL)
-- [Phase 4]: Tenant error codes: `TENANT_DISABLED`, `TENANT_DB_UNAVAILABLE`, `SUBSCRIPTION_EXPIRED`, `TENANT_MISMATCH`, `TENANT_NOT_PROVISIONED`
-- [Phase 4]: Structured logs include `school_id`, `request_id`, `plan` fields; errors enriched with `request_id`
-- [Phase 5]: S3 only backup storage — no local filesystem fallback (D-01)
-- [Phase 5]: S3Config has Endpoint field for S3-compatible stores (D-02)
-- [Phase 5]: Asynq queue for backup scheduling (D-04/D-05); same daily schedule for all active tenants
-- [Phase 5]: Keep 14 most recent backups per school; auto-purge oldest on new successful backup (D-07)
-- [Phase 5]: Failed backups marked as 'failed', not deleted; count towards 14 limit (D-08)
+- [Phase 1]: Dual-ID pattern — keep `uint` PK (existing code) + add `uuid` column (new code)
+- [Phase 1]: `BeforeCreate` hook auto-generates UUIDs on insert
+- [Phase 1]: pgcrypto extension enabled for both core and tenant databases
+- [Phase 1]: `Auditable` interface added for CreatedBy/UpdatedBy tracking
+
+### Phase 1 Deliverables
+- `internal/database/uuid/uuid.go` — Generate, Parse, IsValid, UUIDFromBytes utilities
+- `internal/database/uuid/uuid_test.go` — 7 test functions, all passing
+- `internal/database/models/interfaces.go` — Model, TenantAwareModel, Auditable interfaces
+- `internal/database/models/base.go` — Enhanced BaseModel with UUID + audit fields + BeforeCreate hook
+- `internal/database/migrations/core/phase1.go` — pgcrypto extension migration
+- `internal/database/migrations/school/school.go` — pgcrypto extension migration (tenant)
 
 ### Pending Todos
-
-- None — milestone v1.0 is complete
-
-### Blockers/Concerns
-
-None yet.
-
-## Session Continuity
-
-Last session: 2026-06-30T14:00:00.000Z
-Stopped at: Phase 5 execution complete
-Resume file: .planning/phases/05-backup-recovery-system/05-CONTEXT.md
+- Phase 2: Convert core models (School, User, Role, Tenant) to use UUIDs
+- Phase 3: Convert all ~95 remaining model structs
+- Phase 4: Convert ~81 SQL migrations to GORM AutoMigrate + create fresh DB
+- Phase 5: API compatibility layer for UUID/int ID coexistence
+- Phase 6: Staged rollout and old DB decommissioning

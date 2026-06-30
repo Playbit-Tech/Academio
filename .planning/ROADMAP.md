@@ -27,10 +27,10 @@ Transform SchoolCare v2 from single-database row-level isolation (SchoolID scopi
 **Plans**: 4 plans
 
 Plans:
-- [ ] 01-01: EncryptionService (AES-256-GCM encrypt/decrypt in internal/crypto/)
-- [ ] 01-02: Schema migration (schools enhancement + database_connections + tenant_backups tables)
-- [ ] 01-03: DatabaseConnectionManager (sync.RWMutex+map cache, GORM pool, health checks)
-- [ ] 01-04: RepositoryFactory pattern (ForSchool + TenantRepositories + ErrRepositoryNotImplemented)
+- [x] 01-01: EncryptionService (AES-256-GCM encrypt/decrypt)
+- [x] 01-02: Schema migration (schools enhancement + new tables)
+- [x] 01-03: DatabaseConnectionManager (sync.Map cache, GORM pool, health checks)
+- [x] 01-04: RepositoryFactory pattern + core DB wiring
 **UI hint**: no
 
 ### Phase 2: Repository Layer Refactoring
@@ -127,7 +127,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Core Database Setup | 0/4 | Not started | - |
+| 1. Core Database Setup | 4/4 | ✅ Complete | 2026-06-29 |
 | 2. Repository Layer Refactoring | 0/3 | Not started | - |
 | 3. Migration System | 0/3 | Not started | - |
 | 4. Enhanced Auth & Tenant Resolution | 0/2 | Not started | - |

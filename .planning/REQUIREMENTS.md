@@ -28,15 +28,15 @@
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| GSD-R10 | TenantResolutionService (JWT → tenant DB resolution) | Pending |
-| GSD-R11 | Enhanced error handling + tenant-aware logging | Pending |
+| GSD-R10 | TenantResolutionService (JWT → tenant DB resolution) | ✅ Complete |
+| GSD-R11 | Enhanced error handling + tenant-aware logging | ✅ Complete |
 
 ## Phase 5: Backup & Recovery System
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| GSD-R12 | BackupService (pg_dump, S3 upload, scheduling) | Pending |
-| GSD-R13 | RestoreService (point-in-time recovery, validation) | Pending |
+| GSD-R12 | BackupService (pg_dump, S3 upload, scheduling) | ✅ Complete |
+| GSD-R13 | RestoreService (point-in-time recovery, validation) | ✅ Complete |
 
 ## Phase 6: Testing & Validation
 
@@ -58,9 +58,9 @@
 | GSD-R7 | Phase 2 | ✅ Complete |
 | GSD-R8 | Phase 3 | ✅ Complete |
 | GSD-R9 | Phase 3 | ✅ Complete |
-| GSD-R10 | Phase 4 | Pending |
-| GSD-R11 | Phase 4 | Pending |
-| GSD-R12 | Phase 5 | Pending |
-| GSD-R13 | Phase 5 | Pending |
+| GSD-R10 | Phase 4 | ✅ Complete |
+| GSD-R11 | Phase 4 | ✅ Complete |
+| GSD-R12 | Phase 5 | ✅ Complete |
+| GSD-R13 | Phase 5 | ✅ Complete |
 | GSD-R14 | Phase 6 | Pending |
 | GSD-R15 | Phase 6 | Pending |

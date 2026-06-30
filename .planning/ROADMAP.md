@@ -6,11 +6,11 @@ Transform SchoolCare v2 from single-database row-level isolation (SchoolID scopi
 
 ## Phases
 
-- [ ] **Phase 1: Core Database Setup** - Encryption service, schema enhancements, connection manager, and repository factory
-- [ ] **Phase 2: Repository Layer Refactoring** - All 39 modules' repositories accept tenant DB connections via factory pattern
-- [ ] **Phase 3: Migration System** - Core vs school migration directories and tenant migration tools
+- [x] **Phase 1: Core Database Setup** - Encryption service, schema enhancements, connection manager, and repository factory (completed 2026-06-29)
+- [x] **Phase 2: Repository Layer Refactoring** - All 39 modules' repositories accept tenant DB connections via factory pattern (completed 2026-06-30)
+- [x] **Phase 3: Migration System** - Core vs school migration directories and tenant migration tools (completed 2026-06-30)
 - [x] **Phase 4: Enhanced Auth & Tenant Resolution** - JWT → tenant DB resolution with enhanced error handling (completed 2026-06-30)
-- [ ] **Phase 5: Backup & Recovery System** - Automated backup (pg_dump + S3) and point-in-time restore
+- [x] **Phase 5: Backup & Recovery System** - Automated backup (pg_dump + S3) and point-in-time restore (completed 2026-06-30)
 - [ ] **Phase 6: Testing & Validation** - Comprehensive integration, load, security testing and documentation
 
 ## Phase Details
@@ -98,8 +98,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — BackupService infrastructure (S3Config, S3BackupStorage, pg_dump, S3 upload, Asynq scheduling, retention)
-- [ ] 05-02-PLAN.md — RestoreService (backup listing, S3 download, pg_restore, validation queries, API endpoints)
+- [x] 05-01-PLAN.md — BackupService infrastructure (S3Config, S3BackupStorage, pg_dump, S3 upload, Asynq scheduling, retention)
+- [x] 05-02-PLAN.md — RestoreService (backup listing, S3 download, pg_restore, validation queries, API endpoints)
 **UI hint**: no
 
 ### Phase 6: Testing & Validation
@@ -107,18 +107,18 @@ Plans:
 **Depends on**: Phase 5
 **Requirements**: GSD-R14, GSD-R15
 **Success Criteria** (what must be TRUE):
-  1. Integration test suite covers: tenant DB connection lifecycle, cross-tenant isolation (school A cannot access school B's data), credential encryption/decryption, repository factory for all module types, migration system (core + school), backup/restore workflows
-  2. Load test suite validates: 1000+ concurrent tenant connections, <50ms cache-hit connection time, <500ms cache-miss connection time, migration of 100+ schools in parallel completes within 30 minutes
-  3. Security test suite validates: AES-256-GCM encryption is FIPS-compliant, no plaintext credentials in logs, no cross-tenant data leakage via connection manager, JWT claims cannot be forged to access another tenant's DB
-  4. Deployment guides exist for: provisioning a new school database, migrating an existing school from shared to dedicated DB, rolling back a school migration, backup/restore operations, monitoring and alerting setup
-  5. Runbooks exist for: tenant DB connection failures, migration failures, backup failures, point-in-time recovery, scaling connection pools
-**Plans**: TBD
+   1. Integration test suite covers: tenant DB connection lifecycle, cross-tenant isolation (school A cannot access school B's data), credential encryption/decryption, repository factory for all module types, migration system (core + school), backup/restore workflows
+   2. Load test suite validates: 1000+ concurrent tenant connections, <50ms cache-hit connection time, <500ms cache-miss connection time, migration of 100+ schools in parallel completes within 30 minutes
+   3. Security test suite validates: AES-256-GCM encryption is FIPS-compliant, no plaintext credentials in logs, no cross-tenant data leakage via connection manager, JWT claims cannot be forged to access another tenant's DB
+   4. Deployment guides exist for: provisioning a new school database, migrating an existing school from shared to dedicated DB, rolling back a school migration, backup/restore operations, monitoring and alerting setup
+   5. Runbooks exist for: tenant DB connection failures, migration failures, backup failures, point-in-time recovery, scaling connection pools
+**Plans**: 4 plans
 
 Plans:
-- [ ] 06-01: Comprehensive integration testing
-- [ ] 06-02: Load testing (1000+ concurrent tenants)
-- [ ] 06-03: Security testing (encryption, isolation, JWT)
-- [ ] 06-04: Documentation + deployment guides
+- [ ] 06-01: Core Infrastructure Tests (crypto security edge cases, queue payloads/handlers, existing test verification)
+- [ ] 06-02: Backup & Recovery Tests (BackupService, RestoreService, S3BackupStorage, LocalStorage)
+- [ ] 06-03: Middleware + Security Tests (tenant middleware, auth middleware, JWT/crypto security edge cases)
+- [ ] 06-04: Integration Tests + Documentation + CI (MigrationService, cross-tenant isolation, CI pipeline, deployment guide, runbooks, TESTING.md)
 **UI hint**: no
 
 ## Progress
@@ -131,5 +131,5 @@ Plans:
 | 2. Repository Layer Refactoring | 3/3 | ✅ Complete | 2026-06-30 |
 | 3. Migration System | 3/3 | ✅ Complete | 2026-06-30 |
 | 4. Enhanced Auth & Tenant Resolution | 2/2 | ✅ Complete | 2026-06-30 |
-| 5. Backup & Recovery System | 0/2 | Not started | - |
-| 6. Testing & Validation | 0/4 | Not started | - |
+| 5. Backup & Recovery System | 2/2 | ✅ Complete | 2026-06-30 |
+| 6. Testing & Validation | 0/4 | Plans written | 2026-06-30 (plans ready to execute) |

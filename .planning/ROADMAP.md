@@ -10,7 +10,7 @@ created: 2026-06-30
 ## Milestones
 
 - ✅ **v2.0-alpha — Foundation** — Phases 1-2 (shipped 2026-06-30)
-- 🚧 **v2.0-beta — Full Conversion** — Phases 3-6 (Phases 3-4 complete, 5-6 remaining)
+- 🚧 **v2.0-beta — Full Conversion** — Phases 3-6 (Phases 3-5 complete, 6 remaining)
 
 ## Phases
 
@@ -26,7 +26,7 @@ created: 2026-06-30
 
 - [x] **Phase 3: All Models** (1 plan) — Convert 108 model structs to UUID — completed 2026-06-30
 - [x] **Phase 4: SQL→GORM + Fresh DB** (2 plans) — Convert ~81 SQL migrations to AutoMigrate + fresh DB — completed 2026-07-01
-- [ ] **Phase 5: API Compatibility** (1 plan) — Accept both UUID and int IDs
+- [x] **Phase 5: API Compatibility** (1 plan) — Accept both UUID and int IDs — completed 2026-07-01
 - [ ] **Phase 6: Validation & Rollout** (1 plan) — Staged switch-over, old DB decommission
 
 ## Progress
@@ -37,7 +37,7 @@ created: 2026-06-30
 | 2. Core Models | v2.0-alpha | 2/2 | ✅ Complete | 2026-06-30 |
 | 3. All Models | v2.0-beta | 1/1 | ✅ Complete | 2026-06-30 |
 | 4. SQL→GORM + Fresh DB | v2.0-beta | 2/2 | ✅ Complete | 2026-07-01 |
-| 5. API Compatibility | v2.0-beta | 0/1 | ⏳ Pending | - |
+| 5. API Compatibility | v2.0-beta | 1/1 | ✅ Complete | 2026-07-01 |
 | 6. Validation & Rollout | v2.0-beta | 0/1 | ⏳ Pending | - |
 
 ## Phase Details
@@ -66,13 +66,20 @@ created: 2026-06-30
 - uuid_phase2.go split into individual db.Exec() calls (lib/pq limitation)
 - uuid_phase3.go skips missing tables gracefully
 
-### Phase 5: API Compatibility
+### Phase 5: API Compatibility ✅
 - **Goal:** Accept both UUID and int IDs in route params, query params, and request bodies.
-- **Status:** 📋 Planned
-- **Plans:** 1 plan
+- **Status:** ✅ Complete (2026-07-01)
+- **Plans:** 1/1
 
 Plans:
-- [ ] 05-01-PLAN.md — Core ID utility + handler conversion + DTO dual fields + repository methods
+- [x] 05-01-PLAN.md — Core ID utility + handler conversion + DTO dual fields + repository methods
+
+**Key Deliverables:**
+- `helpers.ResourceID` + `ParseParamID`/`ParseQueryID` utility + 7 tests
+- 31 handler files converted to use new ID parsers
+- `FindByResourceID` methods added to 20 repositories (67 methods)
+- Dual `*uuid.UUID` fields added to 19 DTO files (311 UUID fields)
+- `go build ./...` and `go vet ./...` pass clean
 
 ### Phase 6: Validation & Rollout
 - **Goal:** Integration tests, staged switch-over, old DB decommission.

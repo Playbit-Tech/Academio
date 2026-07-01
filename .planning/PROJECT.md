@@ -44,12 +44,12 @@ Secure, scalable multi-tenant school management infrastructure that's operationa
 - ✓ **GSD-R15** — Documentation + deployment guides — v2.0-alpha
 - ✓ **UUID Auth Flow** — schoolUUID in JWT tokens, FindByUUID in AuthRepository — v2.0-alpha
 - ✓ **Core Models UUID** — UUID on SchoolConnection, FindByUUID in UserRepository — v2.0-alpha
+- ✓ **Phase 3** — All 108 model structs converted to UUID across 16 modules — 2026-06-30
+- ✓ **Phase 4** — SQL→GORM fresh DB: 205/205 migrations, 111 tables on PG 17.9 — 2026-07-01
+- ✓ **Phase 5** — API compatibility layer for UUID/int ID coexistence: ResourceID parser, 31 handlers converted, FindByResourceID in 20 repos, dual UUID fields in 19 DTOs — 2026-07-01
 
 ### Active
 
-- [ ] **Phase 3** — Convert all ~95 remaining model structs to UUID
-- [ ] **Phase 4** — SQL→GORM cleanup, fresh database
-- [ ] **Phase 5** — API compatibility layer for UUID/int ID coexistence
 - [ ] **Phase 6** — Staged rollout, old DB decommissioning
 
 ### Out of Scope
@@ -76,7 +76,7 @@ Timeline: 8 days (2026-06-22 → 2026-06-30).
 | S3-only backup storage | Implemented with MinIO/DO Spaces support via Endpoint config | ✅ Good |
 | go-sqlmock for DB-layer tests | Added as dev dependency for backup/restore/tenant tests | ✅ Good |
 | 14-backup retention policy | Enforced in BackupService | ✅ Good |
-| pgcrypto extension with uuid_generate_v4() | Ensures unique UUIDs at DB level | ✅ Good |
+| gen_random_uuid() (built-in PG 13+) | UUID generation without pgcrypto dependency, PG 17 compatible | ✅ Good |
 | TenantResolutionService with 5-min Redis TTL | Caches tenant context, graceful degradation | ✅ Good |
 | Asynq for async backup/restore workers | Queue-based architecture for long-running ops | ✅ Good |
 | 30% coverage threshold in CI | Enforced via GitHub Actions | ✅ Good |
@@ -98,4 +98,4 @@ Timeline: 8 days (2026-06-22 → 2026-06-30).
 
 ---
 
-*Last updated: 2026-06-30 after v2.0-alpha milestone*
+*Last updated: 2026-07-01 after Phase 4 completion*

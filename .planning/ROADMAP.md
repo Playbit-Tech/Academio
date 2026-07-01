@@ -10,7 +10,7 @@ created: 2026-06-30
 ## Milestones
 
 - ✅ **v2.0-alpha — Foundation** — Phases 1-2 (shipped 2026-06-30)
-- 🚧 **v2.0-beta — Full Conversion** — Phases 3-6 (in progress)
+- 🚧 **v2.0-beta — Full Conversion** — Phases 3-6 (Phases 3-4 complete, 5-6 remaining)
 
 ## Phases
 
@@ -25,7 +25,7 @@ created: 2026-06-30
 ### 🚧 v2.0-beta — Full Conversion (In Progress)
 
 - [x] **Phase 3: All Models** (1 plan) — Convert 108 model structs to UUID — completed 2026-06-30
-- [ ] **Phase 4: SQL→GORM + Fresh DB** (2 plans) — Convert ~81 SQL migrations to AutoMigrate + fresh DB
+- [x] **Phase 4: SQL→GORM + Fresh DB** (2 plans) — Convert ~81 SQL migrations to AutoMigrate + fresh DB — completed 2026-07-01
 - [ ] **Phase 5: API Compatibility** (1 plan) — Accept both UUID and int IDs
 - [ ] **Phase 6: Validation & Rollout** (1 plan) — Staged switch-over, old DB decommission
 
@@ -36,44 +36,43 @@ created: 2026-06-30
 | 1. Foundation | v2.0-alpha | 1/1 | ✅ Complete | 2026-06-30 |
 | 2. Core Models | v2.0-alpha | 2/2 | ✅ Complete | 2026-06-30 |
 | 3. All Models | v2.0-beta | 1/1 | ✅ Complete | 2026-06-30 |
-| 4. SQL→GORM + Fresh DB | v2.0-beta | 0/2 | 🔵 Planned | - |
+| 4. SQL→GORM + Fresh DB | v2.0-beta | 2/2 | ✅ Complete | 2026-07-01 |
 | 5. API Compatibility | v2.0-beta | 0/1 | ⏳ Pending | - |
 | 6. Validation & Rollout | v2.0-beta | 0/1 | ⏳ Pending | - |
 
 ## Phase Details
 
-### Phase 4: SQL→GORM + Fresh DB
+### Phase 4: SQL→GORM + Fresh DB ✅
 - **Goal:** Convert all ~81 remaining SQL-based migrations to GORM AutoMigrate, eliminate raw SQL migration files, and provision a fresh database with the clean schema.
-- **Status:** 🔵 Planned
-- **Plans:** 2 plans
+- **Status:** ✅ Complete (2026-07-01)
+- **Plans:** 2/2
 
 **Plan 01 — Convert Raw SQL to AutoMigrate (Wave 1):**
-- `school/phase2.go`: Replace raw CREATE TABLE with AutoMigrate for attendance, CBA, books, hostels, transport, exam, reports, messages
-- `school/phase4.go`: Replace raw SQL with AutoMigrate for LMS + CBA tables  
-- `school/phase5.go`: Replace raw SQL with AutoMigrate for report cards
-- `school/admissions.go`: Replace raw SQL with AutoMigrate for admissions tables
-- `school/modules.go`: Replace raw SQL with AutoMigrate for modules tables
-- Verify existing AutoMigrate coverage to avoid double-registration
-- `go build ./...` and `go vet ./...` must pass
+- All ~81 raw CREATE TABLE migrations replaced with `db.AutoMigrate()`
+- Core models (Subject, Level, Student, Teacher, Bill, Fee, Payment) deduplicated
+- Pivot table `cba_paper_questions` kept as raw SQL (no GORM model)
+- `go build ./...` and `go vet ./...` pass
 
 **Plan 02 — Consolidate + Fresh DB (Wave 2):**
-- Consolidate migration file structure, merge domain-grouped files
-- Remove deprecated raw SQL files (phase2, phase4, phase5, admissions, modules after conversion)
-- Provision fresh database, run all migrations end-to-end
-- Validate schema correctness (table count, column types, indexes)
-- `go build ./...` and `go vet ./...` must pass
+- 5 phase files consolidated into 4 domain-grouped files
+- Fresh `schoolcare_core` DB on Docker shared-postgres (PG 17.9)
+- pgcrypto extension enabled
+- 205/205 migrations applied, 111 tables created
+- PG 17 compat: uuid_generate_v4() → gen_random_uuid() across 25 files
 
-**Details:**
-- Keep `school/core_models.go` (already AutoMigrate) — verify no overlap
-- Keep `school/phase3.go` (already AutoMigrate — AuditLog)
-- Keep `school/uuid_phase3.go` (Phase 3 ALTER TABLE for UUID columns)
-- Keep ReusableMigrator pattern (migrator.go) as-is
-- Keep raw SQL for `pgcrypto` extension and certain ALTER TABLE operations
+**Key Details:**
+- In-place conversion preserved migration IDs and entry order
+- ALTER TABLE operations kept as raw SQL (no GORM equivalent)
+- uuid_phase2.go split into individual db.Exec() calls (lib/pq limitation)
+- uuid_phase3.go skips missing tables gracefully
 
 ### Phase 5: API Compatibility
 - **Goal:** Accept both UUID and int IDs in route params, query params, and request bodies.
-- **Status:** ⏳ Pending
+- **Status:** 📋 Planned
 - **Plans:** 1 plan
+
+Plans:
+- [ ] 05-01-PLAN.md — Core ID utility + handler conversion + DTO dual fields + repository methods
 
 ### Phase 6: Validation & Rollout
 - **Goal:** Integration tests, staged switch-over, old DB decommission.

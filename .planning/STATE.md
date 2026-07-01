@@ -27,9 +27,9 @@ See: .planning/PROJECT.md (v2.0 — Database Transformation)
 
 Milestone: v2.0 (database-transformation) — EXECUTING
 Phase: 05 (api-compatibility) — PENDING
-Plan: 0 of 1
+Plan: 1 of 1
 Plans: 1
-Status: Pending Phase 05
+Status: Planned Phase 05
 Last activity: 2026-07-01 -- Phase 04 execution completed (PG 17 compat fix)
 
 Progress: [████████████████████████████████████████████████░░] 67% (4 of 6 phases)

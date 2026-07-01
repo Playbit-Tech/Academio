@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-07-01T07:07:00.000Z"
-last_activity: 2026-07-01 -- Phase 5 API Compatibility executed
+last_updated: "2026-07-01T16:00:00.000Z"
+last_activity: 2026-07-01 -- Phase 6 Multi-Tenant DB Routing complete
 progress:
-  total_phases: 6
-  completed_phases: 5
-  total_plans: 8
-  completed_plans: 8
-  percent: 100
+  total_phases: 7
+  completed_phases: 6
+  total_plans: 10
+  completed_plans: 9
+  percent: 86
 ---
 
 # Project State
@@ -19,20 +19,20 @@ progress:
 
 See: .planning/PROJECT.md (v2.0 — Database Transformation)
 
-**Core value:** Transform SchoolCare database from hybrid SQL/GORM uint IDs to unified GORM-based system with UUID primary keys, enhanced base models, and clean schema.
+**Core value:** Transform SchoolCare database from hybrid SQL/GORM uint IDs to unified GORM-based system with UUID primary keys, enhanced base models, and clean schema. Plus, complete multi-tenant DB routing across all tenant-scoped handlers/services.
 
-**Current focus:** Phase 06 — Validation & Rollout
+**Current focus:** Phase 07 — Validation & Rollout
 
 ## Current Position
 
 Milestone: v2.0 (database-transformation) — EXECUTING
-Phase: 06 (validation-and-rollout) — PENDING
+Phase: 07 (validation-rollout) — EXECUTING
 Plan: 0 of 1
 Plans: 1
-Status: Phase 05 complete
-Last activity: 2026-07-01 -- Phase 05 execution completed (API Compatibility)
+Status: Phase 06 complete, Phase 07 started
+Last activity: 2026-07-01 -- Phase 6 all 33 modules converted
 
-Progress: [███████████████████████████████████████████████████] 83% (5 of 6 phases)
+Progress: [████████████████████████████████████████░░░░░░░░░] 86% (6 of 7 phases)
 
 ## Phase Status
 
@@ -43,16 +43,17 @@ Progress: [███████████████████████
 | 3 | All Models UUID Conversion | 1/1 | ✅ Complete | 2026-06-30 |
 | 4 | SQL→GORM + Fresh DB | 2/2 | ✅ Complete | 2026-07-01 |
 | 5 | API Compatibility | 1/1 | ✅ Complete | 2026-07-01 |
-| 6 | Validation & Rollout | 0/1 | ⏳ Pending | - |
+| 6 | Multi-Tenant DB Routing | 1/1 | ✅ Complete | 2026-07-01 |
+| 7 | Validation & Rollout | 0/1 | 🚧 Executing | - |
 
 ## Performance Metrics
 
 **Velocity:**
-
 - Phase 1: 1 session
 - Phase 2: 1 session
 - Phase 3: 1 session (108 structs across 15 model files + migration)
 - Phase 4: 2 sessions (Wave 1 + Wave 2 conversion, 1 PG 17 compat session)
+- Phase 5: 1 session
 
 ## Accumulated Context
 
@@ -68,11 +69,15 @@ Progress: [███████████████████████
 - [Phase 4]: Duplicate tables already in core_models.go have raw SQL entries deleted (not re-registered)
 - [Phase 4]: PG 17 compat — uuid_generate_v4() replaced with gen_random_uuid()
 - [Phase 4]: Circular FK deps resolved by merging schools/roles/users in one AutoMigrate call
+- [Phase 5]: ResourceID hybrid lookup pattern for UUID/uint coexistence
+- [Phase 6]: Tenant DB routing via middleware.GetTenantRepos(c).TenantDB() pattern
+- [Phase 6]: Service methods accept optional `tenantDB *gorm.DB` param
+- [Phase 6]: Conversion by functional module waves (academic → timetable → exam → ...)
 
 ### Phase 4 Deliverables
 
 - ~81 raw SQL CREATE TABLE migrations converted to db.AutoMigrate()
-- 5 phase files consolidated into 4 domain-grouped files (cba_tables.go, academic_tables.go, lms_and_cba.go, module_tables.go)
+- 5 phase files consolidated into 4 domain-grouped files
 - Fresh `schoolcare_core` DB provisioned on Docker shared-postgres (PG 17.9)
 - pgcrypto extension enabled
 - 205/205 migrations applied end-to-end, 111 tables created
@@ -80,6 +85,24 @@ Progress: [███████████████████████
 - PG 17 compatibility: uuid_generate_v4() → gen_random_uuid() across 22 model files + 3 migration files
 - go build ./... + go vet ./... pass clean
 
+### Phase 5 Deliverables
+
+- helpers.ResourceID + ParseParamID/ParseQueryID utility + 7 tests
+- 31 handler files converted to use new ID parsers
+- FindByResourceID methods added to 20 repositories (67 methods)
+- Dual *uuid.UUID fields added to 19 DTO files (311 UUID fields)
+- go build ./... + go vet ./... pass clean
+
+### Phase 6 Deliverables
+
+- **All 33 tenant-scoped modules** with handler.go files converted to tenant DB pattern
+- Pattern applied consistently: `middleware.GetTenantRepos(c)` → `repos.TenantDB()` → pass `tenantDB` to service
+- Service methods accept `tenantDB *gorm.DB`, resolve DB, create temp repos for tenant data
+- Core repos (schoolRepo, userRepo, rbac) kept on core DB — NOT replaced with temp repos
+- `GetDB()` added to any repository interface that was missing it
+- `go build ./...` + `go vet ./...` pass clean
+- Test call sites updated with `nil` tenantDB for test environments
+
 ## Pending Todos
 
-- Phase 6: Staged rollout and old DB decommissioning
+- Phase 7: Staged validation, integration testing, and old DB decommissioning

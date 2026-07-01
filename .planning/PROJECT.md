@@ -10,13 +10,14 @@ started: 2026-06-30
 
 ## Vision
 
-Transform SchoolCare's database architecture from hybrid SQL/GORM migrations with uint IDs to a unified GORM-based system with UUID primary keys, enhanced base models, and clean schema foundation. Additionally, establish a robust multi-tenant database infrastructure with tenant-aware auth, resolution, migration, backup, and recovery.
+Transform SchoolCare's database architecture from hybrid SQL/GORM migrations with uint IDs to a unified GORM-based system with UUID primary keys, enhanced base models, and clean schema foundation. Additionally, establish a robust multi-tenant database infrastructure with tenant-aware auth, resolution, migration, backup, recovery, and complete tenant DB routing across all services.
 
 ## What This Is
 
 A production-ready multi-tenant backend infrastructure for SchoolCare v2, combining:
 - **Multi-tenant architecture**: Per-school dedicated PostgreSQL databases managed through a shared core database, with AES-256-GCM encrypted credentials, cached connection pooling, and Redis-backed tenant context resolution.
 - **UUID identity system**: Dual-ID strategy (uint PK + UUID) flowing end-to-end through models, repositories, JWT tokens, middleware, and response DTOs.
+- **Tenant DB routing**: Every tenant-scoped handler and service method routes school-scoped data to the school's dedicated database via middleware.GetTenantRepos(c).TenantDB().
 - **Operational tooling**: Parallel tenant migration system, S3 backup/recovery pipeline via Asynq workers, and comprehensive CI/CD with deployment runbooks.
 
 ## Core Value
@@ -50,7 +51,8 @@ Secure, scalable multi-tenant school management infrastructure that's operationa
 
 ### Active
 
-- [ ] **Phase 6** — Staged rollout, old DB decommissioning
+- [ ] **Phase 6** — Multi-Tenant DB Routing: Convert all tenant-scoped handlers/services to use per-school DB connections via middleware.GetTenantRepos(c).TenantDB() pattern
+- [ ] **Phase 7** — Validation & Rollout: Integration tests, staged switch-over, old DB decommission
 
 ### Out of Scope
 
@@ -80,6 +82,8 @@ Timeline: 8 days (2026-06-22 → 2026-06-30).
 | TenantResolutionService with 5-min Redis TTL | Caches tenant context, graceful degradation | ✅ Good |
 | Asynq for async backup/restore workers | Queue-based architecture for long-running ops | ✅ Good |
 | 30% coverage threshold in CI | Enforced via GitHub Actions | ✅ Good |
+| Tenant DB routing via middleware.GetTenantRepos(c) | Handlers extract repos, pass TenantDB() to services | ✅ Good |
+| Optional *gorm.DB param on service methods | Non-nil = use tenant DB, nil = fall back to core DB | ✅ Good |
 
 ## Benefits
 
@@ -98,4 +102,4 @@ Timeline: 8 days (2026-06-22 → 2026-06-30).
 
 ---
 
-*Last updated: 2026-07-01 after Phase 4 completion*
+*Last updated: 2026-07-01 after Phase 5 completion*

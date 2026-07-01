@@ -10,7 +10,7 @@ created: 2026-06-30
 ## Milestones
 
 - ✅ **v2.0-alpha — Foundation** — Phases 1-2 (shipped 2026-06-30)
-- 🚧 **v2.0-beta — Full Conversion** — Phases 3-6 (Phases 3-5 complete, 6 remaining)
+- 🚧 **v2.0-beta — Full Conversion** — Phases 3-7 (Phases 3-5 complete, 6 executing, 7 pending)
 
 ## Phases
 
@@ -27,7 +27,8 @@ created: 2026-06-30
 - [x] **Phase 3: All Models** (1 plan) — Convert 108 model structs to UUID — completed 2026-06-30
 - [x] **Phase 4: SQL→GORM + Fresh DB** (2 plans) — Convert ~81 SQL migrations to AutoMigrate + fresh DB — completed 2026-07-01
 - [x] **Phase 5: API Compatibility** (1 plan) — Accept both UUID and int IDs — completed 2026-07-01
-- [ ] **Phase 6: Validation & Rollout** (1 plan) — Staged switch-over, old DB decommission
+- [ ] **Phase 6: Multi-Tenant DB Routing** (1 plan) — Convert tenant-scoped handlers/services to use per-school DB connections — 🚧 Executing
+- [ ] **Phase 7: Validation & Rollout** (1 plan) — Integration tests, staged switch-over, old DB decommission — ⏳ Pending
 
 ## Progress
 
@@ -38,7 +39,8 @@ created: 2026-06-30
 | 3. All Models | v2.0-beta | 1/1 | ✅ Complete | 2026-06-30 |
 | 4. SQL→GORM + Fresh DB | v2.0-beta | 2/2 | ✅ Complete | 2026-07-01 |
 | 5. API Compatibility | v2.0-beta | 1/1 | ✅ Complete | 2026-07-01 |
-| 6. Validation & Rollout | v2.0-beta | 0/1 | ⏳ Pending | - |
+| 6. Multi-Tenant DB Routing | v2.0-beta | 0/1 | 🚧 Executing | - |
+| 7. Validation & Rollout | v2.0-beta | 0/1 | ⏳ Pending | - |
 
 ## Phase Details
 
@@ -60,12 +62,6 @@ created: 2026-06-30
 - 205/205 migrations applied, 111 tables created
 - PG 17 compat: uuid_generate_v4() → gen_random_uuid() across 25 files
 
-**Key Details:**
-- In-place conversion preserved migration IDs and entry order
-- ALTER TABLE operations kept as raw SQL (no GORM equivalent)
-- uuid_phase2.go split into individual db.Exec() calls (lib/pq limitation)
-- uuid_phase3.go skips missing tables gracefully
-
 ### Phase 5: API Compatibility ✅
 - **Goal:** Accept both UUID and int IDs in route params, query params, and request bodies.
 - **Status:** ✅ Complete (2026-07-01)
@@ -81,7 +77,29 @@ Plans:
 - Dual `*uuid.UUID` fields added to 19 DTO files (311 UUID fields)
 - `go build ./...` and `go vet ./...` pass clean
 
-### Phase 6: Validation & Rollout
+### Phase 6: Multi-Tenant DB Routing 🚧
+- **Goal:** Convert all tenant-scoped handler/service methods to use per-school dedicated databases via `middleware.GetTenantRepos(c).TenantDB()` pattern.
+- **Status:** 🚧 Executing (2026-07-01)
+- **Plans:** 1 plan (multiple waves)
+
+**Scope:** ~28 modules with tenant-scoped data need conversion. Wave 1 covers academic + timetable.
+
+**Pattern (established in user module):**
+```go
+// Handler:
+repos := middleware.GetTenantRepos(c)
+tenantDB := repos.TenantDB()
+result, err := h.service.Method(ctx, tenantDB, schoolID, req)
+
+// Service:
+func (s *Service) Method(ctx context.Context, tenantDB *gorm.DB, schoolID uint, req *Req) (*Model, error) {
+    db := s.repo.GetDB()
+    if tenantDB != nil { db = tenantDB }
+    // Use db for operations
+}
+```
+
+### Phase 7: Validation & Rollout
 - **Goal:** Integration tests, staged switch-over, old DB decommission.
 - **Status:** ⏳ Pending
 - **Plans:** 1 plan
@@ -95,3 +113,5 @@ Plans:
 | BaseModel change | All subsequent phases |
 | Core model UUIDs | Academic/module UUID migration |
 | GORM AutoMigrate patterns | SQL migration cleanup |
+| GetTenantRepos(c) middleware | All tenant-scoped handlers |
+| repos.TenantDB() | All tenant-scoped services |

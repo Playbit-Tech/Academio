@@ -1,6 +1,6 @@
 #!/bin/bash
 # ──────────────────────────────────────────────────────────────────
-# SchoolCare v2 — k6 Load Test Orchestrator
+# Academio v2 — k6 Load Test Orchestrator
 # ──────────────────────────────────────────────────────────────────
 # Runs sequential baseline tests, then parallel load tests.
 # All results are exported as machine-readable JSON reports.
@@ -26,7 +26,7 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 mkdir -p "$REPORT_DIR"
 
 echo "════════════════════════════════════════════════════════════"
-echo "  SchoolCare v2 — k6 Load Test Suite"
+echo "  Academio v2 — k6 Load Test Suite"
 echo "  Timestamp: $TIMESTAMP"
 echo "  Target:    $BASE_URL"
 echo "  k6:        $K6"

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-07-01T16:00:00.000Z"
-last_activity: 2026-07-01 -- Phase 6 Multi-Tenant DB Routing complete
+last_updated: "2026-07-02T09:05:00.000Z"
+last_activity: 2026-07-02 -- Phase 7 verification tasks complete (pastoral/inventory/finance)
 progress:
   total_phases: 7
   completed_phases: 6
   total_plans: 10
-  completed_plans: 9
-  percent: 86
+  completed_plans: 10
+  percent: 95
 ---
 
 # Project State
@@ -21,16 +21,16 @@ See: .planning/PROJECT.md (v2.0 — Database Transformation)
 
 **Core value:** Transform SchoolCare database from hybrid SQL/GORM uint IDs to unified GORM-based system with UUID primary keys, enhanced base models, and clean schema. Plus, complete multi-tenant DB routing across all tenant-scoped handlers/services.
 
-**Current focus:** Phase 07 — Validation & Rollout
+**Current focus:** Phase 07 — validation-rollout
 
 ## Current Position
 
 Milestone: v2.0 (database-transformation) — EXECUTING
 Phase: 07 (validation-rollout) — EXECUTING
-Plan: 0 of 1
+Plan: 1 of 1
 Plans: 1
-Status: Phase 06 complete, Phase 07 started
-Last activity: 2026-07-01 -- Phase 6 all 33 modules converted
+Status: Phase 07 verification tasks complete (pending decommissioning docs)
+Last activity: 2026-07-02 -- Phase 7 verification tasks complete
 
 Progress: [████████████████████████████████████████░░░░░░░░░] 86% (6 of 7 phases)
 
@@ -44,11 +44,12 @@ Progress: [███████████████████████
 | 4 | SQL→GORM + Fresh DB | 2/2 | ✅ Complete | 2026-07-01 |
 | 5 | API Compatibility | 1/1 | ✅ Complete | 2026-07-01 |
 | 6 | Multi-Tenant DB Routing | 1/1 | ✅ Complete | 2026-07-01 |
-| 7 | Validation & Rollout | 0/1 | 🚧 Executing | - |
+| 7 | Validation & Rollout | 1/1 | ✅ Complete | 2026-07-02 |
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Phase 1: 1 session
 - Phase 2: 1 session
 - Phase 3: 1 session (108 structs across 15 model files + migration)
@@ -103,6 +104,22 @@ Progress: [███████████████████████
 - `go build ./...` + `go vet ./...` pass clean
 - Test call sites updated with `nil` tenantDB for test environments
 
+### Phase 7 Deliverables
+
+- Pastoral service refactored to clean repo-selection pattern; all tests pass
+- Inventory service refactored to clean repo-selection pattern; all tests pass
+- Finance service refactored to clean repo-selection pattern; all tests pass
+- Phase 6 reconciliation: committed 121 files across 33 modules with multi-tenant DB routing
+- Consolidated migration files into flat domain structure
+- `go build ./...` + `go vet ./...` + `go test ./...` pass (clean except 2 pre-existing Redis rate-limiter timing tests)
+- Test tenant lifecycle shell script created (`scripts/test_tenant_lifecycle.sh`)
+- Tenant provisioning handler + queue task created
+- Makefile `tenant-lifecycle` target added
+- Benchmark suite for tenant routing performance added
+- API compatibility verification tests added
+- Tenant lifecycle integration test suite (testcontainers-go) added
+- Phase 7 planning/rollout/decommissioning docs written
+
 ## Pending Todos
 
-- Phase 7: Staged validation, integration testing, and old DB decommissioning
+- Old DB decommissioning and final production rollout

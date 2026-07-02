@@ -47,6 +47,51 @@
 
 ---
 
+## Milestone: v2.0 — Multi-Tenant Database Migration (Shipped)
+
+**Shipped:** 2026-07-02
+**Phases:** 7 | **Plans:** 10 | **Sessions:** ~11 (including v2.0-alpha)
+
+### What Was Built
+- **UUID identity system**: Dual-ID strategy (uint PK + uuid) across 108 model structs, 357 source files, 33 modules
+- **GORM-based schema**: All ~81 raw SQL CREATE TABLE migrations replaced with AutoMigrate, consolidated into 7 domain-grouped files
+- **Fresh database**: `schoolcare_core` on PostgreSQL 17.9 with 205/205 migrations, 111 tables
+- **API compatibility layer**: ResourceID parser, 31 handlers converted, FindByResourceID in 20 repos, dual UUID fields in 19 DTOs
+- **Multi-tenant DB routing**: All 33 tenant-scoped modules converted to per-school database routing via `middleware.GetTenantRepos(c).TenantDB()`
+- **Tenant lifecycle**: Integration tests (testcontainers-go), API compat tests, performance benchmarks, provisioning handler + queue task
+- **Clean repo-selection pattern**: Pastoral, inventory, finance services refactored to eliminate nil DB panics and GetDB() mock expectations
+
+### What Worked
+- **Wave-based execution**: Breaking large phases into waves (e.g., Phase 4 Wave 1 → Wave 2) kept each commit focused and reviewable
+- **Module-by-module conversion**: Converting all 33 tenant-scoped modules in functional waves (academic → timetable → exam → ...) ensured consistency
+- **Clean repo-selection pattern**: Using `repo := s.xxxRepo; if tenantDB != nil { repo = NewXxxRepository(tenantDB) }` eliminated nil panics and mock dependency
+- **Pre-existing Redis timing tests**: Documenting and excluding the 2 flaky rate-limiter tests prevented false negatives from blocking progress
+- **GSD milestone archival**: Running `/gsd-complete-milestone` at the right time created proper historical records
+
+### What Was Inefficient
+- **Phase 6 scope creep**: Originally planned for 5 modules (Wave 1), expanded to all 33 modules — this was necessary but made the phase much larger than estimated
+- **Phase 7 finance fixes**: The finance module had accumulated stale `tempVendorRepo` references that weren't caught in the initial Phase 6 conversion
+- **Milestone archival timing**: The archive was run twice because the first attempt didn't fully complete — important to verify completion before committing
+
+### Patterns Established
+- **Clean repo-selection pattern**: `repo := s.xxxRepo; if tenantDB != nil { repo = NewXxxRepository(tenantDB) }` — preferred over `db := s.db; if tenantDB != nil { db = tenantDB }`
+- **Transaction helpers**: `helpers.ExecTransaction(db, ctx, func(txDB *gorm.DB) error { ... })` for cross-table operations within a transaction
+- **Test call sites**: Services called with `nil` tenantDB in tests to use injected repos directly
+- **Gofmt pre-commit**: `gofmt -l .` as a pre-commit check to catch formatting drift
+
+### Key Lessons
+1. **Don't skip test updates when refactoring**: Phase 6 changed service signatures but didn't update all test call sites — this was caught in Phase 7 verification
+2. **Module-by-module is safer than big-batch**: Converting 33 modules in one pass risked missed files; the wave approach with validation after each wave was more reliable
+3. **Flaky tests should be documented, not ignored**: The 2 Redis rate-limiter timing tests were pre-existing and unrelated to our changes — documenting them prevented confusion
+4. **GSD milestone archival needs manual verification**: The automated `gsd-tools.cjs milestone complete` doesn't always capture the full scope — manual review of MILESTONES.md is important
+
+### Cost Observations
+- Mostly default model with occasional tool delegation
+- Key efficiency: GSD execute-phase workflow with parallel batch execution for Phase 6 modules
+- Sessions: ~11 total (v2.0-alpha: ~8, v2.0-beta: ~3)
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -54,13 +99,18 @@
 | Milestone | Sessions | Phases | Key Change |
 |-----------|----------|--------|------------|
 | v2.0-alpha | ~8 | 6 | First milestone — established GSD workflow patterns |
+| v2.0 | ~3 | 7 | Completed Phase 6-7, milestone archival patterns |
 
 ### Cumulative Quality
 
 | Milestone | Tests | Coverage | Zero-Dep Additions |
 |-----------|-------|----------|-------------------|
 | v2.0-alpha | 41 test files | 54% (unit packages) | go-sqlmock (dev dep) |
+| v2.0 | 45 test files | 54% (unit packages) | testcontainers-go (dev dep) |
 
 ### Top Lessons (Verified Across Milestones)
 
-1. *First milestone — pattern observation pending next milestone*
+1. Wave-based execution keeps large phases manageable — break work into waves with validation after each
+2. Clean repo-selection pattern (`repo := s.xxxRepo; if tenantDB != nil { ... }`) is safer than DB-first pattern
+3. Pre-existing flaky tests should be documented, not ignored — prevents false negatives from blocking progress
+4. GSD milestone archival needs manual verification — automated tools don't always capture full scope

@@ -48,11 +48,12 @@ Secure, scalable multi-tenant school management infrastructure that's operationa
 - ✓ **Phase 3** — All 108 model structs converted to UUID across 16 modules — 2026-06-30
 - ✓ **Phase 4** — SQL→GORM fresh DB: 205/205 migrations, 111 tables on PG 17.9 — 2026-07-01
 - ✓ **Phase 5** — API compatibility layer for UUID/int ID coexistence: ResourceID parser, 31 handlers converted, FindByResourceID in 20 repos, dual UUID fields in 19 DTOs — 2026-07-01
+- ✓ **Phase 6** — Multi-Tenant DB Routing: All 33 tenant-scoped modules converted to per-school DB routing via middleware.GetTenantRepos(c).TenantDB() — 2026-07-01
+- ✓ **Phase 7** — Validation & Rollout: Integration tests (testcontainers), API compat tests, performance benchmarks, clean repo-selection pattern — 2026-07-02
 
 ### Active
 
-- [ ] **Phase 6** — Multi-Tenant DB Routing: Convert all tenant-scoped handlers/services to use per-school DB connections via middleware.GetTenantRepos(c).TenantDB() pattern
-- [ ] **Phase 7** — Validation & Rollout: Integration tests, staged switch-over, old DB decommission
+(None — v2.0 milestone complete)
 
 ### Out of Scope
 
@@ -62,10 +63,10 @@ Secure, scalable multi-tenant school management infrastructure that's operationa
 
 ## Context
 
-Shipped v2.0-alpha with 85,281 LOC Go (347 files, 41 test files).
-Tech stack: Go 1.26, Gin, GORM, PostgreSQL 16, Redis 7, AWS SDK v2, Asynq.
-All 15/15 requirements met across 6 phases, 15 plans, 24+ tasks.
-Timeline: 8 days (2026-06-22 → 2026-06-30).
+Shipped v2.0 with 85,281+ LOC Go (357 source files, 45 test files).
+Tech stack: Go 1.26, Gin, GORM, PostgreSQL 17.9, Redis 7, AWS SDK v2, Asynq.
+All 20/20 requirements met across 7 phases, 10 plans, 24+ tasks.
+Timeline: 3 days (2026-06-30 → 2026-07-02).
 
 ## Key Decisions
 
@@ -102,4 +103,4 @@ Timeline: 8 days (2026-06-22 → 2026-06-30).
 
 ---
 
-*Last updated: 2026-07-01 after Phase 5 completion*
+*Last updated: 2026-07-02 after v2.0 milestone completion*

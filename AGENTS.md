@@ -25,6 +25,15 @@ Implement Phase 3 of the Curriculum & Assessment Model (per-grade-item score rec
 - **Created `useAssessmentGradeItems` hook** in `useAcademics.ts` — fetches grade items for a given assessment ID via `GET /academic/grade-item?assessment_id=X`.
 - **Added `gradeItems` query key** in `query-keys.ts`.
 - Both `go build ./...` and `yarn tsc --noEmit` pass clean after all changes.
+- **Fixed API URL mismatch**: Frontend hooks in `useSchool.ts` were calling `/schools/levels?school_id=X` (query param) but backend routes are `/:id/levels` (path param). Updated all 6 hooks to use path params.
+- **Fixed class pre-fill field name**: Changed `level: String(...)` to `class_level: (l.class)?.level as number ?? 1` — the reusable `ClassFormFields` component reads `class_level`, not `level`.
+- **Added missing `<form>` wrappers**: Steps 2 (Subjects) and 4 (Session) had `type="submit"` buttons without a containing `<form>`.
+- **CurriculumForm UI polish**: Grade items in 2-column grid with card styling (`p-4 rounded-xl border`); delete/add buttons fixed from overflowing (added `min-w-0`, reduced gap, `w-16` score input).
+- **Assessment total guards**: "Add Assessment" disabled when `assessmentsTotal >= 100`; "Create Curriculum" disabled when `Math.round(assessmentsTotal) !== 100`; remaining marks hint shown.
+- **Fixed `footer` prop**: Was defined in interface but never destructured/rendered in `CurriculumForm`.
+- **Removed duplicate back button** below `CurriculumForm` in onboarding step 3.
+- **Fixed JSX in Next button**: Was raw string `"Next <ChevronRight/>"`, now proper `<><span>Next</span> <ChevronRight/></>` fragment.
+- **Fixed `AssessmentCurriculum` model**: Removed `ID uint gorm:"primaryKey"` — the `assessment_curriculum` table was created by GORM's many2many as a join table with composite PK `(assessment_id, curriculum_id)` and no `id` column. The explicit model with a separate `ID` field caused GORM to generate `RETURNING "uuid","id"` on INSERT, which failed with `column "id" does not exist`. Changed to composite `gorm:"primaryKey"` on both FK fields, matching `SessionCurriculum`'s pattern.
 
 ### In Progress
 - *(none)*

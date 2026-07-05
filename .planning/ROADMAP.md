@@ -1,15 +1,16 @@
 ---
 gsd_roadmap_version: 1.0
-milestone: v2.0
-status: shipped
-created: 2026-06-30
+milestone: v2.1
+status: active
+created: 2026-07-05
 ---
 
-# Roadmap: SchoolCare Database Transformation
+# Roadmap: SchoolCare v2.1 — Backend Hardening
 
 ## Milestones
 
-- ✅ **v2.0 — Multi-Tenant Database Migration** — All 7 phases (shipped 2026-07-02)
+- ✅ **v2.0 — Multi-Tenant Database Migration** — Completed 2026-07-02
+- 🏗 **v2.1 — Backend Hardening** — Error propagation, security, context, code quality
 
 ## Phases
 
@@ -26,9 +27,19 @@ created: 2026-06-30
 
 </details>
 
+<details open>
+<summary>🏗 v2.1 — Backend Hardening (Phases 8-11) — IN PROGRESS</summary>
+
+- [ ] **Phase 8: Error Propagation** (1 plan — replace 21 `_ =` GORM discard patterns with logging/error returns) — planned
+- [ ] **Phase 9: Security Hardening** (1 plan — CSRF warning, safe DSN via net/url, DB name validation) — planned
+- [ ] **Phase 10: Context Propagation** (1 plan — propagate ctx through provisioning, S3, alumni, connection manager) — planned
+- [ ] **Phase 11: Code Quality** (1 plan — replace panic, add stop channel, backoff, guard assertions, goroutine lifecycle) — planned
+
+</details>
+
 ## What's Next
 
-Post-v2.0 work:
+After v2.1:
 - Old DB decommissioning and final production rollout
 - Monitoring and stabilization
 - Future milestones TBD (AI integration, microservices, etc.)

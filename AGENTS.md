@@ -1,73 +1,75 @@
 ## Goal
-Implement Phase 3 of the Curriculum & Assessment Model (per-grade-item score recording + rollup), fix the onboarding cache invalidation bug, and add a Curriculum step to the onboarding flow.
+Apply code quality fixes (error discards, security, context propagation, code quality) and validate end‑to‑end onboarding + scoring flows for a ~58K-line backend across 39 Go modules.
 
 ## Constraints & Preferences
-- Enforce under/over 100 validation on both backend and frontend for grade item scores and rollups.
-- Seeded classes/subjects must appear immediately after school creation without manual reload.
-- Curriculum step must appear on the onboarding page between Subjects and Session, with defaults pre-filled (like classes and subjects).
+- Go 1.26+, GORM v1.30.0, Gin framework, pgx/v5 PostgreSQL driver.
+- Multi-tenant: each school gets its own PostgreSQL database via tenant `ConnectionManager`.
+- Backend on :8080; frontend Vite dev server on :4000 proxies `/api` → :8080.
+- Air handles hot reload (binary at `backend/tmp/server`).
+- All fixes must pass `go build ./...`, `go vet ./...`, and auth tests.
+- **Use `pkg/logger`** (slog wrapper) for logging; `logger.Warnf`/`logger.Errorf`.
+- **Redis required** for asynq queue (tenant provisioning). Docker container `shared-redis` at localhost:6379.
+- **Use `backend/scripts/test_endpoint.sh`** for integration testing — covers full flow (40 tests). Don't write ad-hoc test scripts.
+- **pgx v5 prepared-statement mode** does NOT support multiple SQL statements in one `db.Exec()`. Break into individual calls.
 
 ## Progress
 ### Done
-- Phase 1 (GradeItem CRUD Backend) and Phase 2 (Nested Curriculum Frontend+Backend) marked completed in `plans/curriculum-assessment-roadmap.md` and `plans/STATE.md`.
-- `Score` model: added nullable `GradeItemID` (FK) and `ScoreValue` fields.
-- `POST /academic/grade-item-score` endpoint: upsert per-grade-item score.
-- `POST /academic/scores/rollup` endpoint: roll up grade item scores into assessment total.
-- Added `grade_item_id` filter to `ListScores` handler.
-- Backend validation: score clamped to `[0, grade_item.max_score]`, FK mismatch rejected, rollup requires all grade items scored, result bounded to `[0, assessment.total]`.
-- Added `useGradeItemScores`, `useSaveGradeItemScore`, `useRollupScores` hooks and exported from `hooks/index.ts`.
-- Built `GradeItemScoreEntry` component with per-item inputs, live total calculation, per-item save, Save All, and Rollup button.
-- Integrated `GradeItemScoreEntry` into Teacher Academics page with subject/assessment/class selectors.
-- Ran `make db-init DROP_TENANT=true`, `make migrate`, `make seed` to recreate and seed the database.
-- **Fixed backend onboarding bug**: Added `DatabaseStatus` to `SchoolResponse`, updated `Get` handler, added `GetDB()` to `SchoolService`, fixed `ListSubjects`/`ListLevels` to return empty arrays when `tenantDB` is nil.
-- **Added Curriculum step to onboarding**: Between Subjects (step 2) and Session (step 4). Uses reusable `CurriculumForm` component. Defaults are now fetched from the backend (seeded assessment + grade items via provisioning) rather than hardcoded—same polling + pre-fill pattern as classes/subjects.
-- **Added `seedDefaultGradeItems` in provisioning.go**: Creates a default `Assessment` ("Terminal Examination", total=100) with three `GradeItem` rows (CA1=20, CA2=20, Exam=60) when a new tenant DB is provisioned.
-- **Created reusable `CurriculumForm` component** at `src/components/academics/curriculum-form.tsx` — same plain `useState` pattern as `CurriculumDrawer` in `school.tsx`; handles curriculum name, description, multiple assessments with grade items, add/remove, total validation. Used by onboarding step 3.
-- **Created `useAssessmentGradeItems` hook** in `useAcademics.ts` — fetches grade items for a given assessment ID via `GET /academic/grade-item?assessment_id=X`.
-- **Added `gradeItems` query key** in `query-keys.ts`.
-- Both `go build ./...` and `yarn tsc --noEmit` pass clean after all changes.
-- **Fixed API URL mismatch**: Frontend hooks in `useSchool.ts` were calling `/schools/levels?school_id=X` (query param) but backend routes are `/:id/levels` (path param). Updated all 6 hooks to use path params.
-- **Fixed class pre-fill field name**: Changed `level: String(...)` to `class_level: (l.class)?.level as number ?? 1` — the reusable `ClassFormFields` component reads `class_level`, not `level`.
-- **Added missing `<form>` wrappers**: Steps 2 (Subjects) and 4 (Session) had `type="submit"` buttons without a containing `<form>`.
-- **CurriculumForm UI polish**: Grade items in 2-column grid with card styling (`p-4 rounded-xl border`); delete/add buttons fixed from overflowing (added `min-w-0`, reduced gap, `w-16` score input).
-- **Assessment total guards**: "Add Assessment" disabled when `assessmentsTotal >= 100`; "Create Curriculum" disabled when `Math.round(assessmentsTotal) !== 100`; remaining marks hint shown.
-- **Fixed `footer` prop**: Was defined in interface but never destructured/rendered in `CurriculumForm`.
-- **Removed duplicate back button** below `CurriculumForm` in onboarding step 3.
-- **Fixed JSX in Next button**: Was raw string `"Next <ChevronRight/>"`, now proper `<><span>Next</span> <ChevronRight/></>` fragment.
-- **Fixed `AssessmentCurriculum` model**: Removed `ID uint gorm:"primaryKey"` — the `assessment_curriculum` table was created by GORM's many2many as a join table with composite PK `(assessment_id, curriculum_id)` and no `id` column. The explicit model with a separate `ID` field caused GORM to generate `RETURNING "uuid","id"` on INSERT, which failed with `column "id" does not exist`. Changed to composite `gorm:"primaryKey"` on both FK fields, matching `SessionCurriculum`'s pattern.
+- **Initial CRITICAL/HIGH code review fixes** (13 items): TOCTOU in Register, BatchDelete N+1, ChangePassword revoke, Logout error logging, ListScores cap, mergeGradeItemScore data loss, build\*JSON marshal errors, computeGradeItemsTotal warning, CSRF nonce token, fresh repos helper, dead RedisClient removed, CORS credentials fix, unbounded query caps.
+- **Phase 08: Error discard patterns** — 21 patterns fixed across reports (13 log-and-continue), communication (3 log), admission (2 error-return), cba (3: 2 log + 1 sig change `gradeExamAnswers`).
+- **Phase 09: Security hardening** — CSRF fallback `logger.Warnf`; `net/url` DSN in `tenant/config.go` + `config/config.go`; `safeDBNameRegex` in `provisioning.go`.
+- **Phase 10: Context propagation** — `GetTenantDB`/`GetTenantDBByUUID` accept `ctx` (8 callers + tests updated); `provisioning.go` seed methods receive `ctx`; `s3_backup.go` all 4 methods accept `ctx` (callers updated); `alumni/service.go` `GetDashboardInsights` accepts `ctx`.
+- **Phase 11: Code quality** — `tool.go` `Register()` returns `error` (caller `runner.go` updated); `ratelimit.go` `Stop()` method; `postgres.go` `Close(ctx)` with exponential backoff; `uuid_columns.go` `checkSafeTableName` guard; `connection_manager.go` health goroutine uses `WaitGroup`.
+- **Provisioning fix** — `user_infos.go` multi‑statement `db.Exec()` broken into 7 individual calls (pgx prepared‑statement compatibility).
+- **Test script fix** — `test_endpoint.sh` CSRF token extraction changed from `extract_value` (breaks on colon) to `extract_nested`; school creation payload updated to match `CreateSchoolRequest` DTO.
+- **End-to-end validation** — `test_endpoint.sh` passes **40/40 tests, 0 failed** (health → CSRF → register → login → school create → provisioning poll → curriculum → assessments → sessions → grade items → sum-to-100 validation).
+- `go build ./...` and `go vet ./...` clean.
 
 ### In Progress
 - *(none)*
 
 ### Blocked
-- *(none)*
+- `staticcheck` incompatible with Go 1.25/1.26 (built with 1.23.4).
+- Redis rate limiter tests (`TestRedisRateLimiter_Allow`, `TestRedisRateLimiter_SlidingWindowPrecision`) fail because installed Redis truncates sub-second durations to 1s — pre-existing, unrelated.
 
 ## Key Decisions
-- Added `GradeItemID` as nullable FK on existing `scores` table (Option A from plan) to keep assessment-level rollup scores alongside per-grade-item scores.
-- Placed score entry UI in Teacher Academics page with per-student expandable cards rather than a flat table.
-- Fixed the onboarding polling issue at the backend level (returning `database_status` + empty data when tenant not provisioned).
-- Used existing `useCreateCurriculum` + `POST /academic/curriculum` for the onboarding curriculum step instead of creating individual assessment/grade-item endpoints.
+- **Reports: log-and-continue** for GORM errors — analytics queries are best-effort; failing reports on transient DB blips is worse.
+- **Communication/Admission/CBA: return errors** — state mutations where silent failures would corrupt status.
+- **`gradeExamAnswers` signature changed** from `(float64, float64)` to `(float64, float64, error)`.
+- **Break multi‑statement `db.Exec()` into individual calls** for pgx v5 prepared‑statement compatibility.
+- `ChangePassword` logs RevokeAllSessions error instead of returning it — password change itself succeeded, session revocation is best-effort defense in depth.
+- `computeGradeItemsTotal` logs a warning instead of returning an error when a score exceeds max — prevents rollup from blocking on data quality issues.
 
 ## Next Steps
-1. Re-test the full onboarding flow end-to-end — verify that after school creation, polling picks up `database_status`, and the Curriculum step creates the curriculum/assessments/grade items correctly.
-2. Verify the full score entry → rollup flow works in Teacher Academics.
+1. Verify the full score entry → rollup flow works in Teacher Academics (grade items, scoring, sum-to-100 validation — covered by `test_endpoint.sh`).
+2. Update README.md and AGENTS.md to reference `scripts/test_endpoint.sh` so future sessions don't rewrite it.
+3. Clean up `.tmp/sessions/` and `.planning/phases/` artifacts.
 
 ## Critical Context
 - `.env` connects to `shared-postgres` container at `localhost:5432`, user `postgres`, database `academio`.
 - Super admin credentials after seed: `playbit / Password123!`.
-- The provisioning task (background) seeds default levels and subjects AFTER `POST /schools` returns, which is why the frontend must poll until `database_status` changes from `"pending"` to `"active"`.
-- `models.School` in Go does NOT have a `DatabaseStatus` field — the column is added dynamically via raw SQL and must be queried separately.
+- Provisioning runs as an asynq background task; frontend must poll `GET /api/v2/schools/:id` until `database_status` is `"active"`.
 - Use `make db-init DROP_TENANT=true && make migrate && make seed` to reset the database.
+- `models.School` has a `DatabaseStatus` field (enum: `pending`, `active`, `provisioning_failed`).
+- Docker containers `shared-postgres` (5432) and `shared-redis` (6379) always running.
+- Build time ~2 min cold, ~15-30s warm.
+- Server start: `cd backend && ./bin/server` (binds :8080). Queue worker runs as goroutine inside same process.
+- `.env` at `backend/.env` with `JWT_SECRET`, `ENCRYPTION_KEY`, `DB_*`, `REDIS_*` config.
 
 ## Relevant Files
-- `backend/internal/modules/school/dto.go`: Added `DatabaseStatus` field to `SchoolResponse`.
-- `backend/internal/modules/school/handler.go`: Updated `Get` to include `database_status`; fixed `ListSubjects`/`ListLevels` to return empty when tenantDB nil.
-- `backend/internal/modules/school/service.go`: Added `GetDB()` method to `SchoolService`.
-- `backend/internal/database/tenant/provisioning.go`: Seeds default levels and subjects asynchronously.
-- `backend/internal/modules/academic/dto.go`: `CreateCurriculumRequest`, `CreateAssessmentInput`, `CreateGradeItemInput` DTOs.
-- `frontend/src/routes/_onboarding/onboarding.tsx`: Added Curriculum step (step 3) with curriculum name, assessment name, and grade items. Uses `useCreateCurriculum`.
-- `frontend/src/lib/hooks/useAcademics.ts`: `useCreateCurriculum` hook.
-- `frontend/src/routes/_dashboard/school.tsx`: `CurriculumDrawer` component for full curriculum management.
-- `frontend/src/components/academics/curriculum-form.tsx`: Reusable `CurriculumForm` component (used by onboarding step 3). Same state-management pattern as `CurriculumDrawer`.
-- `frontend/src/components/academics/grade-item-score-entry.tsx`: Reusable `GradeItemScoreEntry` component.
-- `plans/curriculum-assessment-roadmap.md`: Roadmap with all 3 phases.
-- `plans/STATE.md`: Project state tracking.
+- `backend/scripts/test_endpoint.sh` — integration test suite, 40 tests, full flow. Run after `make db-init && make migrate && make seed && ./bin/server`.
+- `backend/internal/database/migrations/school/user_infos.go` — provisioning migration: multi‑statement `db.Exec()` → 7 individual calls.
+- `backend/internal/modules/reports/service.go`: 13 discard patterns fixed (log-and-continue).
+- `backend/internal/modules/communication/service.go`: 3 discard patterns fixed (log), import added.
+- `backend/internal/modules/admission/service.go`: 2 discard patterns fixed (error return).
+- `backend/internal/modules/cba/service.go`: 3 discard patterns fixed (2 log, 1 sig change `gradeExamAnswers`).
+- `backend/internal/middleware/csrf.go`: `logger.Warnf` when `APP_SECRET` unset; nonce-based tokens.
+- `backend/internal/database/tenant/config.go` + `backend/internal/config/config.go`: `DSN()` uses `net/url`.
+- `backend/internal/database/tenant/provisioning.go`: DB name regex guard + seed methods receive `ctx`.
+- `backend/pkg/storage/s3_backup.go`: All 4 methods accept `ctx`.
+- `backend/internal/modules/alumni/service.go`: `GetDashboardInsights` accepts `ctx` (handler updated).
+- `backend/internal/database/tenant/connection_manager.go`: `GetTenantDB`/`GetTenantDBByUUID` accept `ctx`; `healthLoop` uses `sync.WaitGroup`.
+- `backend/internal/database/models/school.go`: School model with `DatabaseStatus` field.
+- `backend/internal/modules/auth/repository.go`: `CreateUserWithChecks()` with advisory lock.
+- `backend/internal/modules/auth/service.go`: Register, BatchDelete, ChangePassword, Logout fixes.
+- `backend/internal/modules/score/service.go`: build/marshal errors, type safety, repos helper, page cap.
+- `backend/internal/middleware/cors.go`: Credentials only with explicit origin.

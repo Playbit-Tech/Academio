@@ -22,6 +22,8 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 - **Provisioning fix** — `user_infos.go` multi‑statement `db.Exec()` broken into 7 individual calls (pgx prepared‑statement compatibility).
 - **Test script fix** — `test_endpoint.sh` CSRF token extraction changed from `extract_value` (breaks on colon) to `extract_nested`; school creation payload updated to match `CreateSchoolRequest` DTO.
 - **End-to-end validation** — `test_endpoint.sh` passes **40/40 tests, 0 failed** (health → CSRF → register → login → school create → provisioning poll → curriculum → assessments → sessions → grade items → sum-to-100 validation).
+- **Parent/guardian validations (session changes + CR fixes):** Session edit drawer curriculum read-only; structured address in form JSONB; 2-step student wizard (checkboxes → address fields); XLSX sample 20 rows; `isEmptyAddress()` helper for `any`-type address; `json.Marshal` error handling at both call sites; role assignment logging via `logger.Warnf`; parent dedup by email→phone→username; sibling UserInfo reuse; combined error collection per parent.
+- **Artifact cleanup** — Removed stale GSD artifacts (`.planning/`, `.tmp/`, stale plan files); plan persisted at `docs/plans/CR-CODE-REVIEW-FIXES.md`.
 - `go build ./...` and `go vet ./...` clean.
 
 ### In Progress
@@ -38,11 +40,15 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 - **Break multi‑statement `db.Exec()` into individual calls** for pgx v5 prepared‑statement compatibility.
 - `ChangePassword` logs RevokeAllSessions error instead of returning it — password change itself succeeded, session revocation is best-effort defense in depth.
 - `computeGradeItemsTotal` logs a warning instead of returning an error when a score exceeds max — prevents rollup from blocking on data quality issues.
+- **Parent dedup priority**: email → phone → username (email is strongest identifier).
+- **Parent `UserInfo` skipped** in tenant DB if already exists (sibling reuse) — avoids duplicate-key error on `user_info.user_id` unique index.
+- **`ParentData.Address` uses `any` type** to accept both flat string (XLSX compat) and structured map/object (form submission), stored in `UserInfo.Details` JSONB.
+- **Session update** uses `Select("name","year","term","status","description","details").Updates(session)` — never touches many2many join tables.
+- **Sonner `<Toaster />`** belongs in root layout (`__root.tsx`), not child routes, so toasts survive navigation and drawer close.
 
 ## Next Steps
 1. Verify the full score entry → rollup flow works in Teacher Academics (grade items, scoring, sum-to-100 validation — covered by `test_endpoint.sh`).
 2. Update README.md and AGENTS.md to reference `scripts/test_endpoint.sh` so future sessions don't rewrite it.
-3. Clean up `.tmp/sessions/` and `.planning/phases/` artifacts.
 
 ## Critical Context
 - `.env` connects to `shared-postgres` container at `localhost:5432`, user `postgres`, database `academio`.
@@ -73,3 +79,14 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 - `backend/internal/modules/auth/service.go`: Register, BatchDelete, ChangePassword, Logout fixes.
 - `backend/internal/modules/score/service.go`: build/marshal errors, type safety, repos helper, page cap.
 - `backend/internal/middleware/cors.go`: Credentials only with explicit origin.
+- `backend/internal/modules/user/service.go`: Parent validation rules (R1-R3, per-parent completeness), parent dedup by email→phone→username, sibling UserInfo reuse, `isEmptyAddress()` helper for `any`-type address, combined error collection in `BatchCreateStudents`, structured address in `UserInfo.Details` JSONB.
+- `backend/internal/modules/user/dto.go`: `Address` as `any` on `ParentData`, additional import preview fields (`father_address`, `mother_address`, `guardian_address`).
+- `backend/internal/modules/user/repository.go`: `FindByEmail`, `FindByPhone`, `FindUserInfoByUserID` for parent dedup.
+- `backend/internal/database/models/curriculum.go`: `ActiveContinuousAssessmentID` FK documentation comment.
+- `backend/internal/pkg/logger`: `logger.Warnf`/`logger.Errorf` used for error discards and role assignment logging.
+- `frontend/src/routes/_dashboard/users.tsx`: 2-step student wizard (checkboxes → structured address fields), `buildAddress()` helper, `stepCircleClass()` helper, Zod validation with superRefine for per-parent fields.
+- `frontend/src/routes/_dashboard/school.tsx`: Session save flow, curriculum read-only in edit drawer.
+- `frontend/src/lib/hooks/useSchool.ts`: `useSubjects`/`useClasses` without `enabled` guard.
+- `frontend/src/routes/__root.tsx`: Sonner `<Toaster />` placement for global toast visibility.
+- `frontend/src/components/academics/excel-upload-step.tsx`: XLSX preview step with import confirmation.
+- `docs/plans/CR-CODE-REVIEW-FIXES.md`: Phase plan for current CR work.

@@ -62,6 +62,7 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 - `.env` at `backend/.env` with `JWT_SECRET`, `ENCRYPTION_KEY`, `DB_*`, `REDIS_*` config.
 
 ## Relevant Files
+- `backend/STYLE.md` — human-readable Go coding conventions (replaces running `.golangci.yml` locally). **Read this before writing any backend code.**
 - `backend/scripts/test_endpoint.sh` — integration test suite, 40 tests, full flow. Run after `make db-init && make migrate && make seed && ./bin/server`.
 - `backend/internal/database/migrations/school/user_infos.go` — provisioning migration: multi‑statement `db.Exec()` → 7 individual calls.
 - `backend/internal/modules/reports/service.go`: 13 discard patterns fixed (log-and-continue).

@@ -11,6 +11,7 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 - **Redis required** for asynq queue (tenant provisioning). Docker container `shared-redis` at localhost:6379.
 - **Use `backend/scripts/test_endpoint.sh`** for integration testing — covers full flow (40 tests). Don't write ad-hoc test scripts.
 - **pgx v5 prepared-statement mode** does NOT support multiple SQL statements in one `db.Exec()`. Break into individual calls.
+- **Use `docs/architecture/10-AUDIT-CHECKLIST.md`** for production audit gate — run before any release. Covers architecture, security, DB, performance, observability, tenant isolation, testing, and consistency.
 
 ## Progress
 ### Done

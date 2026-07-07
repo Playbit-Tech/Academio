@@ -18,7 +18,7 @@ This directory contains the full architecture specification for evolving SchoolC
 | 6 | [SECURITY-INFRASTRUCTURE](./6-SECURITY-INFRASTRUCTURE.md) | Defense-in-depth, auth flow, RBAC/ABAC, audit logging, multi-tenant strategy, Kubernetes, CI/CD, monitoring, mobile API strategy | ~14 |
 | 7 | [USE-CASES](./7-USE-CASES.md) | 15 actor personas, 15 detailed use cases with AI extensions, actor×module permission matrix | ~10 |
 | 8 | [FUTURE-EXPANSION](./8-FUTURE-EXPANSION.md) | Phase 10+ roadmap, blockchain credentials, crypto payments, metaverse classrooms, go-to-market, KPIs, existing vs evolved comparison | ~10 |
-| 9 | [ARCHITECTURAL-STANDARDS](./9-ARCHITECTURAL-STANDARDS.md) | Ratified coding standards for Go backend: context propagation, error handling, logging, security, testing patterns | ~10 |
+| 10 | [AUDIT-CHECKLIST](./10-AUDIT-CHECKLIST.md) | Production audit checklist: architecture, security, DB, performance, observability, tenant isolation, testing, consistency | ~25 |
 
 ---
 

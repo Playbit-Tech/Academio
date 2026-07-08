@@ -14,9 +14,10 @@ jobs:
         working-directory: backend
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout submodules
+        run: |
+          git submodule sync --recursive
+          git -c "http.extraheader=AUTHORIZATION: bearer ${{ github.token }}" submodule update --init --force --depth=1 --recursive
       - uses: actions/setup-go@v5
         with:
           go-version-file: backend/go.mod
@@ -38,9 +39,10 @@ jobs:
         working-directory: backend
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout submodules
+        run: |
+          git submodule sync --recursive
+          git -c "http.extraheader=AUTHORIZATION: bearer ${{ github.token }}" submodule update --init --force --depth=1 --recursive
       - uses: actions/setup-go@v5
         with:
           go-version-file: backend/go.mod
@@ -98,9 +100,10 @@ jobs:
           --health-retries 5
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout submodules
+        run: |
+          git submodule sync --recursive
+          git -c "http.extraheader=AUTHORIZATION: bearer ${{ github.token }}" submodule update --init --force --depth=1 --recursive
       - uses: actions/setup-go@v5
         with:
           go-version-file: backend/go.mod
@@ -126,9 +129,10 @@ jobs:
         working-directory: backend
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout submodules
+        run: |
+          git submodule sync --recursive
+          git -c "http.extraheader=AUTHORIZATION: bearer ${{ github.token }}" submodule update --init --force --depth=1 --recursive
       - uses: actions/setup-go@v5
         with:
           go-version-file: backend/go.mod

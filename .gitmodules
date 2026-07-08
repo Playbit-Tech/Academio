@@ -1,6 +1,6 @@
 [submodule "backend"]
 	path = backend
-	url = git@github.com:Playbits/schoolcare-be-v2.git
+	url = https://github.com/Playbits/schoolcare-be-v2.git
 [submodule "frontend"]
 	path = frontend
-	url = git@github.com:Playbits/schoolcare-fe-v2.git
+	url = https://github.com/Playbits/schoolcare-fe-v2.git

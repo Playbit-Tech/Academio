@@ -26,6 +26,8 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 - **Parent/guardian validations (session changes + CR fixes):** Session edit drawer curriculum read-only; structured address in form JSONB; 2-step student wizard (checkboxes → address fields); XLSX sample 20 rows; `isEmptyAddress()` helper for `any`-type address; `json.Marshal` error handling at both call sites; role assignment logging via `logger.Warnf`; parent dedup by email→phone→username; sibling UserInfo reuse; combined error collection per parent.
 - **Artifact cleanup** — Removed stale GSD artifacts (`.planning/`, `.tmp/`, stale plan files); plan persisted at `docs/plans/CR-CODE-REVIEW-FIXES.md`.
 - `go build ./...` and `go vet ./...` clean.
+- **TypeScript zero-errors** — 46 pre-existing typecheck errors fixed across 6 batches; `npx tsc --noEmit` passes clean.
+- **Vercel/CI Yarn 4 fix** — `vercel.json` + GitHub CI use `corepack yarn` to bypass global Yarn 1.
 
 ### In Progress
 - *(none)*
@@ -46,10 +48,6 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 - **`ParentData.Address` uses `any` type** to accept both flat string (XLSX compat) and structured map/object (form submission), stored in `UserInfo.Details` JSONB.
 - **Session update** uses `Select("name","year","term","status","description","details").Updates(session)` — never touches many2many join tables.
 - **Sonner `<Toaster />`** belongs in root layout (`__root.tsx`), not child routes, so toasts survive navigation and drawer close.
-
-## Next Steps
-1. Verify the full score entry → rollup flow works in Teacher Academics (grade items, scoring, sum-to-100 validation — covered by `test_endpoint.sh`).
-2. Update README.md and AGENTS.md to reference `scripts/test_endpoint.sh` so future sessions don't rewrite it.
 
 ## Critical Context
 - `.env` connects to `shared-postgres` container at `localhost:5432`, user `postgres`, database `academio`.

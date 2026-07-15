@@ -1,5 +1,5 @@
 ## Goal
-Apply code quality fixes (error discards, security, context propagation, code quality) and validate end‑to‑end onboarding + scoring flows for a ~58K-line backend across 39 Go modules.
+Apply code quality fixes (error discards, security, context propagation, code quality), validate end‑to‑end onboarding + scoring flows, and complete attendance + timetable features for a ~58K-line backend across 39 Go modules.
 
 ## Constraints & Preferences
 - Go 1.26+, GORM v1.30.0, Gin framework, pgx/v5 PostgreSQL driver.
@@ -29,6 +29,11 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 - `go build ./...` and `go vet ./...` clean.
 - **TypeScript zero-errors** — 46 pre-existing typecheck errors fixed across 6 batches; `npx tsc --noEmit` passes clean.
 - **Vercel/CI Yarn 4 fix** — `vercel.json` + GitHub CI use `corepack yarn` to bypass global Yarn 1.
+- **Teacher assessment score grid fixes** — persisted filter selections, dirty scores, AlertDialog on filter change, logout cleanup; `persistDirty()` now called from `setCellValue`, comment `onChange`, `handleSaveAll`; `onKeyDown` guard + `type="number"` on score inputs; `is_active` filter for assessments; proportional total calculation `(studentSum / maxScoreSum) × assessmentTotal`; fixed student ID mismatch via `StudentID` DTO field.
+- **Timetable feature (backend + frontend):** Added `subject_name`, `teacher_name`, `level_name` to `TimetableResponse` DTO with GORM Preloads; added missing `Teacher` relation on Timetable model. Frontend: 3-tab weekly/daily/events layout, CRUD Sheet dialog with react-hook-form + Zod validation, resolved display names, session/level filter bar.
+- **Student attendance feature (backend + frontend):** Added `level_id`/`session_id` optional filters to `GET /academic/attendance`; new `POST /academic/attendance/bulk` upsert endpoint. Frontend: roll-call mode (select timetable → see class students → bulk mark present/absent/late → Save All to bulk endpoint), records tab with student name resolution, stats cards.
+- **Teacher/staff attendance:** New teacher clock-in/out page (`/_dashboard/teacher/attendance`) with history table, weekly summary cards, role-gated to `requireRole(["teacher"])`.
+- **Calendar-style bulk timetable editor:** New bulk create endpoint `POST /timetables/bulk` accepting an array of entries; new `GET /timetables/calendar?level_id=&session_id=` for class-wide grid view. Frontend: editable calendar grid component with click-to-create/update/delete popovers, conflict highlighting (red border on overlapping entries), bulk toolbar with Clear Day (confirm dialog) and Fill Week (per-day form → bulk create). Integrated as a new "Calendar Editor" tab on the timetable page alongside the existing read-only view.
 
 ### In Progress
 - *(none)*
@@ -49,6 +54,11 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 - **`ParentData.Address` uses `any` type** to accept both flat string (XLSX compat) and structured map/object (form submission), stored in `UserInfo.Details` JSONB.
 - **Session update** uses `Select("name","year","term","status","description","details").Updates(session)` — never touches many2many join tables.
 - **Sonner `<Toaster />`** belongs in root layout (`__root.tsx`), not child routes, so toasts survive navigation and drawer close.
+- **Timetable response includes resolved names** via GORM Preloads (`Subject`, `Teacher.UserInfo`, `Level`) so frontend can display names without additional lookups.
+- **Attendance bulk upsert** uses `Where(...).Assign(...).FirstOrCreate(...)` — idempotent, handles both create and update in one call.
+- **Attendance filter by level/session** resolves timetable IDs via a timetable query, then filters attendance by those IDs — avoids adding level_id/session_id as denormalized columns on attendance.
+- **Timetable bulk create** uses GORM batch `Create(&entries)` in a single call — no need for manual transaction wrapping.
+- **Timetable calendar grid** keeps existing single-entry Sheet dialog for fine-tuning, adds the visual calendar as a supplementary "Calendar Editor" tab.
 
 ## Critical Context
 - `.env` connects to `shared-postgres` container at `localhost:5432`, user `postgres`, database `academio`.
@@ -91,3 +101,16 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 - `frontend/src/routes/__root.tsx`: Sonner `<Toaster />` placement for global toast visibility.
 - `frontend/src/components/academics/excel-upload-step.tsx`: XLSX preview step with import confirmation.
 - `docs/plans/CR-CODE-REVIEW-FIXES.md`: Phase plan for current CR work.
+- `backend/internal/modules/timetable/`: Full CRUD for timetables (dto.go, handler.go, service.go, repository.go).
+- `backend/internal/modules/academic/`: Student attendance endpoints (handler.go, service.go, repository.go, dto.go).
+- `backend/internal/modules/hr/`: Staff attendance clock-in/out (handler.go, service.go, repository.go).
+- `backend/internal/database/models/school.go`: Timetable model with Teacher GORM relation.
+- `backend/internal/database/models/attendance.go`: Student Attendance model.
+- `backend/internal/database/models/hr.go`: StaffAttendance model.
+- `frontend/src/routes/_dashboard/timetable.tsx`: 4-tab weekly/daily/events/calendar-editor timetable page with CRUD dialogs + bulk calendar grid.
+- `frontend/src/components/timetable/calendar-grid.tsx`: Editable calendar grid with click-to-create/update/delete popovers and conflict highlighting.
+- `frontend/src/components/timetable/bulk-toolbar.tsx`: Bulk toolbar with Clear Day (confirm dialog) and Fill Week (per-day form) actions.
+- `frontend/src/components/timetable/calendar-editor-view.tsx`: Wrapper combining calendar grid + toolbar with session/level filters.
+- `frontend/src/routes/_dashboard/attendance.tsx`: Roll-call grid + records with student name resolution.
+- `frontend/src/routes/_dashboard/teacher.tsx`: Teacher clock-in/out page.
+- `frontend/src/lib/hooks/useTimetable.ts`: TimetableEntry interface + useTimetable hook.

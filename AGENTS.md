@@ -34,9 +34,11 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 - **Student attendance feature (backend + frontend):** Added `level_id`/`session_id` optional filters to `GET /academic/attendance`; new `POST /academic/attendance/bulk` upsert endpoint. Frontend: roll-call mode (select timetable → see class students → bulk mark present/absent/late → Save All to bulk endpoint), records tab with student name resolution, stats cards.
 - **Teacher/staff attendance:** New teacher clock-in/out page (`/_dashboard/teacher/attendance`) with history table, weekly summary cards, role-gated to `requireRole(["teacher"])`.
 - **Calendar-style bulk timetable editor:** New bulk create endpoint `POST /timetables/bulk` accepting an array of entries; new `GET /timetables/calendar?level_id=&session_id=` for class-wide grid view. Frontend: editable calendar grid component with click-to-create/update/delete popovers, conflict highlighting (red border on overlapping entries), bulk toolbar with Clear Day (confirm dialog) and Fill Week (per-day form → bulk create). Integrated as a new "Calendar Editor" tab on the timetable page alongside the existing read-only view.
+- **Schema-aware backup/restore:** `CreateTenantBackup` uses `pg_dump --schema=<schema>`, S3 uploads, 14-backup retention. `RestoreTenantBackup` downloads from S3, drops/recreates schema, `pg_restore --schema=<schema>`, validates. Build/vet/tests all pass.
+- **FK circular dependency fix verified:** 41/41 integration tests pass end-to-end (register → login → school create → provisioning → curriculum → sessions → assessments → grade items → sum-to-100).
+- **SchemaTablePrefix debug logging removed:** Noisy `[schema:prefix_table] DEBUG` lines removed from `schema_db.go` — seed and runtime output much cleaner.
 
-### In Progress
-- *(none)*
+### Blocked
 
 ### Blocked
 - `staticcheck` incompatible with Go 1.25/1.26 (built with 1.23.4).

@@ -234,9 +234,14 @@ func (c *Config) validate() error {
 |--------|------|
 | `JWT_SECRET` | Required in production; reject placeholder values |
 | `ENCRYPTION_KEY` | Always required; must be 32-byte hex |
+| `APP_SECRET` | Required in production; reject placeholder values (used for CSRF) |
 | `DB_PASSWORD` | Required in production; reject default `academio` |
 | `APP_PORT` | Must be valid port (1-65535) |
 | `OTEL_ENABLED` | If `true`, `OTEL_ENDPOINT` must be set |
+| `SENDGRID_API_KEY` | Required if `EMAIL_ENABLED=true` in production |
+| `TWILIO_ACCOUNT_SID`/`TWILIO_AUTH_TOKEN` | Required if `SMS_ENABLED=true` in production |
+| `S3_ACCESS_KEY`/`S3_SECRET_KEY` | Required if `S3_DRIVER` is set in production |
+| `AI_GEMINI_API_KEY` (or provider-specific) | Required if `AI_ENABLED=true` in production |
 
 ### Anti-patterns (forbidden)
 ```go
@@ -255,7 +260,100 @@ if c.JWT.Secret == "" {
 
 ---
 
-## 6. Zero Hardcoded Secrets
+## 6. Pagination Pattern (Service-Layer)
+
+**Rule**: All list endpoints must support pagination with sensible defaults and an upper bound. Pagination is implemented at the **service layer** (not repository) to avoid changing repository interfaces and their mock implementations.
+
+### Requirements
+- Handlers call `helpers.ParsePagination(c)` to extract `page` and `limit` from query parameters.
+- Default: `page=1, limit=20`. Maximum: `limit=100`.
+- Service methods accept `(page, limit int)` and return `(items, total int64, error)`.
+- Handlers return `response.SuccessWithPagination(data, total, page, limit)`.
+- The total count is fetched via a separate `COUNT(*)` query before the paginated `SELECT`.
+
+### Canonical Pattern
+```go
+// Handler
+func (h *SessionHandler) ListSessions(c *gin.Context) {
+    page, limit := helpers.ParsePagination(c)
+    sessions, total, err := h.service.ListSessions(c.Request.Context(), levelID, page, limit)
+    if err != nil {
+        response.Error(c, http.StatusInternalServerError, "Failed to list sessions")
+        return
+    }
+    response.SuccessWithPagination(c, sessions, total, page, limit)
+}
+
+// Service
+func (s *SessionService) ListSessions(ctx context.Context, levelID uint, page, limit int) ([]SessionListResponse, int64, error) {
+    var total int64
+    if err := s.db.WithContext(ctx).Model(&models.Session{}).Where("level_id = ?", levelID).Count(&total).Error; err != nil {
+        return nil, 0, fmt.Errorf("count sessions: %w", err)
+    }
+    offset := (page - 1) * limit
+    var sessions []models.Session
+    if err := s.db.WithContext(ctx).Where("level_id = ?", levelID).Offset(offset).Limit(limit).Preload(...).Find(&sessions).Error; err != nil {
+        return nil, 0, fmt.Errorf("list sessions: %w", err)
+    }
+    // map to response DTOs...
+    return responses, total, nil
+}
+```
+
+### Anti-patterns (forbidden)
+```go
+// ❌ No pagination - returns unbounded result set
+db.WithContext(ctx).Where("level_id = ?", levelID).Find(&sessions)
+
+// ❌ Repository-layer pagination (breaks mocks, requires interface change)
+type Repository interface {
+    List(ctx context.Context, page, limit int) ([]Model, int64, error)
+}
+```
+
+---
+
+## 7. Content Security Policy (Path-Based)
+
+**Rule**: CSP headers must be strict for API routes and relaxed only where necessary (e.g., Swagger UI). The backend does not serve HTML (except Swagger), so the strictest possible policy applies by default.
+
+### Requirements
+- All API routes (`/api/*`, `/health`, `/metrics`, etc.) receive a strict CSP with no `unsafe-inline` or `unsafe-eval`.
+- Swagger UI routes (`/swagger*`) receive a relaxed CSP with `unsafe-inline` and `unsafe-eval` (required by Swagger's JS).
+- Policy is applied in the `SecurityHeaders()` middleware by checking `c.Request.URL.Path`.
+
+### Canonical Pattern
+```go
+const strictCSP = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'"
+
+const relaxedCSP = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'"
+
+func SecurityHeaders() gin.HandlerFunc {
+    return func(c *gin.Context) {
+        csp := strictCSP
+        if strings.HasPrefix(c.Request.URL.Path, "/swagger") {
+            csp = relaxedCSP
+        }
+        c.Header("Content-Security-Policy", csp)
+        c.Header("X-Content-Type-Options", "nosniff")
+        c.Header("X-Frame-Options", "DENY")
+        c.Header("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload")
+        c.Next()
+    }
+}
+```
+
+### Anti-patterns (forbidden)
+```go
+// ❌ Single blanket CSP with unsafe-inline for all routes
+c.Header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'")
+
+// ❌ No CSP at all on API routes
+```
+
+---
+
+## 8. Zero Hardcoded Secrets
 
 **Rule**: No secrets, passwords, API keys, or tokens may be hardcoded in source code.
 
@@ -303,7 +401,7 @@ getEnv("JWT_SECRET", "change-me-in-production")
 
 ---
 
-## 7. Tenant-Aware Logging and Auditing
+## 9. Tenant-Aware Logging and Auditing
 
 **Rule**: Every request must be traceable to a specific school via structured logs and audit records.
 
@@ -374,7 +472,7 @@ logger.Infof("Processing request")
 
 ---
 
-## Enforcement Summary
+## 10. Enforcement Summary
 
 | Principle | Enforcement Mechanism |
 |-----------|----------------------|
@@ -382,7 +480,9 @@ logger.Infof("Processing request")
 | Graceful Shutdown | Integration tests, code review |
 | Structured Logging | Custom linter, grep for `log.Printf`/`fmt.Println` |
 | OpenTelemetry | CI verification, code review |
-| Config Validation | Unit tests, `config.Load()` error handling |
+| Config Validation | Unit tests, `config.Load()` error handling, `validateProduction()` |
+| Service-Layer Pagination | Code review: verify `ParsePagination` + `SuccessWithPagination` on list endpoints |
+| Path-Based CSP | Code review: verify `strictCSP`/`relaxedCSP` split in `SecurityHeaders()` |
 | Zero Hardcoded Secrets | `gitleaks` pre-commit, CI secret scan |
 | Tenant-Aware Logging | Code review, grep for missing `tenant_id` |
 
@@ -391,11 +491,17 @@ logger.Infof("Processing request")
 ## References
 
 - `AGENTS.md` — project operational constitution
-- `docs/architecture/6-SECURITY-INFRASTRUCTURE.md` — monitoring stack, tenant isolation
+- `docs/architecture/6-SECURITY-INFRASTRUCTURE.md` — monitoring stack, tenant isolation (schema-per-tenant)
+- `docs/architecture/10-AUDIT-CHECKLIST.md` — production audit checklist
 - `backend/MIGRATION_PLAN.md` — error wrapping, DTO discipline
 - `backend/TESTING.md` — testing conventions
+- `backend/STYLE.md` — Go coding conventions
 - `pkg/logger/logger.go` — structured logger implementation
 - `internal/telemetry/provider.go` — OpenTelemetry setup
 - `internal/middleware/tracing.go` — HTTP tracing middleware
 - `internal/middleware/logger.go` — request logging middleware
 - `internal/middleware/audit.go` — audit logging middleware
+- `internal/middleware/security.go` — CSP, HSTS, security headers
+- `internal/config/config.go` — config validation with `validateProduction()`
+- `internal/pkg/helpers/pagination.go` — `ParsePagination` helper
+- `internal/modules/academic/service.go` — service-layer pagination examples (ListSessions, ListCurriculums, ListAssessments)

@@ -203,53 +203,71 @@ Encryption:
 
 ## 2. MULTI-TENANT STRATEGY
 
-### 2.1 Tenant Isolation Model
+### 2.1 Tenant Isolation Model (Current Implementation)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    TENANT ARCHITECTURE                           │
 │                                                                  │
-│  Tier 1: Shared Schema (Default)                                 │
-│  ├── Single database, shared tables                             │
-│  ├── All rows tagged with tenant_id                             │
-│  ├── Best for: Starter, Growth, Premium plans                   │
-│  ├── Max: ~100K students                                        │
-│  └── Isolation: Application-level (WHERE tenant_id = ?)         │
+│  Schema-Per-Tenant (Implemented)                                │
+│  ├── Single PostgreSQL database, per-school schemas             │
+│  ├── Each school's data lives in `school_{id}` schema           │
+│  ├── GORM `SchemaTablePrefix` plugin auto-prefixes table names  │
+│  ├── ── `db.Find(&students)` → `SELECT * FROM school_42.students`
+│  ├── `SET LOCAL search_path` for migration isolation            │
+│  ├── Cross-schema FK constraints: `students.user_id` → `public.users`
+│  ├── `User` and `School` tables in shared `public` schema       │
+│  ├── Schema name cached in Redis via `TenantResolutionService`  │
+│  ├── No per-school database connections (single connection pool) │
+│  └── TenantDBResolver middleware injects schema-scoped `*gorm.DB`
 │                                                                  │
-│  Tier 2: Schema-Per-Tenant (Enterprise)                         │
-│  ├── Same database, separate schemas                            │
-│  ├── Each tenant has own schema (tenant_{id})                   │
-│  ├── Best for: Large enterprise customers                       │
-│  ├── Max: ~50 tenants per DB instance                            │
-│  └── Isolation: Schema-level + app-level                        │
-│                                                                  │
-│  Tier 3: Database-Per-Tenant (Maximum Isolation)                │
-│  ├── Each tenant gets own database instance                     │
-│  ├── Best for: Regulated institutions (banks, govt)             │
-│  ├── Max: Based on infrastructure                               │
-│  └── Isolation: Complete physical/logical separation            │
+│  Legacy: Database-Per-Tenant (retired)                          │
+│  ├── `ConnectionManager` kept for CLI tooling backward compat   │
+│  ├── No longer used at runtime                                  │
+│  └── All new deployments use schema-per-tenant                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 2.2 Tenant Resolution Middleware
+### 2.2 Tenant Resolution Middleware (Implemented)
 
 ```go
 // Middleware chain for tenant resolution
-func TenantResolver() gin.HandlerFunc {
+func TenantDBResolver() gin.HandlerFunc {
     return func(c *gin.Context) {
-        // Resolution order:
-        // 1. JWT claims (authenticated users)
-        // 2. X-Tenant-ID header (API key auth)
-        // 3. Hostname/Domain (subdomain. schoolcare.com)
-        // 4. Default tenant for public routes
+        schoolID := GetSchoolID(c)
+        if schoolID == 0 {
+            c.Next()
+            return
+        }
 
-        tenantID := resolveTenant(c)
-        c.Set("tenant_id", tenantID)
-        c.Set("tenant_config", loadTenantConfig(tenantID))
+        // Resolve schema name from Redis cache or DB
+        tc, err := resolutionService.Resolve(c.Request.Context(), schoolID)
+        if err != nil {
+            c.AbortWithStatusJSON(500, ...)
+            return
+        }
+
+        // Create schema-scoped GORM session
+        repos, err := tenantDBRepoFactory.ForSchoolSchema(
+            c.Request.Context(), schoolID, tc.SchemaName,
+        )
+        if err != nil {
+            c.AbortWithStatusJSON(500, ...)
+            return
+        }
+        c.Set(string(CtxKeyTenantRepos), repos)
         c.Next()
     }
 }
 ```
+
+**Resolution flow**:
+1. School ID extracted from JWT claims (authenticated routes) or URL param
+2. `TenantResolutionService.Resolve(ctx, schoolID)` checks Redis cache first
+3. On cache miss: queries `schools` table in `public` schema → caches `schema_name` in Redis
+4. `RepositoryFactory.ForSchoolSchema(ctx, schoolID, schemaName)` creates a `SchemaDB` wrapper
+5. `SchemaDB.DB()` returns a GORM session with `schema_table_prefix` set in the session context
+6. `SchemaTablePrefix` GORM plugin prepends the schema to every table name in queries
 
 ### 2.3 Tenant Configuration Model
 
@@ -332,7 +350,7 @@ services:
       - uploads_data:/app/uploads
 
   postgres:
-    image: postgres:16-alpine
+    image: postgres:alpine
     environment:
       POSTGRES_DB: schoolcare
       POSTGRES_USER: schoolcare
@@ -346,7 +364,7 @@ services:
       interval: 5s
 
   redis:
-    image: redis:7-alpine
+    image: redis:alpine
     ports:
       - "6379:6379"
     volumes:

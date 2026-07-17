@@ -480,7 +480,7 @@ backend/
 |----------|--------|-----------|
 | Backend Language | Go (Gin) | Performance, simplicity, goroutines for concurrent requests |
 | ORM | GORM | Mature, auto-migration, matches existing investment |
-| Multi-tenancy | school_id column (shared schema) | Simplicity for 90% of customers; schema-per-tenant option for enterprise |
+| Multi-tenancy | Schema-per-tenant: single PostgreSQL DB, per-school `school_{id}` schemas via GORM `SchemaTablePrefix` plugin | Production implementation; `ConnectionManager` legacy deprecated |
 | Event Bus | Redis Streams → Kafka | Redis for current scale; Kafka for 1M+ students |
 | Queue Worker | Redis Streams / Asynq | Lightweight, Go-native, no additional infra |
 | AI Provider | Multi-provider abstraction (OpenAI + Anthropic) | Avoid vendor lock-in, best model per task |

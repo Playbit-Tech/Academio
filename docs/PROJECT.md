@@ -284,7 +284,7 @@ src/routes/
 - **Rate limiting**: Redis-backed sliding window (per-IP, per-plan tier)
 - **TOTP 2FA**: optional second factor
 - **Input validation**: `go-playground/validator` + parameterized SQL queries
-- **Tenant isolation**: separate PostgreSQL database per school
+- **Tenant isolation**: PostgreSQL schema-per-tenant (`school_{id}` schema per school, single shared database)
 - **Encryption at rest**: AES-256-GCM for stored DB credentials
 - **Audit logging**: all mutations logged to `audit_logs` table
 

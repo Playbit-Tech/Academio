@@ -30,7 +30,7 @@ This directory contains the full architecture specification for evolving SchoolC
 - **Language**: Go (Gin) backend, React 19 (Vite + TanStack Router) frontend
 - **Database**: PostgreSQL + Redis (existing) + Qdrant + MinIO + ClickHouse (new)
 - **AI**: Multi-provider (OpenAI + Anthropic), RAG with Qdrant, 10+ specialized agents
-- **Tenancy**: Shared schema with `school_id` (default); schema-per-tenant (enterprise)
+- **Tenancy**: Schema-per-tenant — single PostgreSQL database, per-school `school_{id}` schemas via GORM `SchemaTablePrefix` plugin
 - **Deployment**: Docker → Kubernetes; HPA-ready; OpenTelemetry + Prometheus + Grafana
 
 **Key Principles:**

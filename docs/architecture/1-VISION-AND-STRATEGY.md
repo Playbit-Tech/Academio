@@ -73,7 +73,7 @@ True SaaS architecture with tenant isolation, shared infrastructure efficiency, 
 - [x] Frontend SPA (React 19 + TanStack Router + shadcn/ui)
 
 **Upgrade — Phase 1A: Architecture Hardening**
-- [ ] Tenant schema isolation strategy (schema-per-tenant vs shared)
+- [x] Tenant schema isolation strategy — schema-per-tenant implemented (single PostgreSQL DB, per-school `school_{id}` schemas via GORM `SchemaTablePrefix` plugin)
 - [ ] Enhanced audit logging (all mutations logged)
 - [ ] Rate limiting upgrade (distributed, Redis-backed)
 - [ ] Request validation framework expansion

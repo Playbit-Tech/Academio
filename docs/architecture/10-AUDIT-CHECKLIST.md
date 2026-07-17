@@ -56,7 +56,7 @@ Verify the application follows:
 - [ ] **Constraints**: DB-level uniqueness constraints (not just app-level checks).
 - [ ] **Migrations**: Timestamped, idempotent, reversible (`Up`/`Down`). No destructive changes on production data.
 - [ ] **Soft Delete**: `gorm.DeletedAt` used where data retention matters. Queries filter `WHERE deleted_at IS NULL`.
-- [ ] **Multi-Tenant Readiness**: All tenant-scoped queries include `school_id` filter or use `ConnectionManager.GetTenantDB()`.
+- [ ] **Multi-Tenant Readiness**: All tenant-scoped queries use schema-scoped `*gorm.DB` from `middleware.GetTenantDB(c)` (which returns the `SchemaTablePrefix`-prefixing session). Never use raw core DB for tenant queries.
 - [ ] **Repository Correctness**: `First` vs `Find` used correctly (`First` expects 1 row; `Find` expects 0+). Errors checked after every query.
 - [ ] **Connection Pooling**: `MaxOpenConns`, `MaxIdleConns`, `ConnMaxLifetime` set per tenant. No connection leaks.
 - [ ] **pgx v5 Compatibility**: No multi-statement `db.Exec()`. Break into individual calls.
@@ -89,7 +89,7 @@ db.Preload("Grades").Find(&students)
 - [ ] **Session Security**: Sessions invalidated on password change. Logout revokes tokens.
 - [ ] **SQL Injection**: Parameterized queries only. No `fmt.Sprintf` for SQL. No raw SQL string concatenation.
 - [ ] **XSS Protection**: Gin's `SecureJSON` or `HTML escape` on user-generated content in API responses.
-- [ ] **CSRF Protection**: Double-submit cookie or token pattern. Not disabled for any state-mutating endpoint.
+- [x] **CSRF Protection**: HMAC-based token pattern via `middleware.CSRF(secret)`. APP_SECRET validated at startup (fail-fast in production, warning in dev). Tokens generated with `GenerateCSRFToken()` and validated with `ValidateCSRFToken()` — both read from a package-level secret set during middleware initialization, not via `os.Getenv`. All state-mutating endpoints protected.
 - [ ] **SSRF Protection**: Outbound HTTP requests restricted to allowlisted domains. No user-controlled URLs.
 - [ ] **Rate Limiting**: Per-IP and per-user rate limits. Login endpoints have stricter limits.
 - [ ] **Request Validation**: Input validated at handler boundary (struct tags, custom validators). Invalid input rejected early.
@@ -98,7 +98,7 @@ db.Preload("Grades").Find(&students)
 - [ ] **Secure File Uploads**: File type validated by content (not extension). Size limit enforced. Stored outside webroot.
 - [ ] **Secret Management**: All secrets from env vars. No hardcoded defaults. `.env` never committed.
 - [ ] **CORS**: Explicit origin allowlist. Credentials only with specific origin (not `*`).
-- [ ] **Security Headers**: `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Strict-Transport-Security`.
+- [x] **Security Headers**: `Content-Security-Policy` (path-based — strict for API routes, relaxed with `unsafe-inline`/`unsafe-eval` for `/swagger*`), `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Strict-Transport-Security`, `Referrer-Policy`, `Permissions-Policy` via `middleware/security.go`.
 
 ### Sensitive Data Exposure
 - [ ] Passwords never returned in API responses.
@@ -184,7 +184,7 @@ db.Preload("Grades").Find(&students)
 - [ ] **Unnecessary Allocations**: Large structs passed by value. `fmt.Sprintf` in hot loops. Repeated slice growth.
 - [ ] **Duplicate DB Calls**: Same query executed multiple times in the same request. Missing `Preload` causing N+1.
 - [ ] **Missing Caching**: Frequently accessed, rarely changed data (config, school settings) not cached. Redis available but unused.
-- [ ] **Missing Pagination**: List endpoints returning all rows without `LIMIT`/`OFFSET`. Unbounded queries flagged as HIGH.
+- [x] **Missing Pagination**: Resolved. Three academic endpoints (`ListSessions`, `ListCurriculums`, `ListAssessments`) now use service-layer pagination: `helpers.ParsePagination(c)` → `(page=1, limit=20)` with a max limit of 100. Handlers return `response.SuccessWithPagination(data, total, page, limit)`. Unbounded queries on remaining list endpoints flagged as future work.
 - [ ] **Missing Indexes**: Composite indexes for multi-column WHERE clauses.
 - [ ] **Inefficient Loops**: Nested loops over DB result sets. O(n²) algorithms on large slices.
 
@@ -202,7 +202,7 @@ db.Preload("Grades").Find(&students)
 
 - [ ] **Environment Variables**: All config loaded from env vars. No config files committed with secrets.
 - [ ] **Startup Validation**: `config.Load()` validates all required fields. Missing required config = fatal error, not warning.
-- [ ] **Fail-Fast**: Server doesn't start with invalid or missing configuration. No silent fallback to insecure defaults.
+- [x] **Fail-Fast**: `config.Load()` validates all required fields and calls `validateProduction()`, which checks: email enabled → SendGrid key present, SMS enabled → Twilio credentials present, S3 driver → access/secret key present, AI enabled → provider API key present. Server doesn't start if any enabled service is missing its required credentials.
 - [ ] **No Hardcoded Secrets**: Zero tokens, passwords, API keys in source. Grep the entire repo.
 - [ ] **Secure Defaults**:
   - Production: rejects default passwords, requires strong JWT secret.
@@ -351,18 +351,20 @@ r.Use(
 
 ---
 
-## 13. Tenant Isolation Review
+## 13. Tenant Isolation Review (Schema-Per-Tenant)
 
-- [ ] **School Isolation**: Each school gets its own PostgreSQL database. No cross-tenant data in shared DB.
-- [ ] **Dynamic DB Selection**: `ConnectionManager.GetTenantDB(ctx, schoolID)` resolves the correct DB.
-- [ ] **Tenant-Safe Repositories**: Repositories use `db.WithContext(ctx)` which carries tenant connection.
+- [ ] **School Isolation**: All schools share one PostgreSQL database; each school's data lives in `school_{id}` schema. `User` + `School` tables in shared `public` schema. `SchemaTablePrefix` GORM plugin auto-prefixes table names at query time.
+- [ ] **Schema Resolution**: `TenantDBResolver` middleware calls `TenantResolutionService.Resolve(ctx, schoolID)` → checks Redis cache → falls back to `schools` table → returns `schema_name`. `RepositoryFactory.ForSchoolSchema(ctx, schoolID, schemaName)` creates a `SchemaDB` wrapper around the core DB connection.
+- [ ] **Tenant-Safe Repositories**: Repositories receive a `*gorm.DB` from `GetTenantDB(c)`, which returns the `SchemaDB` session. Queries on this session automatically have schema-prefixed table names via the GORM plugin.
 - [ ] **Tenant-Safe Logging**: Every log entry includes `tenant_id`/`school_id`.
 - [ ] **Tenant-Safe Caching**: Cache keys include `school_id` prefix. No cross-tenant cache poisoning.
+- [ ] **Migration Isolation**: `SET LOCAL search_path TO school_{id}` scopes DDL to the tenant schema within a transaction. Tracking table: `tenant_schema_migrations` created inside each schema.
 - [ ] **Leak Prevention**:
-  - [ ] No query without `school_id` filter in tenant DB.
-  - [ ] No hardcoded database names.
+  - [ ] No query without schema prefix in tenant operations (enforced by `SchemaTablePrefix` plugin).
+  - [ ] No hardcoded schema names (resolved from `schools` table at runtime).
   - [ ] No `context.Background()` in tenant-scoped operations.
-  - [ ] No shared DB connection between tenants (each has own pool).
+  - [ ] Single shared connection pool — no per-tenant connections (schema isolation removes the need).
+  - [ ] Cross-schema FK constraints verified (e.g., `students.user_id` → `public.users.id`).
 
 ---
 

@@ -43,14 +43,17 @@ CREATE TABLE tenants (
 ALTER TABLE schools ADD COLUMN tenant_id BIGINT REFERENCES tenants(id);
 ```
 
-### Schema-Per-Tenant (Enterprise Option)
-For enterprise customers requiring data isolation:
+### Schema-Per-Tenant (Current Implementation)
+All schools use schema-per-tenant isolation (single database, per-school schemas):
 ```
--- Separate schema per tenant
-CREATE SCHEMA tenant_{id};
-SET search_path TO tenant_{id};
+-- GORM plugin auto-prefixes: "students" → "school_42.students"
+-- No manual search_path switching in application code
+-- Migration isolation via SET LOCAL search_path TO school_{id}
 
--- All tables replicated in each schema
+-- Schema naming: school_{school_id}
+-- Shared tables in public schema: users, schools, roles
+-- Tenant tables in school_{id} schema: students, teachers, subjects, etc.
+-- Cross-schema FK constraints link tenant tables → public tables
 ```
 
 ---

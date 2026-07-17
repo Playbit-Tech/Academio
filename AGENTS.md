@@ -3,8 +3,8 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 
 ## Constraints & Preferences
 - Go 1.26+, GORM v1.30.0, Gin framework, pgx/v5 PostgreSQL driver.
-- Multi-tenant: each school gets its own PostgreSQL database via tenant `ConnectionManager`.
-- **🚨 CRITICAL — Tenant DB vs Shared DB**: `User` (users table) is in the **shared DB**. All school-specific models (`Teacher`, `Student`, `UserInfo`, `Level`, `Score`, `Student`, `Subject`, `Assessment`, `Session`, `GradeItem`, `Alumni`, etc.) are in the **tenant DB** (school-specific database). Before writing any query or repository method, always confirm which DB the table lives in. When in doubt, check the migration file (`backend/internal/database/migrations/school/` vs `backend/internal/database/migrations/shared/`) or the model file.
+- Multi-tenant: schema-per-tenant isolation via GORM `SchemaTablePrefix` plugin. All schools share one PostgreSQL database; each school's data lives in its own schema (`school_{id}`).
+- **🚨 CRITICAL — Shared Schema vs Tenant Schema**: `User` (users table) lives in the **`public` schema** (shared DB). All school-specific models (`Teacher`, `Student`, `UserInfo`, `Level`, `Score`, `Subject`, `Assessment`, `Session`, `GradeItem`, `Alumni`, etc.) live in the **tenant schema** (`school_{id}`). The `SchemaTablePrefix` plugin automatically prepends `school_{id}.` to all table names during GORM operations — so a query like `db.Find(&students)` becomes `SELECT * FROM school_42.students`. Before writing any query or repository method, always check which schema the model lives in. When in doubt, check the migration file: `backend/internal/database/migrations/school/` (tenant schema) vs `backend/internal/database/migrations/shared/` (public schema). Tenant context is resolved via `TenantDBResolver` middleware and cached in Redis via `TenantResolutionService`.
 - Backend on :8080; frontend Vite dev server on :4000 proxies `/api` → :8080.
 - Air handles hot reload (binary at `backend/tmp/server`).
 - All fixes must pass `go build ./...`, `go vet ./...`, and auth tests.

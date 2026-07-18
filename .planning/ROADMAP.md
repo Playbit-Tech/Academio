@@ -29,7 +29,7 @@ Academio is a mature multi-tenant school management system (~58K Go backend, 39 
 
 Plans:
 - [x] 01-01: Migration infrastructure hardening — per-schema advisory locks, migration_errors table, retry CLI, CI migration-count validation
-- [ ] 01-02: SchemaTablePrefix search_path audit — verify SET LOCAL in transactions, PgBouncer compatibility
+- [x] 01-02: SchemaTablePrefix search_path audit — verify SET LOCAL in transactions, PgBouncer compatibility
 - [ ] 01-03: Provisioning pipeline hardening — transactional CREATE SCHEMA → migrations → seed with full rollback
 - [ ] 01-04: Gotenberg PDF integration — Docker config, Go client wrapper, report card/transcript/certificate PDF pipeline
 - [ ] 01-05: Cron job scheduler — robfig/cron v3 integration, Asynq task delegation, backup/report/billing job templates

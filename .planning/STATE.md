@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-foundation-hardening-01-PLAN.md
-last_updated: "2026-07-18T22:52:32.328Z"
+stopped_at: Completed 01-foundation-hardening-02-PLAN.md
+last_updated: "2026-07-18T22:58:29.908Z"
 last_activity: 2026-07-18
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 0
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 ## Current Position
 
 Phase: 1 of 6 (Foundation Hardening)
-Plan: 1 of 5 in current phase
+Plan: 2 of 5 in current phase
 Status: Ready to execute
 Last activity: 2026-07-18
 
@@ -58,6 +58,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 01-foundation-hardening P01 | 0 | 4 tasks | 8 files |
+| Phase 01-foundation-hardening P02 | 12 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,7 @@ Recent decisions affecting current work:
 - **Gradebook hardening after academic workflow**: Grade precision touches the same data model as year-end rollover and WAEC — better to migrate once after the model is stable.
 - [Phase 01-foundation-hardening]: SchemaName fetched via raw query from schools table (not School model field)
 - [Phase 01-foundation-hardening]: CI script validates migration list integrity (non-empty + unique IDs) not raw count parity
+- [Phase 01-foundation-hardening]: GORM SchemaTablePrefix plugin is the correct primary isolation strategy for tenant queries — PgBouncer-compatible, survives connection pool reuse, requires zero PostgreSQL session state changes
 
 ### Pending Todos
 
@@ -84,6 +86,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-18T22:52:32.323Z
-Stopped at: Completed 01-foundation-hardening-01-PLAN.md
+Last session: 2026-07-18T22:58:29.902Z
+Stopped at: Completed 01-foundation-hardening-02-PLAN.md
 Resume file: None

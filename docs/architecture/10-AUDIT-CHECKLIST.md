@@ -359,6 +359,12 @@ r.Use(
 - [ ] **Tenant-Safe Logging**: Every log entry includes `tenant_id`/`school_id`.
 - [ ] **Tenant-Safe Caching**: Cache keys include `school_id` prefix. No cross-tenant cache poisoning.
 - [ ] **Migration Isolation**: `SET LOCAL search_path TO school_{id}` scopes DDL to the tenant schema within a transaction. Tracking table: `tenant_schema_migrations` created inside each schema.
+- [ ] **Search path isolation**: No connection-level `SET search_path` exists.
+      All raw SQL uses either explicit schema qualifiers or `SET LOCAL` inside
+      transactions. The `SchemaTablePrefix` GORM plugin is the default isolation
+      mechanism for API queries — it prefixes table names at the SQL statement
+      level, making it PgBouncer-compatible and immune to connection pool reuse
+      issues. See `docs/architecture/search-path-strategy.md`.
 - [ ] **Leak Prevention**:
   - [ ] No query without schema prefix in tenant operations (enforced by `SchemaTablePrefix` plugin).
   - [ ] No hardcoded schema names (resolved from `schools` table at runtime).

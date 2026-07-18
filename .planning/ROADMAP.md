@@ -28,7 +28,7 @@ Academio is a mature multi-tenant school management system (~58K Go backend, 39 
 **Plans**: 5 plans (all created)
 
 Plans:
-- [ ] 01-01: Migration infrastructure hardening — per-schema advisory locks, migration_errors table, retry CLI, CI migration-count validation
+- [x] 01-01: Migration infrastructure hardening — per-schema advisory locks, migration_errors table, retry CLI, CI migration-count validation
 - [ ] 01-02: SchemaTablePrefix search_path audit — verify SET LOCAL in transactions, PgBouncer compatibility
 - [ ] 01-03: Provisioning pipeline hardening — transactional CREATE SCHEMA → migrations → seed with full rollback
 - [ ] 01-04: Gotenberg PDF integration — Docker config, Go client wrapper, report card/transcript/certificate PDF pipeline
@@ -139,7 +139,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation Hardening | 0/5 | Not started | - |
+| 1. Foundation Hardening | 1/5 | In progress | 2026-07-18 |
 | 2. Critical Table-Stakes Features | 0/4 | Not started | - |
 | 3. Communication & Calendar | 0/5 | Not started | - |
 | 4. Academic Workflow | 0/4 | Not started | - |

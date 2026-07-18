@@ -25,7 +25,7 @@ Academio is a mature multi-tenant school management system (~58K Go backend, 39 
   3. Tenant provisioning is fully transactional — `CREATE SCHEMA → migrations → seed` either completes entirely or rolls back with no orphaned schemas
   4. User can generate and download a PDF report card, transcript, or certificate — existing HTML templates render via Gotenberg v8.x headless Chromium with proper page breaks
   5. Scheduled jobs (nightly backups, weekly reports, monthly billing) execute automatically on configured cron intervals, delegating to Asynq for fault-tolerant execution
-**Plans**: 5 plans
+**Plans**: 5 plans (all created)
 
 Plans:
 - [ ] 01-01: Migration infrastructure hardening — per-schema advisory locks, migration_errors table, retry CLI, CI migration-count validation
@@ -33,6 +33,8 @@ Plans:
 - [ ] 01-03: Provisioning pipeline hardening — transactional CREATE SCHEMA → migrations → seed with full rollback
 - [ ] 01-04: Gotenberg PDF integration — Docker config, Go client wrapper, report card/transcript/certificate PDF pipeline
 - [ ] 01-05: Cron job scheduler — robfig/cron v3 integration, Asynq task delegation, backup/report/billing job templates
+
+**Plans Directory**: `.planning/plans/phase-1/`
 
 ### Phase 2: Critical Table-Stakes Features
 **Goal**: Nigerian market parity with student health records, discipline management, CA/Exam split grading, and itemized fee structures

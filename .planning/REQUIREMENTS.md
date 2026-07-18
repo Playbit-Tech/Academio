@@ -11,7 +11,7 @@ Requirements for next phase of development. Each maps to roadmap phases.
 
 - [x] **INFRA-01**: Migration infrastructure hardened with per-schema advisory locks, migration_errors table, retry CLI, and CI migration-count validation
 - [x] **INFRA-02**: SchemaTablePrefix plugin audited — verify `SET LOCAL` in transactions (not connection-level `SET search_path`) for PgBouncer compatibility
-- [ ] **INFRA-03**: Provisioning pipeline hardened with transactional CREATE SCHEMA → migrations → seed and full rollback on failure
+- [x] **INFRA-03**: Provisioning pipeline hardened with transactional CREATE SCHEMA → migrations → seed and full rollback on failure
 - [ ] **INFRA-04**: Gotenberg v8.x integrated for server-side HTML→PDF conversion of report cards, transcripts, certificates
 - [ ] **INFRA-05**: Cron job scheduler (robfig/cron v3) integrated for nightly backups, weekly reports, monthly billing — delegates to Asynq for execution
 - [ ] **INFRA-06**: PDF pipeline connecting existing HTML report card generator → Gotenberg → downloadable PDF served to users
@@ -144,7 +144,7 @@ Deferred to future release. Tracked but not in current roadmap.
 |-------------|-------|--------|
 | INFRA-01 | Phase 1 | Complete |
 | INFRA-02 | Phase 1 | Complete |
-| INFRA-03 | Phase 1 | Pending |
+| INFRA-03 | Phase 1 | Complete |
 | INFRA-04 | Phase 1 | Pending |
 | INFRA-05 | Phase 1 | Pending |
 | INFRA-06 | Phase 1 | Pending |

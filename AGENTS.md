@@ -116,3 +116,374 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 - `frontend/src/routes/_dashboard/attendance.tsx`: Roll-call grid + records with student name resolution.
 - `frontend/src/routes/_dashboard/teacher.tsx`: Teacher clock-in/out page.
 - `frontend/src/lib/hooks/useTimetable.ts`: TimetableEntry interface + useTimetable hook.
+
+<!-- GSD:project-start source:PROJECT.md -->
+## Project
+
+**Academio**
+
+Academio is a multi-tenant school management system that provides K-12 and higher education institutions with tools for academic management, admissions, student information, finance, HR, communication, and reporting. Each school runs in its own database schema, with shared user authentication across the platform.
+
+**Core Value:** Students can be enrolled, tracked through their academic journey, and assessed — with every school's data isolated and secure in its own tenant schema.
+
+### Constraints
+
+- **Tech Stack**: Go 1.26+, GORM v1.31+, Gin, pgx/v5, PostgreSQL — no migrations to other languages/frameworks
+- **Multi-Tenant**: Schema-per-tenant isolation — must never leak data between schools
+- **Database**: Single PostgreSQL instance shared across all tenants — connection pool must be carefully managed
+- **Public Endpoints**: Admission forms are public (no auth) — must be secured via rate limiting and reference numbers
+- **Background Tasks**: Asynq queue for async operations — Redis required for tenant provisioning
+<!-- GSD:project-end -->
+
+<!-- GSD:stack-start source:codebase/STACK.md -->
+## Technology Stack
+
+## Languages
+- **Go 1.26.1** — All backend services (`backend/`), 39+ modules
+- **TypeScript ~5.x** — Frontend SPA (`frontend/src/`)
+- **Bash** — Integration test suite (`backend/scripts/test_endpoint.sh`), CI scripts
+- **JavaScript** — Load testing scripts (`scripts/loadtest/*.js`)
+- **SQL (PostgreSQL)** — Database queries, GORM-generated, pg_dump/pg_restore
+## Backend Runtime
+## Frontend Runtime
+## Testing
+- Test Runner: `go test`
+- SQL Mock: go-sqlmock v1.5.2
+- Assertions: testify v1.11.1
+- Integration: Custom Bash script (`backend/scripts/test_endpoint.sh`), 40 tests
+- Containerized DB: testcontainers-go v0.43.0
+- GORM SQLite driver v1.6.0 (for test isolation)
+- Test Runner: Vitest v4.1.9
+- Component Testing: @testing-library/react v16.3.2, @testing-library/dom v10.4.1, @testing-library/user-event v14.6.1
+- DOM Assertions: @testing-library/jest-dom v6.9.1
+- DOM Environment: jsdom v29.1.1
+- E2E: Playwright v1.61.1 (`@playwright/test`)
+## Infrastructure & DevOps
+- Docker (`backend/Dockerfile`): Multi-stage build, golang:1.26-alpine → alpine:3.19
+- Docker Compose: Managed externally (PostgreSQL `shared-postgres` on :5432, Redis `shared-redis` on :6379)
+- GitHub Actions (`.github/workflows/ci.yml`) — `go vet ./...`, backend tests with race detection, coverage threshold
+- Vercel Deployment — Frontend SPA (Vite build, `vercel.json`)
+- **Air** — Go hot reload (binary at `backend/tmp/server`)
+- **Makefile** — `make db-init`, `make migrate`, `make seed`, etc.
+- **Swagger** — API docs via `swaggo/swag` v1.16.6, `swaggo/gin-swagger` v1.6.1, `swaggo/files` v1.0.1
+- **Prometheus** — Metrics endpoint via `prometheus/client_golang` v1.19.1
+## Configuration
+- `.env` file loaded by godotenv (`backend/.env`)
+- Config struct: `backend/internal/config/config.go`
+- All config loaded from environment variables with sensible defaults
+- Vite env vars prefixed with `VITE_` (`import.meta.env`)
+- `VITE_API_URL`, `VITE_WS_URL`, `VITE_GOOGLE_MAPS_API_KEY`, `VITE_MAPBOX_ACCESS_TOKEN`
+## Go Dependencies (Key)
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `github.com/gin-gonic/gin` | v1.12.0 | HTTP framework |
+| `gorm.io/gorm` | v1.31.2 | ORM |
+| `gorm.io/driver/postgres` | v1.6.0 | PostgreSQL driver (pgx/v5) |
+| `github.com/redis/go-redis/v9` | v9.21.0 | Redis client |
+| `github.com/hibiken/asynq` | v0.26.0 | Task queue |
+| `github.com/aws/aws-sdk-go-v2` | v1.42.0 | AWS SDK (S3) |
+| `github.com/aws/aws-sdk-go-v2/service/s3` | v1.104.1 | S3 storage |
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `github.com/openai/openai-go` | v1.12.0 | OpenAI API client |
+| `google.golang.org/genai` | v1.62.0 | Google Gemini API client |
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `go.opentelemetry.io/otel` | v1.41.0 | OpenTelemetry SDK |
+| `go.opentelemetry.io/otel/sdk` | v1.35.0 | OTel SDK |
+| `go.opentelemetry.io/otel/exporters/otlp/otlptrace` | v1.28.0 | OTLP trace exporter |
+| `go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc` | v1.28.0 | OTLP gRPC transport |
+| `go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp` | v1.28.0 | OTLP HTTP transport |
+| `github.com/prometheus/client_golang` | v1.19.1 | Prometheus metrics |
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `github.com/xuri/excelize/v2` | v2.11.0 | Excel file generation |
+| `github.com/gorilla/websocket` | v1.5.3 | WebSocket support |
+| `gorm.io/datatypes` | v1.2.7 | GORM data types (JSON, etc.) |
+| `gorm.io/driver/sqlite` | v1.6.0 | SQLite (test isolation) |
+| `cloud.google.com/go` | v0.116.0 | GCP SDK (indirect, via Gemini/OTel) |
+## Dependency Licenses
+<!-- GSD:stack-end -->
+
+<!-- GSD:conventions-start source:CONVENTIONS.md -->
+## Conventions
+
+## Go Conventions
+### Project Structure
+- `dto.go` — Request/response DTOs with `json` struct tags and `binding` validation tags
+- `handler.go` — HTTP handler with Gin `*gin.Context`, route parsing, response formatting
+- `service.go` — Business logic with named `*Service` struct and `New*Service` constructor
+- `repository.go` — Data access with GORM, repository interface defined at top
+### Naming Conventions
+| Construct | Convention | Example |
+|---|---|---|
+| Files | camelCase | `service.go`, `dto.go`, `handler.go` |
+| Exported functions | PascalCase | `CreateUserWithChecks` |
+| Unexported functions | camelCase | `findOrCreateParentUserInCore` |
+| Service/Handler types | PascalCase | `UserService`, `UserHandler` |
+| Interfaces | Meaningful `Interface` suffix | `UserRepositoryInterface` |
+| Error vars | `Err` prefix | `ErrNotFound`, `ErrConflict` |
+| Constants | PascalCase | `MaxPageSize`, `RoleParent` |
+| Abbreviations | Keep case | `schoolID`, `userURL` |
+| Receivers | 1-2 letter abbreviation | `s *UserService`, `r *UserRepository` |
+### Import Organization
+### Error Handling
+| Context | Strategy | Rationale |
+|---|---|---|
+| Analytics/reports queries | Log warning, continue | Best-effort analytics |
+| State mutations | Return error | Silent failures corrupt status |
+| Batch operations | Collect all errors, return one message | Better UX — user fixes everything in one pass |
+- `NewNotFoundError(entity string)` — 404
+- `NewConflictError(msg string)` — 409
+- `NewForbiddenError(msg string)` — 403
+- `NewUnauthorizedError(msg string)` — 401
+- `NewBadRequestError(msg string)` — 400
+- `NewValidationError(msg string)` — 422
+- Each has `.Code`, `.Category`, `.Message`, `.StatusCode()` fields
+### GORM/ORM Patterns
+- Use `BaseModel` to embed `ID`, `UUID`, `CreatedAt`, `UpdatedAt`, `DeletedAt`
+- Tag columns with `gorm` and `json` tags
+- `many2many` relationships use `gorm:"many2many:table_name;"`
+- Always scope queries to tenant schema via `middleware.GetTenantDB(c *gin.Context)` returning `*gorm.DB` with `SchemaTablePrefix`
+- List queries always capped with page limit, default 100, max 1000
+- Multi-statement `db.Exec()` forbidden — break into individual calls
+- Use `Select(...)` to scope updates (avoid many2many join tables)
+- Parameterized queries always via GORM — never `fmt.Sprintf` for SQL
+### Middleware Patterns
+- `GetTenantDB(c *gin.Context)` — returns schema-scoped `*gorm.DB`
+- `GetRole(c *gin.Context)` — returns role string from JWT context
+- `requireAdminOrAbove(c *gin.Context) bool` — role guard in handlers (sends 403 if unauthorized)
+### Context Propagation
+### Logging
+### Configuration
+- `internal/config/` — loads from env vars via `os.Getenv`, validated at startup
+- `.env` file at `backend/.env`
+- `DSN()` uses `net/url` for safe DSN construction
+- No hardcoded secrets
+### Tests
+### Common Go Anti-Patterns (Forbidden)
+## TypeScript/React Conventions
+### Component Patterns
+### Route Structure (TanStack Router)
+### Hooks and API Client
+- Single fetch-based client with Bearer token auth
+- Automatic 401 → refresh → retry
+- Methods: `api.get<T>()`, `api.post()`, `api.put()`, `api.delete()`
+- Returns typed response: `ApiEnvelope<T>` with `{ success, data, error, meta }`
+### Form Patterns (react-hook-form + Zod)
+### UI Component Library
+- **shadcn/ui** components in `src/components/ui/` (client components)
+- Icons from `lucide-react`
+- Toast notifications via `sonner`
+- Tables via `@tanstack/react-virtual` and custom `DataTable` component
+### Custom Hooks Pattern
+- `useTimetable()` — fetches timetable entries
+- `useSchool()` / `useSchools()` / `useCreateSchool()` — school CRUD
+- `useSessions()` — academic sessions
+- `useSubjects()` — school subjects
+- `useClasses()` — class/level data
+### Styling (Tailwind CSS)
+- Use `cn()` utility (`clsx` + `tailwind-merge`) for conditional classes
+- shadcn/ui CSS variables for theming (`--primary`, `--muted-foreground`, etc.)
+- `text-muted-foreground` for secondary text
+- `animate-spin` for loading states
+### Imports Organization
+<!-- GSD:conventions-end -->
+
+<!-- GSD:architecture-start source:ARCHITECTURE.md -->
+## Architecture
+
+## High-Level Architecture
+- **Frontend**: React 19 + Vite + TanStack Router (file-based client-side routing) + TanStack React Query + Zustand + shadcn/ui
+- **Backend**: Go 1.26+ / Gin web framework / GORM v1.31.2 / pgx v5 PostgreSQL driver
+- **Cache & Queue**: Redis (tenant context cache, rate limiting, asynq task queue)
+- **Database**: Single PostgreSQL instance with **schema-per-tenant** isolation
+- **AI**: Gemini/OpenAI provider integration with Qdrant vector store for RAG
+### Multi-Tenant Architecture
+| Component | Location | Scope |
+|-----------|----------|-------|
+| `User` (users table) | `public` schema | Shared across all tenants |
+| School-specific models (Teacher, Student, Score, Subject, etc.) | `school_{id}` schema | Per-tenant |
+| Tenant config, plans, features | `public` schema | Shared, but resolved per-request |
+### Project Technology Stack
+| Component | Technology |
+|-----------|-----------|
+| Backend runtime | Go 1.26.1 |
+| HTTP framework | Gin v1.12.0 |
+| ORM | GORM v1.31.2 |
+| DB driver | pgx v5 (via GORM postgres driver) |
+| Cache | Redis (go-redis v9) |
+| Auth | JWT (golang-jwt v5) + CSRF nonce |
+| Background jobs | Asynq (hibiken/asynq) |
+| AI providers | Gemini (google.golang.org/genai) + OpenAI (openai-go) |
+| Vector store | Qdrant |
+| Telemetry | OpenTelemetry (OTLP) |
+| Monitoring | Prometheus metrics |
+| Documentation | Swagger/OpenAPI |
+| Storage | Local filesystem or S3-compatible |
+| Communication | SendGrid (email) + Twilio (SMS) |
+## Key Architectural Patterns
+### Modular Monolith
+```
+```
+### Schema-Per-Tenant Isolation Layers
+### Middleware Chain (Order Matters)
+```
+```
+```
+```
+### Dependency Injection
+- All repositories, services, handlers are constructed manually
+- Shared infrastructure (DB, Redis, queue, AI provider) passed as dependencies
+- `Handlers` struct holds all handler references
+- `NewRouter()` function builds everything and returns `*gin.Engine`
+### Background Task Queue (Asynq)
+- `client.go` — Queue client for enqueueing tasks
+- `worker.go` — Background worker goroutine started in `setup.go`
+- `tasks.go` — Task type constants and payload types
+- `handlers/` — Task handler implementations (email, SMS, backup, restore, report gen, AI scoring)
+| Task Type | Handler | Purpose |
+|-----------|---------|---------|
+| `email:send` | `EmailTaskHandler` | SendGrid email delivery |
+| `sms:send` | `SMSTaskHandler` | Twilio SMS delivery |
+| `report:generate` | Inline handler | PDF report generation |
+| `ai:scoring` | Inline handler | AI-powered applicant scoring |
+| `backup:create` | `BackupTaskHandler` | S3 tenant backup |
+| `restore:execute` | `RestoreTaskHandler` | S3 tenant restore |
+## Data Flows
+### Tenant Resolution Flow
+```
+```
+- `backend/internal/middleware/auth.go` — `JWTAuth()`
+- `backend/internal/middleware/schoolid.go` — `SchoolID()`
+- `backend/internal/middleware/tenant.go` — `TenantResolution()`, `TenantDBResolver()`
+- `backend/internal/database/tenant/resolution_service.go` — `TenantResolutionService.ResolveTenant()`
+- `backend/internal/database/tenant/schema_db.go` — `SchemaDB.DB()` and `SchemaTablePrefix` plugin
+- `backend/internal/database/tenant/factory.go` — `RepositoryFactory.ForSchool()`
+### Authentication Flow
+```
+```
+- `backend/internal/middleware/auth.go` — JWT validation, Redis blacklist check
+- `backend/internal/middleware/csrf.go` — HMAC-SHA256 stateless CSRF token
+- `backend/internal/modules/auth/service.go` — Login, Register, Logout, RefreshToken
+- `backend/internal/modules/auth/handler.go` — HTTP handlers
+- `backend/pkg/jwt/service.go` — Token creation and validation
+### School Provisioning Flow
+```
+```
+- `backend/internal/database/tenant/provisioning.go` — `ProvisioningService`
+- `backend/internal/database/tenant/migration_service.go` — `MigrationService`
+- `backend/internal/modules/school/service.go` — `SchoolService.Create()`
+- `backend/internal/database/migrations/school/school.go` — Default seed data
+### Admission Application Flow
+```
+```
+- `backend/internal/modules/admission/handler.go` — Public + admin admission routes
+- `backend/internal/modules/admission/service.go` — Business logic
+- `backend/internal/modules/admission/repository.go` — DB operations
+## Layers
+### Transport Layer (HTTP)
+- **Location**: `backend/internal/modules/*/handler.go`
+- **Responsibility**: Parse HTTP requests, validate input, call service, return JSON responses
+- **Depends on**: Services, DTOs
+- **Pattern**: Each handler method is a `gin.HandlerFunc` registered in `router.go`
+### Business Logic Layer
+- **Location**: `backend/internal/modules/*/service.go`
+- **Responsibility**: Business rules, orchestration, cross-cutting concerns, error handling
+- **Depends on**: Repositories, other services, infrastructure (queue, storage, etc.)
+- **Pattern**: Struct with methods, dependencies injected via constructor
+### Data Access Layer
+- **Location**: `backend/internal/modules/*/repository.go`
+- **Responsibility**: GORM queries, data persistence, transactional boundaries
+- **Depends on**: `*gorm.DB` (tenant-scoped or core), models
+- **Pattern**: Struct with methods, one per aggregate/model
+### Infrastructure Layer
+- **Database**: `backend/internal/database/` — connections, migrations, models, tenant infrastructure
+- **Middleware**: `backend/internal/middleware/` — CORS, CSRF, Auth, Tenant, Rate limit, etc.
+- **Queue**: `backend/internal/queue/` — Asynq client, worker, task definitions
+- **Communication**: `backend/internal/communication/` — SendGrid/Twilio providers
+- **AI**: `backend/internal/ai/` — Provider abstraction, agents, RAG pipeline, vector store
+- **WebSocket**: `backend/internal/ws/` — Hub, connections, rooms
+## Module Map
+| Module | Package | Responsibility |
+|--------|---------|----------------|
+| Academic | `academic/` | Academic sessions, curriculum, assessments, grade items, attendance |
+| Admission | `admission/` | Intake management, applications, document review, offers, enrollment |
+| AI | `ai/` | Chat endpoint, agent listing, NL search |
+| Alumni | `alumni/` | Alumni records, events, mentorships, campaigns, donations, jobs |
+| Analytics | `analytics/` | Dashboard overview, enrollment/revenue/academic/attendance analytics, forecasts |
+| Audit | `audit/` | Audit log listing |
+| Auth | `auth/` | Register, login, logout, 2FA, session management, password reset |
+| Bill | `bill/` | Billing CRUD |
+| Career | `career/` | Career profiles, assessments, recommendations |
+| CBA | `cba/` | Computer-Based Assessment — questions, papers, exams, proctoring |
+| Communication | `communication/` | Templates, campaigns, broadcast, delivery logs |
+| Dashboard | `dashboard/` | Dashboard stats |
+| Exam | `exam/` | Exam schedules and results |
+| Finance | `finance/` | Chart of accounts, journal entries, budgets, expenses, vendors |
+| Health | `health/` | Health check endpoints (`/health`, `/livez`, `/readyz`, `/startupz`) |
+| Hostel | `hostel/` | Hostel and bed management |
+| HR | `hr/` | Departments, staff, leaves, payroll, attendance, appraisals, recruitment |
+| Inventory | `inventory/` | Asset categories, assets, assignments, maintenance |
+| Invitation | `invitation/` | User invitations |
+| Library | `library/` | Books, issues, returns |
+| LMS | `lms/` | Courses, modules, lessons, assignments, discussions |
+| Messages | `messages/` | Internal messaging |
+| Multimedia | `multimedia/` | File uploads and media management |
+| Notifications | `notifications/` | In-app notifications |
+| Parent Dashboard | `parentdashboard/` | Parent-specific dashboard, child progress/attendance/fees |
+| Pastoral | `pastoral/` | Wellness surveys, alerts, counseling sessions |
+| Payment | `payment/` | Payment CRUD |
+| Proctoring | `proctoring/` | Webcam proctoring events |
+| RBAC | `rbac/` | Role-based access control service |
+| Report Builder | `reportbuilder/` | Custom report configs, generation, export, scheduling |
+| Report Card | `reportcard/` | Report card generation, templates, batch generation |
+| Reports | `reports/` | Predefined report listing and generation |
+| Result | `result/` | Academic results, approval workflow |
+| School | `school/` | School CRUD, subjects, levels, roles |
+| Score | `score/` | Grade item scores, bulk save, rollup, export |
+| Tenant | `tenant/` | Tenant config and feature management |
+| Timetable | `timetable/` | Timetable CRUD, bulk create, calendar view |
+| Transport | `transport/` | Routes, vehicles, assignments |
+| User | `user/` | User CRUD, student/teacher/staff management, batch import |
+## Error Handling
+- `backend/internal/errors/errors.go` — `AppError` with code, message, HTTP status category
+- `backend/internal/middleware/error.go` — Catches `c.Errors`, maps `AppError` to JSON responses
+- `backend/pkg/response/` — Helper functions: `response.Error()`, `response.Success()`, `response.Unauthorized()`, etc.
+- Log-and-continue pattern for non-critical analytics/report queries (best-effort)
+- Error return for state-mutating operations
+## Cross-Cutting Concerns
+## Entry Points
+| Entry Point | File | Purpose |
+|-------------|------|---------|
+| Server | `backend/cmd/server/main.go` | Config load → DB/Redis connect → migrations → router → HTTP server |
+| Schema migrator | `backend/cmd/migrate-schemas/main.go` | Schema migration utility tool |
+| Data copy | `backend/cmd/copy-tenant-data/main.go` | Legacy data migration tool |
+| Frontend | `frontend/src/main.tsx` | React app bootstrap with TanStack Router + Query |
+<!-- GSD:architecture-end -->
+
+<!-- GSD:skills-start source:skills/ -->
+## Project Skills
+
+No project skills found. Add skills to any of: `.claude/skills/`, `.agents/skills/`, `.cursor/skills/`, or `.github/skills/` with a `SKILL.md` index file.
+<!-- GSD:skills-end -->
+
+<!-- GSD:workflow-start source:GSD defaults -->
+## GSD Workflow Enforcement
+
+Before using Edit, Write, or other file-changing tools, start work through a GSD command so planning artifacts and execution context stay in sync.
+
+Use these entry points:
+- `/gsd-quick` for small fixes, doc updates, and ad-hoc tasks
+- `/gsd-debug` for investigation and bug fixing
+- `/gsd-execute-phase` for planned phase work
+
+Do not make direct repo edits outside a GSD workflow unless the user explicitly asks to bypass it.
+<!-- GSD:workflow-end -->
+
+<!-- GSD:profile-start -->
+## Developer Profile
+
+> Profile not yet configured. Run `/gsd-profile-user` to generate your developer profile.
+> This section is managed by `generate-claude-profile` -- do not edit manually.
+<!-- GSD:profile-end -->

@@ -10,8 +10,8 @@ Academio is a mature multi-tenant school management system (~58K Go backend, 39 
 - [ ] **Phase 2: Critical Table-Stakes Features** - Student health records, discipline management, CA/Exam grading config, Nigerian fee structure
 - [ ] **Phase 3: Communication & Calendar** - Threaded messaging with attachments, real-time delivery, iCal export, WhatsApp channel, conference management
 - [x] **Phase 4: Academic Workflow** - End-of-year rollover, WAEC/NECO external exam integration, stable student identifiers, promotion
-- [ ] **Phase 5: Gradebook Hardening** - Frozen grade UI indicators + WAEC boundary tests
-- [ ] **Phase 6: CBA & Course Management** - CBA→gradebook push, entity integration, LMS admin CRUD, student progress dashboard, quiz engine
+- [x] **Phase 5: Gradebook Hardening** - Frozen grade UI indicators + WAEC boundary tests
+- [ ] **Phase 6: CBA & Course Management** - CBA→gradebook push, entity integration, LMS admin CRUD, student progress dashboard, quiz engine, assessment/intake exam integration
 - [ ] **Phase 7: Scaling & Reliability** - Delivery webhooks, contact validation, communication rate limiting, pg_catalog monitoring, cross-tenant analytics, Sentry
 
 ## Phase Details
@@ -114,12 +114,14 @@ Plans:
 **Depends on**: Phase 5 (gradebook freeze conventions)
 **Requirements**: (derived from CBA-01 through CBA-05, LMS-01 through LMS-04)
 **Success Criteria** (what must be TRUE):
-   1. After a student submits a CBA exam, the percentage score appears in the gradebook under the linked `GradeItem` — report cards show CBA scores alongside teacher-entered scores
-   2. CBAAssignment records reference actual `Level` and `Subject` entities — CBA data cross-references correctly with academic reports
-   3. Teacher can create, edit, and delete courses, modules, and lessons through the frontend UI without API calls
-   4. Student can view enrolled courses with progress bars and see assignment/CBA scores on the course detail page
-   5. A lesson with `content_type: "quiz"` renders an inline CBA exam — students take it without leaving the LMS page
-**Plans**: 5 plans
+    1. After a student submits a CBA exam, the percentage score appears in the gradebook under the linked `GradeItem` — report cards show CBA scores alongside teacher-entered scores
+    2. CBAAssignment records reference actual `Level` and `Subject` entities — CBA data cross-references correctly with academic reports
+    3. Teacher can create, edit, and delete courses, modules, and lessons through the frontend UI without API calls
+    4. Student can view enrolled courses with progress bars and see assignment/CBA scores on the course detail page
+    5. A lesson with `content_type: "quiz"` renders an inline CBA exam — students take it without leaving the LMS page
+    6. CBA exams can be linked to Assessment components — scores auto-populate assessment grades in the gradebook
+    7. Admission intakes can be configured with a CBA entrance exam — applicants take the exam inline and results feed into screening
+**Plans**: 7 plans
 
 Plans:
 - [ ] 06-01: CBA → Gradebook push — `CBAAssignment.grade_item_id` FK, score writes on SubmitExam/GradeAnswer
@@ -127,6 +129,8 @@ Plans:
 - [ ] 06-03: LMS admin CRUD UI — create/edit/delete dialogs for courses, modules, lessons
 - [ ] 06-04: Student progress dashboard — enrolled courses with progress %, assignment scores, CBA results
 - [ ] 06-05: LMS quiz engine — `content_type: "quiz"` wired to CBA papers, inline exam taking
+- [ ] 06-06: CBA → Assessment integration — Assessment.cba_assignment_id FK, auto-populate assessment scores
+- [ ] 06-07: CBA → Intake enrollment exam — AdmissionIntake.cba_paper_id FK, applicant CBA exam flow
 **UI hint**: yes
 
 ### Phase 7: Scaling & Reliability
@@ -158,6 +162,6 @@ Plans:
 | 2. Critical Table-Stakes Features | 4/4 | Complete ✅ | 2026-07-19 |
 | 3. Communication & Calendar | 5/5 | Complete ✅ | 2026-07-19 |
 | 4. Academic Workflow | 4/4 | Complete ✅ | 2026-07-19 |
-| 5. Gradebook Hardening | 0/2 | UI-SPEC done, ready to plan | - |
-| 6. CBA & Course Management | 0/5 | Ready to plan | - |
+| 5. Gradebook Hardening | 2/2 | Complete ✅ | 2026-07-19 |
+| 6. CBA & Course Management | 0/7 | Wave 1 ready | - |
 | 7. Scaling & Reliability | 0/6 | Not started | - |

@@ -1,79 +1,99 @@
 # Remaining Work — Phased Plan
 
-## Phase 1: Admin Dashboard (1-2 sessions)
+## ✅ ALL PHASES COMPLETED
 
-Replace the placeholder `admin.dashboard.tsx` with live data:
-
-- **Stat cards**: Total Students, Teachers, Staff, Active Sessions
-- **Results pending approval**: List of results with `status: "teacher-approved"` — each with Approve/Withhold buttons
-- **Quick links**: Academics, Users, School Settings, Reports, Teacher Academics
-- **Time-bounded greeting** like the teacher dashboard
-
-**Files:** `admin.dashboard.tsx`, `useAcademics.ts` (add `usePendingResults` hook)
+All 7 phases have been implemented and verified. Both backend (`go build ./...`, `go vet ./...`) and frontend (`npx tsc --noEmit`) build clean. Integration tests (62/62) pass.
 
 ---
 
-## Phase 2: Student/Parent Result UX (1 session)
+## ✅ Phase 1: Admin Dashboard
 
-- Add `GET /academic/result/:id/status` endpoint returning `{ status: "not-approved" | "teacher-approved" | "approved" | "withheld" }` without approval gating
-- Frontend calls status endpoint first; shows friendly card when not approved
-- Shows full result when approved
+**Status: Completed**
 
-**Files:** `result/handler.go`, `result/service.go`, `academics.tsx`, `parent/children.$id.tsx`
+- Stat cards with live data: total students, teachers, staff, revenue
+- Pending results with Approve/Withhold buttons
+- Quick links to Academics, Users, School Settings, Reports, Teacher Academics
+- Time-bounded greeting (like teacher dashboard)
+- Full implementation in `dashboard.tsx`
 
 ---
 
-## Phase 3: Admin Assessments Tab (1 session)
+## ✅ Phase 2: Student/Parent Result UX
 
-Replace the "Coming soon" placeholder in `admin.academics.tsx` with:
-- Full assessment list (reuse the curriculum tab pattern from school page)
+**Status: Completed**
+
+- `GET /academic/result/:id/status` endpoint returns `{ id, status }` without role gating
+- Frontend: parent `children.$id.tsx` has "Results" tab
+- Session/class/assessment selectors
+- Friendly "Pending Approval" card when not approved
+- Full result display when approved
+
+---
+
+## ✅ Phase 3: Admin Assessments Tab
+
+**Status: Completed**
+
+- Full assessment list grouped by curriculum
 - Active/inactive toggle per assessment
-- "Create Assessment" button
-
-**Files:** `admin.academics.tsx`
-
----
-
-## Phase 4: Teacher Sidebar Guard (1 session)
-
-- Teacher sidebar `/users/student` should show students only in their assigned levels
-- Backend `GET /users/teacher/students` already exists
-- Frontend `users.student.tsx` already uses it
-- Verify the redirect guard on `/users` prevents teacher access
-
-**Files:** `users.tsx` (add `beforeLoad` guard), `users.student.tsx` (verify)
+- **Create Assessment** button + Sheet dialog with Name, Curriculum dropdown, Total Marks, Description fields
+- `useCreateAssessment` hook updated to include `curriculum_id` (matching backend `CreateAssessmentRequest`)
 
 ---
 
-## Phase 5: Excel Score Import (1-2 sessions)
+## ✅ Phase 4: Teacher Sidebar Guard
 
-Frontend connect to the existing backend bulk endpoint:
-- Upload XLSX button in ScoreGrid toolbar
-- Parse workbook with `xlsx` library
-- Preview dialog with row count and error list
-- Confirm → `POST /academic/scores/bulk`
-- Download template from `GET /academic/scores/export`
+**Status: Completed**
 
-**Files:** `score-grid.tsx` (already partially wired — needs polish)
+- `users.tsx` has `beforeLoad` guard redirecting teachers to `/users/student`
+- `users.student.tsx` uses `GET /users/teacher/students` backend endpoint
+- Teacher sees only students in their assigned levels
 
 ---
 
-## Phase 6: Report Cards (2-3 sessions)
+## ✅ Phase 5: Excel Score Import
 
-Audit and complete the report card generation pipeline:
-- Backend: report card PDF generation, template rendering
-- Frontend: template editor, batch generation UI, individual report card view
-- Wiring: link from results to report cards
+**Status: Completed**
 
-**Files:** Multiple — audit needed first
+- XLSX upload via `xlsx` library in ScoreGrid toolbar
+- Preview dialog with row count and validation
+- Confirm → bulk save via `useBulkSaveScores()`
+- Download template via `downloadScoreXLSX`
 
 ---
 
-## Phase 7: Communication Module (2-3 sessions)
+## ✅ Phase 6: Report Cards
 
-- Compose view (send email/SMS)
-- Template management
-- Campaign progress tracking
-- Delivery logs
+**Status: Completed**
 
-**Files:** `communication/*` routes
+- Backend: Full module with 8 endpoints:
+  - `GET /report-cards` — list
+  - `GET /report-cards/:id` — detail
+  - `GET /report-cards/:id/download` — PDF download
+  - `POST /report-cards/generate` — single generate
+  - `POST /report-cards/batch-generate` — batch generate
+  - `PUT /report-cards/:id/publish` — publish
+  - `PUT /report-cards/template` + `GET /report-cards/template` — template CRUD
+- Frontend: Full pages with:
+  - `index.tsx` — list with status/term filters, stat cards, navigation to detail/batch
+  - `$id.tsx` — detail view with publish action, download
+  - `batch.tsx` — batch generate form by class/session/term
+
+---
+
+## ✅ Phase 7: Communication Module
+
+**Status: Completed**
+
+- Backend: Full module with 15+ endpoints:
+  - Templates CRUD (`POST/GET/:id/PUT/:id/DELETE/:id /templates`)
+  - Send single + bulk (`/send`, `/send-bulk`)
+  - Campaigns CRUD + pause/resume/cancel
+  - Delivery logs (`/delivery-logs`)
+  - Broadcast (`POST/GET /broadcast`)
+- Frontend: 6 full pages:
+  - `templates.tsx` — create/edit/delete with channel filter + search
+  - `compose.tsx` — send email/SMS with template selection
+  - `campaigns.tsx` + `campaigns.$id.tsx` — campaign list + detail with progress
+  - `broadcast.tsx` — broadcast creation and history
+  - `delivery.tsx` — delivery log viewer with status filtering

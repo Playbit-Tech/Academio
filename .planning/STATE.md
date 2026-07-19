@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 01-05-CRON-SCHEDULER
-last_updated: "2026-07-19T07:03:10.697Z"
+status: ready_to_plan
+stopped_at: Phase 5 UI-SPEC approved — ready for planning
+last_updated: "2026-07-19"
 last_activity: 2026-07-19
 progress:
   total_phases: 6
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 5
-  percent: 0
+  completed_phases: 4
+  total_plans: 20
+  completed_plans: 18
+  percent: 67
 ---
 
 # Project State
@@ -21,79 +21,24 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-18)
 
 **Core value:** Students can be enrolled, tracked through their academic journey, and assessed — with every school's data isolated and secure in its own tenant schema.
-**Current focus:** Foundation Hardening
+**Current focus:** Gradebook Hardening (Phase 5)
 
 ## Current Position
 
-Phase: 1 of 6 (Foundation Hardening)
-Plan: 5 of 5 in current phase
-Status: Phase complete — ready for verification
-Last activity: 2026-07-19
+Phase: 5 of 6 (Gradebook Hardening)
+Plans: 0 of 2 executed
+Status: UI-SPEC approved, ready to plan
 
-Progress: [░░░░░░░░░░] 0%
+## Summary
 
-## Performance Metrics
+Phase 5 scope has been simplified to just:
+1. **05-01**: Grade freeze frontend UI — Frozen badges/banners on completed sessions
+2. **05-02**: Boundary test suite — WAEC A1-F9 threshold precision tests
 
-**Velocity:**
+All backend/database hardening items were descoped (app-level enforcement already sufficient).
 
-- Total plans completed: 0
-- Average duration: N/A
-- Total execution time: 0.0 hours
+## Key Decisions
 
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 1. Foundation Hardening | 0/5 | - | - |
-| 2. Critical Table-Stakes | 0/4 | - | - |
-| 3. Communication & Calendar | 0/5 | - | - |
-| 4. Academic Workflow | 0/4 | - | - |
-| 5. Gradebook Hardening | 0/5 | - | - |
-| 6. Scaling & Reliability | 0/6 | - | - |
-
-**Recent Trend:**
-
-- Last 5 plans: N/A
-- Trend: N/A
-
-*Updated after each plan completion*
-| Phase 01-foundation-hardening P01 | 0 | 4 tasks | 8 files |
-| Phase 01-foundation-hardening P02 | 12 | 2 tasks | 2 files |
-| Phase 01-foundation-hardening P04 | 25 | 2 tasks | 8 files |
-| Phase 01-foundation-hardening P03 | 35min | 2 tasks | 9 files |
-| Phase 01-foundation-hardening P05 | 12min | 2 tasks | 6 files |
-
-## Accumulated Context
-
-### Decisions
-
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- **Phase 1 prioritization**: Foundation hardening first — migration fan-out, search_path isolation, and provisioning reliability underpin all subsequent phases. Skipping this means every subsequent phase operates on fragile infrastructure.
-- **Phase ordering**: Table-stakes before differentiators — health records and discipline (#1 Nigerian competitor gap) before calendar/communication enhancements.
-- **Gradebook hardening after academic workflow**: Grade precision touches the same data model as year-end rollover and WAEC — better to migrate once after the model is stable.
-- [Phase 01-foundation-hardening]: SchemaName fetched via raw query from schools table (not School model field)
-- [Phase 01-foundation-hardening]: CI script validates migration list integrity (non-empty + unique IDs) not raw count parity
-- [Phase 01-foundation-hardening]: GORM SchemaTablePrefix plugin is the correct primary isolation strategy for tenant queries — PgBouncer-compatible, survives connection pool reuse, requires zero PostgreSQL session state changes
-- [Phase 01-foundation-hardening]: GotenbergClient uses type assertion for GeneratePDF — HTMLGenerator returns error as fallback
-- [Phase 01-foundation-hardening]: buildSubjectData() adapted to actual scores table schema with JSON blob instead of plan's assumed grade_item_scores table
-- [Phase 01-foundation-hardening]: PDF render endpoint gated by APP_ENV != production (dev-only)
-- [Phase 01-foundation-hardening]: Use compensating-actions rollback instead of PG transaction for ProvisionSchool — DDL (CREATE SCHEMA) cannot run inside a DML transaction
-- [Phase 01-foundation-hardening]: Jobs delegate to Asynq for retryable, persisted execution rather than handling failures inline
-
-### Pending Todos
-
-None yet.
-
-### Blockers/Concerns
-
-- **Phase 2 research depth needed**: Nigerian school health record practices (immunization schedules, common allergies) should be verified with school administrators during Phase 2 planning.
-- **WAEC CSV import format**: Not well-documented publicly — may need sample data from a partner school during Phase 4 planning.
-- **pg_catalog bloat thresholds**: ~500 schema ceiling is based on community reports — exact thresholds depend on PostgreSQL version and hardware. Monitor proactively rather than pre-optimize.
-
-## Session Continuity
-
-Last session: 2026-07-19T07:03:10.691Z
-Stopped at: Completed 01-05-CRON-SCHEDULER
-Resume file: None
+- Grade freeze is frontend-only: `session.status === "completed"` toggles visual indicators
+- No DB triggers, no grade_corrections table, no override endpoints for this phase
+- ScoreGrid already has `disabled` prop and `canModifyScore()` backend guard

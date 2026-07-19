@@ -9,7 +9,7 @@ Academio is a mature multi-tenant school management system (~58K Go backend, 39 
 - [ ] **Phase 1: Foundation Hardening** - Production-safe multi-tenant infrastructure, PDF generation, and scheduled job runner
 - [ ] **Phase 2: Critical Table-Stakes Features** - Student health records, discipline management, CA/Exam grading config, Nigerian fee structure
 - [ ] **Phase 3: Communication & Calendar** - Threaded messaging with attachments, real-time delivery, iCal export, WhatsApp channel, conference management
-- [ ] **Phase 4: Academic Workflow** - End-of-year rollover, WAEC/NECO external exam integration, stable student identifiers, promotion
+- [x] **Phase 4: Academic Workflow** - End-of-year rollover, WAEC/NECO external exam integration, stable student identifiers, promotion
 - [ ] **Phase 5: Gradebook Hardening** - Integer basis-point score storage, sum-to-100 triggers, grade freeze, report card snapshotting
 - [ ] **Phase 6: Scaling & Reliability** - Delivery webhooks, contact validation, communication rate limiting, pg_catalog monitoring, cross-tenant analytics, Sentry
 
@@ -49,10 +49,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 02-01: Student Health Records module — models, CRUD, immunization/alerts/medication/visits, PDF export via Gotenberg
-- [ ] 02-02: Discipline/Behavior Management module — incident logging, categories/severity, detention/suspension workflow, parent notifications via existing Communication module, conduct rollup to report cards, analytics dashboard
-- [ ] 02-03: CA/Exam split grading configuration — ratio config per subject/term, WAEC A1-F9 scale mapping, DB-level sum-to-100 enforcement
-- [ ] 02-04: Fee structure configuration — NGN itemization per class/term, waivers, partial payments, debtors list, automated fee reminders
+- [x] 02-01: Student Health Records module — models, CRUD, immunization/alerts/medication/visits, PDF export via Gotenberg
+- [x] 02-02: Discipline/Behavior Management module — incident logging, categories/severity, detention/suspension workflow, parent notifications via existing Communication module, conduct rollup to report cards, analytics dashboard
+- [x] 02-03: CA/Exam split grading configuration — ratio config per subject/term, WAEC A1-F9 scale mapping, DB-level sum-to-100 enforcement
+- [x] 02-04: Fee structure configuration — NGN itemization per class/term, waivers, partial payments, debtors list, automated fee reminders
 **UI hint**: yes
 
 ### Phase 3: Communication & Calendar
@@ -68,11 +68,11 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 03-01: Conversation model & enhanced messaging — threading, file attachments, read receipts, frontend conversation view
-- [ ] 03-02: Real-time delivery via WebSocket hub — parent inbox with unread count, conversation list in parent dashboard
-- [ ] 03-03: iCal export endpoint (RFC 5545) — timetable calendar sync for Google Calendar, Apple Calendar, Outlook
-- [ ] 03-04: WhatsApp notification channel — Twilio WhatsApp API integration, per-parent channel preference management
-- [ ] 03-05: Parent-teacher conference management — slot booking, reminders, confirmation workflow
+- [x] 03-01: Conversation model & enhanced messaging — threading, file attachments, read receipts, frontend conversation view
+- [x] 03-02: Real-time delivery via WebSocket hub — parent inbox with unread count, conversation list in parent dashboard
+- [x] 03-03: iCal export endpoint (RFC 5545) — timetable calendar sync for Google Calendar, Apple Calendar, Outlook
+- [x] 03-04: WhatsApp notification channel — Twilio WhatsApp API integration, per-parent channel preference management
+- [x] 03-05: Parent-teacher conference management — slot booking, reminders, confirmation workflow
 **UI hint**: yes
 
 ### Phase 4: Academic Workflow
@@ -95,23 +95,17 @@ Plans:
 **UI hint**: yes
 
 ### Phase 5: Gradebook Hardening
-**Goal**: Financially and scholastically reliable gradebook with integer-precision scores, DB-level constraints, grade freeze, and report card snapshotting
-**Depends on**: Phase 4 (needs year-end lifecycle for grade freeze, WAEC thresholds for boundary tests)
-**Requirements**: PREC-01, PREC-02, PREC-03, PREC-04, PREC-05, PREC-06, PREC-07, PREC-08
+**Goal**: Frozen grade visual indicators on completed sessions + WAEC boundary test suite
+**Depends on**: Phase 4 (needs session.status for freeze logic)
+**Requirements**: PREC-03, PREC-08
 **Success Criteria** (what must be TRUE):
-  1. All scores are stored as integer basis points (7500 = 75.00%) — float32 drift eliminated from all computation with "round half away from zero" as platform-wide rounding policy
-  2. Grade items automatically enforce sum-to-100 at database level via BEFORE INSERT/UPDATE trigger — post-mutation recalculation queue cascades score updates asynchronously
-  3. When a session status changes to `completed`, all grades are frozen (read-only) — no further edits allowed without admin override
-  4. Report card generation snapshots grade values at creation time — reissued report cards show the values from that academic period, not current live references
-  5. Admin can make versioned grade corrections with full audit trail — each correction recorded with admin ID, timestamp, before/after values, and reason
-**Plans**: 5 plans
+  1. When a session status is `completed`, the frontend shows a Frozen badge on session cards and a Frozen banner on score pages — score inputs are visually disabled with lock icons
+  2. Boundary test suite verifies WAEC A1-F9 grade thresholds at ±0.01 precision and frozen-grade read-only state
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: Integer basis-point score migration — replace float32 in JSONB, "round half away from zero" policy, platform-wide rounding utility
-- [ ] 05-02: DB-level sum-to-100 trigger + post-mutation recalculation queue — Asynq task for cascading score updates
-- [ ] 05-03: Grade freeze on session completion — read-only enforcement, UI indicators for frozen grades
-- [ ] 05-04: Versioned grade corrections — admin override workflow, audit trail, reissue history
-- [ ] 05-05: Boundary test suite — verify all WAEC grade thresholds at ±0.01 precision
+- [ ] 05-01: Grade freeze frontend UI — FrozenBanner on score pages, Frozen badge on session cards, lock icons on disabled inputs
+- [ ] 05-02: Boundary test suite — WAEC A1-F9 threshold precision tests, frozen-grade read-only integration test
 **UI hint**: yes
 
 ### Phase 6: Scaling & Reliability
@@ -139,9 +133,9 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation Hardening | 1/5 | In progress | 2026-07-18 |
-| 2. Critical Table-Stakes Features | 0/4 | Not started | - |
-| 3. Communication & Calendar | 0/5 | Not started | - |
-| 4. Academic Workflow | 0/4 | Not started | - |
-| 5. Gradebook Hardening | 0/5 | Not started | - |
+| 1. Foundation Hardening | 5/5 | Complete ✅ | 2026-07-19 |
+| 2. Critical Table-Stakes Features | 4/4 | Complete ✅ | 2026-07-19 |
+| 3. Communication & Calendar | 5/5 | Complete ✅ | 2026-07-19 |
+| 4. Academic Workflow | 4/4 | Complete ✅ | 2026-07-19 |
+| 5. Gradebook Hardening | 0/2 | Not started (UI-SPEC done) | - |
 | 6. Scaling & Reliability | 0/6 | Not started | - |

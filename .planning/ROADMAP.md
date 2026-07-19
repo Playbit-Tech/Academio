@@ -2,7 +2,7 @@
 
 ## Overview
 
-Academio is a mature multi-tenant school management system (~58K Go backend, 39 modules) serving K-12 and higher education institutions in Nigeria. This roadmap delivers the remaining production-hardening and Nigerian-market-fit features across six disciplined phases — starting with infrastructure foundations (migration locking, search_path audit, provisioning, PDF generation, cron scheduling), then building critical table-stakes features (health records, discipline, CA/Exam grading, fee structure), enhancing parent-teacher communication (conversations, iCal, WhatsApp, conferences), completing the academic year lifecycle (rollover, WAEC integration, student promotion), hardening the gradebook (integer precision, sum-to-100 enforcement, grade freeze), and finishing with scaling and reliability (delivery webhooks, monitoring, analytics).
+Academio is a mature multi-tenant school management system (~58K Go backend, 39 modules) serving K-12 and higher education institutions in Nigeria. This roadmap delivers the remaining production-hardening and Nigerian-market-fit features across seven disciplined phases — starting with infrastructure foundations (migration locking, search_path audit, provisioning, PDF generation, cron scheduling), building critical table-stakes features (health records, discipline, CA/Exam grading, fee structure), enhancing parent-teacher communication (conversations, iCal, WhatsApp, conferences), completing the academic year lifecycle (rollover, WAEC integration, student promotion), hardening the gradebook (frozen grade UI + boundary tests), integrating the CBA exam engine with the gradebook and delivering LMS course management, and finishing with scaling and reliability (delivery webhooks, monitoring, analytics).
 
 ## Phases
 
@@ -10,8 +10,9 @@ Academio is a mature multi-tenant school management system (~58K Go backend, 39 
 - [ ] **Phase 2: Critical Table-Stakes Features** - Student health records, discipline management, CA/Exam grading config, Nigerian fee structure
 - [ ] **Phase 3: Communication & Calendar** - Threaded messaging with attachments, real-time delivery, iCal export, WhatsApp channel, conference management
 - [x] **Phase 4: Academic Workflow** - End-of-year rollover, WAEC/NECO external exam integration, stable student identifiers, promotion
-- [ ] **Phase 5: Gradebook Hardening** - Integer basis-point score storage, sum-to-100 triggers, grade freeze, report card snapshotting
-- [ ] **Phase 6: Scaling & Reliability** - Delivery webhooks, contact validation, communication rate limiting, pg_catalog monitoring, cross-tenant analytics, Sentry
+- [ ] **Phase 5: Gradebook Hardening** - Frozen grade UI indicators + WAEC boundary tests
+- [ ] **Phase 6: CBA & Course Management** - CBA→gradebook push, entity integration, LMS admin CRUD, student progress dashboard, quiz engine
+- [ ] **Phase 7: Scaling & Reliability** - Delivery webhooks, contact validation, communication rate limiting, pg_catalog monitoring, cross-tenant analytics, Sentry
 
 ## Phase Details
 
@@ -99,34 +100,54 @@ Plans:
 **Depends on**: Phase 4 (needs session.status for freeze logic)
 **Requirements**: PREC-03, PREC-08
 **Success Criteria** (what must be TRUE):
-  1. When a session status is `completed`, the frontend shows a Frozen badge on session cards and a Frozen banner on score pages — score inputs are visually disabled with lock icons
-  2. Boundary test suite verifies WAEC A1-F9 grade thresholds at ±0.01 precision and frozen-grade read-only state
+   1. When a session status is `completed`, the frontend shows a Frozen badge on session cards and a Frozen banner on score pages — score inputs are visually disabled with lock icons
+   2. Boundary test suite verifies WAEC A1-F9 grade thresholds at ±0.01 precision and frozen-grade read-only state
 **Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: Grade freeze frontend UI — FrozenBanner on score pages, Frozen badge on session cards, lock icons on disabled inputs
-- [ ] 05-02: Boundary test suite — WAEC A1-F9 threshold precision tests, frozen-grade read-only integration test
+- [x] 05-01: Grade freeze frontend UI — FrozenBanner on score pages, Frozen badge on session cards, lock icons on disabled inputs
+- [x] 05-02: Boundary test suite — WAEC A1-F9 threshold precision tests, frozen-grade read-only integration test
 **UI hint**: yes
 
-### Phase 6: Scaling & Reliability
+### Phase 6: CBA & Course Management
+**Goal**: CBA exam scores flow into the academic gradebook, CBA entities integrate with real school data, and LMS gains admin CRUD UI, student progress dashboard, and quiz engine powered by CBA
+**Depends on**: Phase 5 (gradebook freeze conventions)
+**Requirements**: (derived from CBA-01 through CBA-05, LMS-01 through LMS-04)
+**Success Criteria** (what must be TRUE):
+   1. After a student submits a CBA exam, the percentage score appears in the gradebook under the linked `GradeItem` — report cards show CBA scores alongside teacher-entered scores
+   2. CBAAssignment records reference actual `Level` and `Subject` entities — CBA data cross-references correctly with academic reports
+   3. Teacher can create, edit, and delete courses, modules, and lessons through the frontend UI without API calls
+   4. Student can view enrolled courses with progress bars and see assignment/CBA scores on the course detail page
+   5. A lesson with `content_type: "quiz"` renders an inline CBA exam — students take it without leaving the LMS page
+**Plans**: 5 plans
+
+Plans:
+- [ ] 06-01: CBA → Gradebook push — `CBAAssignment.grade_item_id` FK, score writes on SubmitExam/GradeAnswer
+- [ ] 06-02: CBA entity integration — `Class`→`Level` FK, `Subject`→`Subject` FK, exam_config JSONB (schedule, max_attempts, passing_threshold, randomize)
+- [ ] 06-03: LMS admin CRUD UI — create/edit/delete dialogs for courses, modules, lessons
+- [ ] 06-04: Student progress dashboard — enrolled courses with progress %, assignment scores, CBA results
+- [ ] 06-05: LMS quiz engine — `content_type: "quiz"` wired to CBA papers, inline exam taking
+**UI hint**: yes
+
+### Phase 7: Scaling & Reliability
 **Goal**: Enterprise-grade communication reliability, pg_catalog monitoring, cross-tenant analytics, and error aggregation
-**Depends on**: Phase 5 (communication reliability after hardened gradebook)
+**Depends on**: Phase 6 (CBA/LMS integration complete)
 **Requirements**: RELY-01, RELY-02, RELY-03, RELY-04, OBSV-01, OBSV-02, OBSV-03, OBSV-04
 **Success Criteria** (what must be TRUE):
-  1. Admin can see delivery status (delivered/failed/bounced) for each communication — Twilio/SendGrid delivery webhooks update delivery_status field in real-time
-  2. System automatically validates parent contact info (phone/email) before term starts — contacts with invalid entries flagged for admin review
-  3. Per-parent channel preference (SMS/Email/WhatsApp/In-App) with automatic fallback chain — per-school token bucket rate limiting prevents provider throttling
-  4. Ops team receives alerts when tenant schema count exceeds 300 or catalog query planning time exceeds 50ms — pg_catalog monitoring tracks total rows and p95 planning time
-  5. Cross-tenant analytics reports load from materialized views in the analytics schema — Sentry aggregates errors with performance monitoring and release tracking
+   1. Admin can see delivery status (delivered/failed/bounced) for each communication — Twilio/SendGrid delivery webhooks update delivery_status field in real-time
+   2. System automatically validates parent contact info (phone/email) before term starts — contacts with invalid entries flagged for admin review
+   3. Per-parent channel preference (SMS/Email/WhatsApp/In-App) with automatic fallback chain — per-school token bucket rate limiting prevents provider throttling
+   4. Ops team receives alerts when tenant schema count exceeds 300 or catalog query planning time exceeds 50ms — pg_catalog monitoring tracks total rows and p95 planning time
+   5. Cross-tenant analytics reports load from materialized views in the analytics schema — Sentry aggregates errors with performance monitoring and release tracking
 **Plans**: 6 plans
 
 Plans:
-- [ ] 06-01: Twilio/SendGrid delivery webhooks — delivery_status tracking through delivered/failed/bounced
-- [ ] 06-02: Parent contact validation job — pre-term phone/email verification, invalid contact flagging
-- [ ] 06-03: Per-parent channel preference (SMS/Email/WhatsApp/In-App) with fallback chain; per-school token bucket rate limiting
-- [ ] 06-04: pg_catalog monitoring — track total catalog rows, p95 query planning time, alerts at 300 schema / 50ms thresholds
-- [ ] 06-05: Analytics schema with materialized views — cross-tenant reporting infrastructure
-- [ ] 06-06: Sentry integration — error aggregation, performance monitoring, release tracking
+- [ ] 07-01: Twilio/SendGrid delivery webhooks — delivery_status tracking through delivered/failed/bounced
+- [ ] 07-02: Parent contact validation job — pre-term phone/email verification, invalid contact flagging
+- [ ] 07-03: Per-parent channel preference (SMS/Email/WhatsApp/In-App) with fallback chain; per-school token bucket rate limiting
+- [ ] 07-04: pg_catalog monitoring — track total catalog rows, p95 query planning time, alerts at 300 schema / 50ms thresholds
+- [ ] 07-05: Analytics schema with materialized views — cross-tenant reporting infrastructure
+- [ ] 07-06: Sentry integration — error aggregation, performance monitoring, release tracking
 **UI hint**: yes
 
 ## Progress
@@ -137,5 +158,6 @@ Plans:
 | 2. Critical Table-Stakes Features | 4/4 | Complete ✅ | 2026-07-19 |
 | 3. Communication & Calendar | 5/5 | Complete ✅ | 2026-07-19 |
 | 4. Academic Workflow | 4/4 | Complete ✅ | 2026-07-19 |
-| 5. Gradebook Hardening | 0/2 | Not started (UI-SPEC done) | - |
-| 6. Scaling & Reliability | 0/6 | Not started | - |
+| 5. Gradebook Hardening | 0/2 | UI-SPEC done, ready to plan | - |
+| 6. CBA & Course Management | 0/5 | Ready to plan | - |
+| 7. Scaling & Reliability | 0/6 | Not started | - |

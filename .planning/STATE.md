@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 01-03-PROVISIONING-PIPELINE
-last_updated: "2026-07-18T23:13:26.329Z"
-last_activity: 2026-07-18
+status: verifying
+stopped_at: Completed 01-05-CRON-SCHEDULER
+last_updated: "2026-07-19T07:03:10.697Z"
+last_activity: 2026-07-19
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 0
-  completed_plans: 4
+  completed_plans: 5
   percent: 0
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 ## Current Position
 
 Phase: 1 of 6 (Foundation Hardening)
-Plan: 4 of 5 in current phase
-Status: Ready to execute
-Last activity: 2026-07-18
+Plan: 5 of 5 in current phase
+Status: Phase complete — ready for verification
+Last activity: 2026-07-19
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -61,6 +61,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01-foundation-hardening P02 | 12 | 2 tasks | 2 files |
 | Phase 01-foundation-hardening P04 | 25 | 2 tasks | 8 files |
 | Phase 01-foundation-hardening P03 | 35min | 2 tasks | 9 files |
+| Phase 01-foundation-hardening P05 | 12min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,7 @@ Recent decisions affecting current work:
 - [Phase 01-foundation-hardening]: buildSubjectData() adapted to actual scores table schema with JSON blob instead of plan's assumed grade_item_scores table
 - [Phase 01-foundation-hardening]: PDF render endpoint gated by APP_ENV != production (dev-only)
 - [Phase 01-foundation-hardening]: Use compensating-actions rollback instead of PG transaction for ProvisionSchool — DDL (CREATE SCHEMA) cannot run inside a DML transaction
+- [Phase 01-foundation-hardening]: Jobs delegate to Asynq for retryable, persisted execution rather than handling failures inline
 
 ### Pending Todos
 
@@ -92,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-18T23:13:26.324Z
-Stopped at: Completed 01-03-PROVISIONING-PIPELINE
+Last session: 2026-07-19T07:03:10.691Z
+Stopped at: Completed 01-05-CRON-SCHEDULER
 Resume file: None

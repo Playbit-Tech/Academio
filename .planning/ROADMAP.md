@@ -172,12 +172,12 @@ Plans:
 
 **Requirements**: (derived — audit consistency, cache reliability, API documentation completeness)
 **Depends on:** None (Phase 7 dependency overridden — independently valuable)
-**Plans:** 5 plans (all created, 0 executed)
+**Plans:** 5 plans (all created, 5 executed)
 
 Plans:
-- [ ] 08-01: Widen AuditLogging middleware to all authGroup routes + fix inferResourceType + add user/school name resolution to AuditLogResponse
-- [ ] 08-02: Add LogMutation() calls in User, School, Academic, Score, CBA service layers (capture ResourceID, OldValues, NewValues)
-- [ ] 08-03: Create audit_logs_archive table + 90-day cron archival job + admin archive query endpoint
-- [ ] 08-04: Cache warming — call WarmCacheByUUID() on provisioning + background refresh every 30 min for active schools
-- [ ] 08-05: Swagger completeness — add annotations to 10 missing modules, fix inconsistencies across all modules, add body examples, run swag init
+- [x] 08-01: Widen AuditLogging middleware to all authGroup routes + fix inferResourceType + add user/school name resolution to AuditLogResponse
+- [x] 08-02: Add LogMutation() calls in User, School, Academic, Score, CBA service layers (capture ResourceID, OldValues, NewValues)
+- [x] 08-03: Create audit_logs_archive table + 90-day cron archival job + admin archive query endpoint
+- [x] 08-04: Cache warming — call WarmCacheByUUID() on provisioning + background refresh every 30 min for active schools
+- [x] 08-05: Swagger completeness — add annotations to 10 missing modules, fix inconsistencies across all modules, add body examples, run swag init
 **UI hint**: no (backend only)

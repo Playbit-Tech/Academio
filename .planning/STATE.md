@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-07-19T18:30:00.000Z"
+last_updated: "2026-07-19T22:35:00.000Z"
 progress:
   total_phases: 8
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 38
-  completed_plans: 33
-  percent: 87
+  completed_plans: 38
+  percent: 100
 ---
 
 # Project State
@@ -38,10 +38,13 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 ### Phase 7 (Not started)
 - Scaling & Reliability — 0/6 plans
 
-### Phase 8 (Active — Planning Complete)
-- Audit log consistency, cache warming & API documentation with Swagger annotations (backend only)
-- 5 plans created, 0/5 executed
-- Design decisions captured in 01-CONTEXT.md (Deep audit, Combination cache warming, Complete Swagger pass)
+### Phase 8 ✅ (Complete)
+- 5/5 plans executed
+- Deep audit: middleware widened + 36 LogMutation calls in 5 services
+- Cache warming: on provisioning + 30-min background refresh for all active schools
+- Audit archive: 90-day retention + daily cron + admin query endpoints
+- Swagger: 10 missing modules annotated, @Router /api/v2/ fixed across all ~30 modules, swag init zero warnings
+- Nyquist validation: 13 gap items resolved, 5 test files created, all go build/vet/test green
 
 ## Key Decisions
 
@@ -63,7 +66,7 @@ See: .planning/PROJECT.md (updated 2026-07-18)
 | 5. Gradebook Hardening | 2/2 | Complete ✅ |
 | 6. CBA & Course Management | 7/7 | Complete ✅ |
 | 7. Scaling & Reliability | 0/6 | Not started |
-| 8. Audit consistency, cache warming & API docs | 0/5 | Active — planning done |
+| 8. Audit consistency, cache warming & API docs | 5/5 | Complete ✅ |
 
 ## Accumulated Context
 

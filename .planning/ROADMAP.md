@@ -165,3 +165,19 @@ Plans:
 | 5. Gradebook Hardening | 2/2 | Complete ✅ | 2026-07-19 |
 | 6. CBA & Course Management | 0/7 | Wave 1 ready | - |
 | 7. Scaling & Reliability | 0/6 | Not started | - |
+
+### Phase 8: Complete audit log consistency, cache warming & API documentation with Swagger annotations. Backend.
+
+**Goal:** Widen audit logging middleware to all auth routes, add `LogMutation()` in 5 key service layers, implement log retention (90-day archive), add cache warming (on provisioning + background refresh), and complete Swagger annotations for all 40 modules with consistent patterns and verified generation.
+
+**Requirements**: (derived — audit consistency, cache reliability, API documentation completeness)
+**Depends on:** None (Phase 7 dependency overridden — independently valuable)
+**Plans:** 5 plans (all created, 0 executed)
+
+Plans:
+- [ ] 08-01: Widen AuditLogging middleware to all authGroup routes + fix inferResourceType + add user/school name resolution to AuditLogResponse
+- [ ] 08-02: Add LogMutation() calls in User, School, Academic, Score, CBA service layers (capture ResourceID, OldValues, NewValues)
+- [ ] 08-03: Create audit_logs_archive table + 90-day cron archival job + admin archive query endpoint
+- [ ] 08-04: Cache warming — call WarmCacheByUUID() on provisioning + background refresh every 30 min for active schools
+- [ ] 08-05: Swagger completeness — add annotations to 10 missing modules, fix inconsistencies across all modules, add body examples, run swag init
+**UI hint**: no (backend only)

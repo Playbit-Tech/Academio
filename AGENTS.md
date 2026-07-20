@@ -65,9 +65,9 @@ Apply code quality fixes (error discards, security, context propagation, code qu
 ## Critical Context
 - `.env` connects to `shared-postgres` container at `localhost:5432`, user `postgres`, database `academio`.
 - Super admin credentials after seed: `playbit / Password123!`.
-- Provisioning runs as an asynq background task; frontend must poll `GET /api/v2/schools/:id` until `database_status` is `"active"`.
+- Provisioning runs synchronously (no background task); frontend must poll `GET /api/v2/schools/:id` until `schema_name` is non-empty (the provisioning completion signal).
 - Use `make db-init DROP_TENANT=true && make migrate && make seed` to reset the database.
-- `models.School` has a `DatabaseStatus` field (enum: `pending`, `active`, `provisioning_failed`).
+- `models.SchoolConnection` has a `SchemaName` field — if non-empty, the school is provisioned.
 - Docker containers `shared-postgres` (5432) and `shared-redis` (6379) always running.
 - Build time ~2 min cold, ~15-30s warm.
 - Server start: `cd backend && ./bin/server` (binds :8080). Queue worker runs as goroutine inside same process.

@@ -151,19 +151,17 @@ Hybrid model with three layers:
 ### Provisioning flow
 
 ```
-School created → database_status: "pending"
+School created (schema_name empty)
        ↓
-Asynq task tenant:provision queued
+ProvisionSchool creates tenant schema (school_{id})
        ↓
-Worker creates PostgreSQL database
-       ↓
-Runs school migrations on tenant DB
+Runs migrations on tenant schema
        ↓
 Seeds initial data (curriculum, subjects, levels, etc.)
        ↓
-Sets database_status: "active"
+Sets schema_name = 'school_{id}' (provisioning complete)
        ↓
-Frontend polls GET /api/v2/schools/:id until active
+Frontend polls GET /api/v2/schools/:id until schema_name != ""
 ```
 
 ---
@@ -173,11 +171,11 @@ Frontend polls GET /api/v2/schools/:id until active
 ### School onboarding
 
 ```
-Register → Login → Create School (triggers provisioning async)
+Register → Login → Create School (triggers synchronous provisioning)
                                               ↓
-User sees provisioning state                    Worker creates + seeds tenant DB
-      ↓                                                   ↓
-Poll GET /schools/:id until active ←────────── database_status = "active"
+User polls provisioning state                   ProvisionSchool creates schema,
+      ↓                                        runs migrations, seeds data
+Poll GET /schools/:id until schema_name != "" ←── schema_name set on completion
       ↓
 Configure academic sessions → curriculum → subjects → levels → grade items
 ```
@@ -364,7 +362,7 @@ All critical (auth trust model, WebSocket token leakage, missing ErrorBoundary, 
 
 - **pgx v5 prepared-statement mode** does not support multiple SQL statements in a single `db.Exec()` call. Always break into individual calls.
 - **Redis** is required for the asynq queue (tenant provisioning). Docker container `shared-redis` at `localhost:6379`.
-- **Provisioning** runs as an async background task. Frontend must poll `GET /api/v2/schools/:id` until `database_status` is `"active"`.
+- **Provisioning** runs synchronously. Frontend must poll `GET /api/v2/schools/:id` until `schema_name` is non-empty. A non-empty `schema_name` is the provisioning completion signal.
 - **Use `scripts/test_endpoint.sh`** for integration testing — it handles CSRF tokens, bearer auth, provisioning polling, and all academic endpoints. Do not write ad-hoc test scripts.
 - **CSP headers** in dev: the frontend dev server proxies `/api` to `:8080`, but CSP `connect-src` must allow both origins.
 

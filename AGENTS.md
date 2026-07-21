@@ -1,6 +1,9 @@
 ## Goal
 Apply code quality fixes (error discards, security, context propagation, code quality), validate end‑to‑end onboarding + scoring flows, and complete attendance + timetable features for a ~58K-line backend across 39 Go modules.
 
+## 🚨 Hard Rules
+- **Select drop-down should always show values not ID.** Every `<Select>` that references entities (subjects, levels, teachers) must display resolved names, never raw numeric IDs. Use entity **names as `SelectItem` values** (not IDs), then resolve back to IDs in `onValueChange`. Always guard with a loading placeholder until data is available. Never pass a numeric ID as the `value` prop — Base UI renders raw value text when no matching `<SelectItem>` exists.
+
 ## Constraints & Preferences
 - Go 1.26+, GORM v1.30.0, Gin framework, pgx/v5 PostgreSQL driver.
 - Multi-tenant: schema-per-tenant isolation via GORM `SchemaTablePrefix` plugin. All schools share one PostgreSQL database; each school's data lives in its own schema (`school_{id}`).

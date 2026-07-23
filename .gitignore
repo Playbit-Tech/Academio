@@ -1,1 +1,13 @@
-.tmp/
+# Internal engineering — do not publish
+AGENTS.md
+.commandcode/
+docs/architecture/
+docs/audits/
+docs/ops/
+docs/plans/
+docs/reports/
+docs/PROJECT.md
+docs/performance-baseline.md
+scripts/
+tmp/
+start_schoolcare

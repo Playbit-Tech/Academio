@@ -2,6 +2,8 @@
 
 School management system — monorepo with a Go/Gin API backend and a React 19 SPA frontend.
 
+[![Docs](https://img.shields.io/badge/docs-github_pages-8DD290?style=flat&logo=github)](https://playbits.github.io/schoolcare-v2/)
+
 ## Repositories
 
 | Component | Description | Repository |

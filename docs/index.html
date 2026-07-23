@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academio — Education ERP Architecture</title>
+    <link rel="icon" type="image/svg+xml" href="logo.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" href="favicon/apple-icon-180x180.png" />
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#F5F6F0', 100: '#E8E9E0', 200: '#D9DCC9', 300: '#C9CDB2',
+                            400: '#B8BE9B', 500: '#A5A78F', 600: '#94987A', 700: '#838965',
+                            800: '#727A50', 900: '#616B3B',
+                            DEFAULT: '#A5A78F',
+                        },
+                        secondary: {
+                            50: '#FFEEE8', 100: '#FFDDD3', 200: '#FFCCC0', 300: '#FFBBA5',
+                            400: '#FFA98A', 500: '#FF7E5F', 600: '#FF6B4A', 700: '#FF5836',
+                            800: '#FF4521', 900: '#FF320D',
+                            DEFAULT: '#FF7E5F',
+                        },
+                        sage: {
+                            50: '#F0F7ED', 100: '#E1F0DC', 200: '#C5E6C3', 300: '#A9DCA9',
+                            400: '#8DD290', 500: '#6B8E5A', 600: '#5A7B4E', 700: '#496840',
+                            800: '#385532', 900: '#274224',
+                            DEFAULT: '#6B8E5A',
+                        },
+                        amber: {
+                            50: '#FEF7ED', 100: '#FDF0DC', 200: '#FCE6C3', 300: '#FADCA9',
+                            400: '#F8D290', 500: '#D4A574', 600: '#C89563', 700: '#BC7552',
+                            800: '#B05541', 900: '#A43530',
+                            DEFAULT: '#D4A574',
+                        },
+                        sky: {
+                            50: '#F0F7FA', 100: '#E1F0F5', 200: '#C5E3EA', 300: '#A9D6DF',
+                            400: '#8DC9D4', 500: '#7B9AA1', 600: '#6A8B91', 700: '#597C81',
+                            800: '#486D71', 900: '#375E61',
+                            DEFAULT: '#7B9AA1',
+                        },
+                        rose: {
+                            50: '#FDF0F0', 100: '#FCE1E1', 200: '#FACACA', 300: '#F8B2B2',
+                            400: '#F68989', 500: '#C87F7F', 600: '#B86F6F', 700: '#A85F5F',
+                            800: '#984F4F', 900: '#883F3F',
+                            DEFAULT: '#C87F7F',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    borderRadius: {
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '24px',
+                    },
+                },
+            },
+        }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/panzoom/9.4.3/panzoom.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #A5A78F 0%, #D4A574 40%, #FF7E5F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gradient-subtle {
+            background: linear-gradient(135deg, #616B3B 0%, #727A50 50%, #838965 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .glow-sage { box-shadow: 0 0 60px rgba(165, 167, 143, 0.08), 0 0 30px rgba(107, 142, 90, 0.05); }
+        .glow-sage:hover { box-shadow: 0 0 80px rgba(165, 167, 143, 0.12), 0 0 40px rgba(107, 142, 90, 0.08); }
+
+        .glow-peach { box-shadow: 0 0 60px rgba(255, 126, 95, 0.08), 0 0 30px rgba(255, 126, 95, 0.05); }
+        .glow-peach:hover { box-shadow: 0 0 80px rgba(255, 126, 95, 0.12), 0 0 40px rgba(255, 126, 95, 0.08); }
+
+        .glow-amber { box-shadow: 0 0 60px rgba(212, 165, 116, 0.08), 0 0 30px rgba(212, 165, 116, 0.05); }
+        .glow-amber:hover { box-shadow: 0 0 80px rgba(212, 165, 116, 0.12), 0 0 40px rgba(212, 165, 116, 0.08); }
+
+        .glow-sky { box-shadow: 0 0 60px rgba(123, 154, 161, 0.08), 0 0 30px rgba(123, 154, 161, 0.05); }
+        .glow-sky:hover { box-shadow: 0 0 80px rgba(123, 154, 161, 0.12), 0 0 40px rgba(123, 154, 161, 0.08); }
+
+        .glow-diagram { box-shadow: 0 0 60px rgba(165, 167, 143, 0.08), 0 0 30px rgba(165, 167, 143, 0.04); }
+        .glow-diagram:hover { box-shadow: 0 0 80px rgba(165, 167, 143, 0.12), 0 0 40px rgba(165, 167, 143, 0.06); }
+
+        .status-dot {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-up-delayed {
+            animation: slideUp 0.5s ease-out 0.15s forwards;
+            opacity: 0;
+        }
+
+        .slide-up-delayed-2 {
+            animation: slideUp 0.5s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        .tech-badge {
+            transition: all 0.2s ease;
+        }
+
+        .tech-badge:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(165, 167, 143, 0.3);
+        }
+
+        .method-get    { background: rgba(107, 142, 90, 0.15); color: #8DD290; }
+        .method-post   { background: rgba(165, 167, 143, 0.15); color: #B8BE9B; }
+        .method-patch  { background: rgba(212, 165, 116, 0.15); color: #F8D290; }
+        .method-delete { background: rgba(200, 127, 127, 0.15); color: #F68989; }
+        .method-put    { background: rgba(255, 126, 95, 0.15); color: #FFA98A; }
+
+        .ftree { position: relative; padding: 0.25rem 0; }
+        .ftree-line { position: relative; padding: 0.2rem 0 0.2rem 2rem; margin-left: 1rem; }
+        .ftree-line::before { content: ''; position: absolute; left: 0; top: 50%; width: 1.25rem; height: 2px; background: #334155; }
+        .ftree-line::after { content: ''; position: absolute; left: 0; top: 0; bottom: 50%; width: 2px; background: #334155; }
+        .ftree-line:last-child::after { bottom: auto; height: 50%; }
+        .ftree-line:only-child::before { display: none; }
+        .ftree-line:only-child::after { display: none; }
+        .ftree-root-line { position: relative; padding: 0.2rem 0 0.2rem 1rem; margin-left: 0.5rem; }
+        .ftree-root-line::before { content: ''; position: absolute; left: 0; top: 50%; width: 0.75rem; height: 2px; background: #334155; }
+        .ftree-parent { position: relative; padding-left: 1rem; }
+        .ftree-parent::before { content: ''; position: absolute; left: 1rem; top: 0; bottom: 0; width: 2px; background: #334155; }
+        .ftree-parent:last-child::before { bottom: 50%; }
+        .ftree-node { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0.75rem; border-radius: 0.5rem; font-size: 0.8rem; cursor: default; transition: background 0.15s; }
+        .ftree-node:hover { background: rgba(165, 167, 143, 0.08); }
+        .ftree-label { font-weight: 600; color: #e2e8f0; letter-spacing: -0.01em; }
+        .ftree-desc { font-size: 0.7rem; color: #64748b; }
+        .ftree-badge { font-size: 0.6rem; padding: 0.1rem 0.45rem; border-radius: 999px; font-weight: 600; letter-spacing: 0.02em; }
+        .ftree-badge-primary { background: rgba(165, 167, 143, 0.15); color: #B8BE9B; }
+        .ftree-badge-sage { background: rgba(107, 142, 90, 0.15); color: #8DD290; }
+        .ftree-badge-secondary { background: rgba(255, 126, 95, 0.15); color: #FFA98A; }
+        .ftree-badge-amber { background: rgba(212, 165, 116, 0.15); color: #F8D290; }
+        .ftree-badge-sky { background: rgba(123, 154, 161, 0.15); color: #A9D6DF; }
+        .ftree-badge-rose { background: rgba(200, 127, 127, 0.15); color: #F68989; }
+        .ftree-badge-slate { background: rgba(100, 116, 139, 0.15); color: #94a3b8; }
+
+        #diagramContainer svg, #diagramContainer .ftree {
+            display: block;
+        }
+
+        .grid-pattern {
+            background-image:
+                linear-gradient(rgba(71, 85, 105, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(71, 85, 105, 0.08) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        .section-link {
+            scroll-margin-top: 5rem;
+        }
+
+        .principle-card {
+            border-left: 3px solid;
+        }
+
+        .prose-custom h3 { color: #B8BE9B; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+        .prose-custom p { color: #94a3b8; line-height: 1.7; margin-bottom: 0.75rem; }
+        .prose-custom code { color: #D4A574; font-size: 0.85em; }
+        .prose-custom ul { color: #94a3b8; padding-left: 1.25rem; margin-bottom: 0.75rem; }
+        .prose-custom li { margin-bottom: 0.35rem; }
+        .prose-custom strong { color: #e2e8f0; }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-200 min-h-screen">
+    <!-- Background Pattern -->
+    <div class="fixed inset-0 grid-pattern pointer-events-none"></div>
+
+    <!-- Gradient Orbs -->
+    <div class="fixed top-0 left-1/4 w-96 h-96 bg-primary-500/15 rounded-full blur-[128px] pointer-events-none"></div>
+    <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-secondary-500/15 rounded-full blur-[128px] pointer-events-none"></div>
+
+    <div class="relative z-10">
+        <!-- Fixed Navigation Sidebar -->
+        <nav class="fixed left-0 top-20 w-64 h-screen bg-slate-900/95 backdrop-blur-sm border-r border-slate-800/50 p-6 overflow-y-auto z-40 transform transition-transform duration-300" id="sidebar">
+            <div class="space-y-4">
+                <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Navigation</h3>
+                <a href="#hero" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                    <span class="inline-block w-2 h-2 rounded-full bg-primary-400 mr-3"></span>Overview
+                </a>
+                <a href="#architecture" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                    <span class="inline-block w-2 h-2 rounded-full bg-sage-400 mr-3"></span>Architecture
+                </a>
+                <a href="#quickstart" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                    <span class="inline-block w-2 h-2 rounded-full bg-secondary-400 mr-3"></span>Quick Start
+                </a>
+                <a href="#structure" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                    <span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-3"></span>Project Structure
+                </a>
+                <a href="#principles" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                    <span class="inline-block w-2 h-2 rounded-full bg-sky-400 mr-3"></span>Principles
+                </a>
+                <a href="#components" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                    <span class="inline-block w-2 h-2 rounded-full bg-secondary-400 mr-3"></span>Components
+                </a>
+                <a href="#routes" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                    <span class="inline-block w-2 h-2 rounded-full bg-primary-400 mr-3"></span>Routes
+                </a>
+                <a href="#database" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                    <span class="inline-block w-2 h-2 rounded-full bg-sage-400 mr-3"></span>Database
+                </a>
+                <a href="#multi-tenancy" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                    <span class="inline-block w-2 h-2 rounded-full bg-sky-400 mr-3"></span>Multi-Tenancy
+                </a>
+                <a href="#authorization" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                    <span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-3"></span>Authorization
+                </a>
+                <a href="#middleware" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                    <span class="inline-block w-2 h-2 rounded-full bg-secondary-400 mr-3"></span>Middleware
+                </a>
+                <a href="#queues" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                    <span class="inline-block w-2 h-2 rounded-full bg-rose-400 mr-3"></span>Job Queues
+                </a>
+                <a href="#api-tester" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                    <span class="inline-block w-2 h-2 rounded-full bg-slate-400 mr-3"></span>API Tester
+                </a>
+            </div>
+            <button onclick="toggleSidebar()" class="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="md:ml-64">
+            <!-- Header -->
+            <header class="border-b border-slate-800/50 backdrop-blur-sm bg-slate-950/80 sticky top-0 z-50">
+                <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700 mr-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                            </svg>
+                        </button>
+                        <img src="logo.svg" alt="Academio" class="h-10 w-auto" />
+                        <div>
+                            <h1 class="font-bold text-lg text-white">Academio</h1>
+                            <p class="text-xs text-slate-500">Education ERP — Backend Architecture</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div id="statusBadge" class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/50 border border-slate-800">
+                            <div id="statusDot" class="w-2 h-2 rounded-full bg-slate-500 status-dot"></div>
+                            <span id="statusText" class="text-sm text-slate-400">Checking...</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input id="loginEmail" type="email" placeholder="admin@academio.com" value="playbit" class="w-32 px-2 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs placeholder-slate-500 focus:outline-none focus:border-primary-500">
+                            <input id="loginPass" type="password" placeholder="Password" value="Password123!" class="w-28 px-2 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs placeholder-slate-500 focus:outline-none focus:border-primary-500">
+                            <button onclick="doLogin()" class="px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs font-medium transition-colors">Login</button>
+                            <button onclick="doLogout()" class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs transition-colors">✕</button>
+                            <span id="authBadge" class="text-xs text-slate-500">Not authenticated</span>
+                            <span id="loginStatus" class="text-xs" style="display:none"></span>
+                        </div>
+                        <a href="http://localhost:8080/swagger/index.html" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/30 text-primary-400 hover:bg-primary-500 hover:text-white transition-all duration-300">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                            </svg>
+                            <span class="text-sm font-medium">API Docs</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Hero Section -->
+            <section id="hero" class="max-w-7xl mx-auto px-6 py-16 text-center slide-up">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary mb-8">
+                    <span class="w-2 h-2 rounded-full bg-primary-400 animate-pulse"></span>
+                    <span class="text-sm text-primary-400">Go 1.26 + Gin + GORM</span>
+                </div>
+                <h2 class="text-5xl md:text-6xl font-extrabold mb-6 gradient-text">Academio Architecture</h2>
+                <p class="text-xl text-slate-400 max-w-3xl mx-auto">A multi-tenant School Management &amp; Education ERP platform serving thousands of schools — nursery through university — with admissions, academics, finance, HR, LMS, CBA, and more.</p>
+
+                <div class="flex flex-wrap justify-center gap-3 mt-10">
+                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Go 1.26</span>
+                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Gin</span>
+                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">GORM</span>
+                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">PostgreSQL</span>
+                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Redis</span>
+                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Asynq</span>
+                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">JWT</span>
+                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Swagger</span>
+                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">React 19</span>
+                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">TanStack</span>
+                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Tailwind</span>
+                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">WebSocket</span>
+                </div>
+            </section>
+
+            <!-- Stats -->
+            <section class="max-w-7xl mx-auto px-6 mb-16">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="card-hover p-6 rounded-2xl bg-primary-900/30 border border-primary-800/50 text-center glow-sage">
+                        <div class="text-4xl font-bold text-primary-400 mb-2">42</div>
+                        <div class="text-sm text-primary-300">Route Groups</div>
+                    </div>
+                    <div class="card-hover p-6 rounded-2xl bg-sage-900/30 border border-sage-800/50 text-center glow-sage">
+                        <div class="text-4xl font-bold text-sage-400 mb-2">150+</div>
+                        <div class="text-sm text-sage-300">DB Models</div>
+                    </div>
+                    <div class="card-hover p-6 rounded-2xl bg-amber-900/30 border border-amber-800/50 text-center glow-amber">
+                        <div class="text-4xl font-bold text-amber-400 mb-2">4</div>
+                        <div class="text-sm text-amber-300">Auth Layers</div>
+                    </div>
+                    <div class="card-hover p-6 rounded-2xl bg-secondary-900/30 border border-secondary-800/50 text-center glow-peach">
+                        <div class="text-4xl font-bold text-secondary-400 mb-2">42</div>
+                        <div class="text-sm text-secondary-300">Service Modules</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Architecture Tree Diagram -->
+            <section id="architecture" class="max-w-7xl mx-auto px-6 mb-16 section-link">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-100 mb-2">System Architecture</h3>
+                        <p class="text-slate-400">Component hierarchy &bull; Ctrl+Scroll to zoom &bull; Drag to pan</p>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm">
+                        <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-primary-500"></span> Server</span>
+                        <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-sage-500"></span> Routes</span>
+                        <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-secondary-500"></span> Services</span>
+                        <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Auth</span>
+                        <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-sky-500"></span> Data</span>
+                        <div class="flex items-center gap-1 ml-3 pl-3 border-l border-slate-700">
+                            <button onclick="zoomIn()" class="p-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-primary-500 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                            </button>
+                            <button onclick="zoomOut()" class="p-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-primary-500 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" /></svg>
+                            </button>
+                            <button onclick="resetZoom()" class="px-2 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-primary-500 transition-colors text-xs">Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl bg-slate-900/50 border border-slate-800 overflow-hidden shadow-2xl glow-diagram">
+                    <div id="diagramContainer" class="overflow-auto" style="height: 620px; cursor: grab;">
+                        <div id="diagramWrapper">
+                            <div class="p-6" style="min-width: 1000px;">
+                                <div class="ftree font-mono text-sm leading-relaxed select-none">
+
+                                    <!-- Gin HTTP Server -->
+                                    <div class="ftree-node"><span class="w-2.5 h-2.5 rounded-full bg-primary-500 inline-block flex-shrink-0"></span> <span class="ftree-label">Gin HTTP Server (:8080)</span> <span class="ftree-badge ftree-badge-primary">Layer 1</span></div>
+                                    <div class="ftree">
+                                        <div class="ftree-line"><span class="ftree-node"><span class="ftree-label">Middleware Pipeline</span> <span class="ftree-desc">[execution order]</span></span></div>
+                                        <div class="ftree-line pl-0" style="padding-left:2.5rem;">
+                                            <span class="ftree-node"><span class="ftree-label">Recovery</span> <span class="ftree-desc">panic &rarr; JSON</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">RequestID</span> <span class="ftree-desc">X-Request-ID</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">Tracing</span> <span class="ftree-desc">OpenTelemetry</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">ErrorHandler</span> <span class="ftree-desc">global catch</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">Logger</span> <span class="ftree-desc">structured logging</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">SecurityHeaders</span> <span class="ftree-desc">HSTS, CSP</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">CORS</span> <span class="ftree-desc">domain allowlist</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">BodyLimit</span> <span class="ftree-desc">request size cap</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">SchoolID</span> <span class="ftree-desc">x-school-id header</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">RateLimiter</span> <span class="ftree-desc">Redis-backed</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">CSRF</span> <span class="ftree-desc">token validation</span></span>
+                                        </div>
+
+                                        <div class="ftree-line"><span class="ftree-node"><span class="w-2 h-2 rounded-full bg-sage-500 inline-block flex-shrink-0"></span> <span class="ftree-label">Route Groups (42 groups)</span> <span class="ftree-badge ftree-badge-sage">Layer 2</span></span></div>
+                                        <div class="ftree-line pl-0" style="padding-left:2.5rem;">
+                                            <div class="ftree" style="display:inline-flex; gap:0.75rem; align-items:flex-start; flex-wrap:wrap;">
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:130px;">
+                                                    <div class="text-xs font-semibold text-slate-400 mb-1 px-1">Public</div>
+                                                    <div class="ftree-node text-xs py-0.5">/health</div>
+                                                    <div class="ftree-node text-xs py-0.5">/metrics</div>
+                                                    <div class="ftree-node text-xs py-0.5">/swagger</div>
+                                                    <div class="ftree-node text-xs py-0.5">/auth/login</div>
+                                                    <div class="ftree-node text-xs py-0.5">/auth/register</div>
+                                                </div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:130px;">
+                                                    <div class="text-xs font-semibold text-amber-400 mb-1 px-1">Auth</div>
+                                                    <div class="ftree-node text-xs py-0.5">/auth/* (12)</div>
+                                                    <div class="ftree-node text-xs py-0.5">2FA, TOTP</div>
+                                                    <div class="ftree-node text-xs py-0.5">Sessions</div>
+                                                </div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:140px;">
+                                                    <div class="text-xs font-semibold text-primary-400 mb-1 px-1">Core</div>
+                                                    <div class="ftree-node text-xs py-0.5">/schools</div>
+                                                    <div class="ftree-node text-xs py-0.5">/users</div>
+                                                    <div class="ftree-node text-xs py-0.5">/tenants</div>
+                                                    <div class="ftree-node text-xs py-0.5">/admin</div>
+                                                </div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:140px;">
+                                                    <div class="text-xs font-semibold text-secondary-400 mb-1 px-1">Academic</div>
+                                                    <div class="ftree-node text-xs py-0.5">/academic</div>
+                                                    <div class="ftree-node text-xs py-0.5">/grading</div>
+                                                    <div class="ftree-node text-xs py-0.5">/timetables</div>
+                                                    <div class="ftree-node text-xs py-0.5">/exams</div>
+                                                    <div class="ftree-node text-xs py-0.5">/cba</div>
+                                                </div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:140px;">
+                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">Finance &amp; HR</div>
+                                                    <div class="ftree-node text-xs py-0.5">/finance</div>
+                                                    <div class="ftree-node text-xs py-0.5">/bills</div>
+                                                    <div class="ftree-node text-xs py-0.5">/payments</div>
+                                                    <div class="ftree-node text-xs py-0.5">/hr</div>
+                                                </div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:140px;">
+                                                    <div class="text-xs font-semibold text-sage-400 mb-1 px-1">Operations</div>
+                                                    <div class="ftree-node text-xs py-0.5">/library</div>
+                                                    <div class="ftree-node text-xs py-0.5">/hostels</div>
+                                                    <div class="ftree-node text-xs py-0.5">/transport</div>
+                                                    <div class="ftree-node text-xs py-0.5">/inventory</div>
+                                                </div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:150px;">
+                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">Engagement</div>
+                                                    <div class="ftree-node text-xs py-0.5">/lms, /alumni</div>
+                                                    <div class="ftree-node text-xs py-0.5">/messages</div>
+                                                    <div class="ftree-node text-xs py-0.5">/communication</div>
+                                                    <div class="ftree-node text-xs py-0.5">/pastoral</div>
+                                                    <div class="ftree-node text-xs py-0.5">/conferences</div>
+                                                </div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:150px;">
+                                                    <div class="text-xs font-semibold text-primary-400 mb-1 px-1">Insights</div>
+                                                    <div class="ftree-node text-xs py-0.5">/analytics</div>
+                                                    <div class="ftree-node text-xs py-0.5">/dashboard</div>
+                                                    <div class="ftree-node text-xs py-0.5">/reports</div>
+                                                    <div class="ftree-node text-xs py-0.5">/report-cards</div>
+                                                    <div class="ftree-node text-xs py-0.5">/audit-logs</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Service Layer -->
+                                        <div class="ftree-line"><span class="ftree-node"><span class="w-2 h-2 rounded-full bg-secondary-500 inline-block flex-shrink-0"></span> <span class="ftree-label">Service Layer (42 modules)</span> <span class="ftree-badge ftree-badge-secondary">Layer 3</span></span></div>
+                                        <div class="ftree-line pl-0" style="padding-left:2.5rem;">
+                                            <div class="flex flex-wrap gap-x-1 gap-y-0.5">
+                                                <span class="ftree-node text-xs">Auth</span>
+                                                <span class="ftree-node text-xs">User</span>
+                                                <span class="ftree-node text-xs">School</span>
+                                                <span class="ftree-node text-xs">Academic</span>
+                                                <span class="ftree-node text-xs">CBA</span>
+                                                <span class="ftree-node text-xs">Grading</span>
+                                                <span class="ftree-node text-xs">Timetable</span>
+                                                <span class="ftree-node text-xs">Exam</span>
+                                                <span class="ftree-node text-xs">ExternalExam</span>
+                                                <span class="ftree-node text-xs">Bill</span>
+                                                <span class="ftree-node text-xs">Payment</span>
+                                                <span class="ftree-node text-xs">Finance</span>
+                                                <span class="ftree-node text-xs">HR</span>
+                                                <span class="ftree-node text-xs">LMS</span>
+                                                <span class="ftree-node text-xs">Library</span>
+                                                <span class="ftree-node text-xs">Hostel</span>
+                                                <span class="ftree-node text-xs">Transport</span>
+                                                <span class="ftree-node text-xs">Inventory</span>
+                                                <span class="ftree-node text-xs">Alumni</span>
+                                                <span class="ftree-node text-xs">Admissions</span>
+                                                <span class="ftree-node text-xs">Analytics</span>
+                                                <span class="ftree-node text-xs">Reports</span>
+                                                <span class="ftree-node text-xs">ReportCard</span>
+                                                <span class="ftree-node text-xs">Discipline</span>
+                                                <span class="ftree-node text-xs">Pastoral</span>
+                                                <span class="ftree-node text-xs">Conference</span>
+                                                <span class="ftree-node text-xs">StudentHealth</span>
+                                                <span class="ftree-node text-xs">Messages</span>
+                                                <span class="ftree-node text-xs">Notifications</span>
+                                                <span class="ftree-node text-xs">Communication</span>
+                                                <span class="ftree-node text-xs">Career</span>
+                                                <span class="ftree-node text-xs">ParentDashboard</span>
+                                                <span class="ftree-node text-xs">Multimedia</span>
+                                                <span class="ftree-node text-xs">Audit</span>
+                                                <span class="ftree-node text-xs">Invitation</span>
+                                                <span class="ftree-node text-xs">AI</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Data Layer -->
+                                        <div class="ftree-line"><span class="ftree-node"><span class="w-2 h-2 rounded-full bg-sky-500 inline-block flex-shrink-0"></span> <span class="ftree-label">Data Layer</span> <span class="ftree-badge ftree-badge-sky">Layer 4</span></span></div>
+                                        <div class="ftree-line pl-0" style="padding-left:2.5rem;">
+                                            <div class="ftree" style="display:inline-flex; gap:0.75rem; align-items:flex-start;">
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:140px;">
+                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">GORM ORM</div>
+                                                    <div class="ftree-node text-xs py-0.5">150+ Models</div>
+                                                    <div class="ftree-node text-xs py-0.5">Auto Migrations</div>
+                                                    <div class="ftree-node text-xs py-0.5">Schema-per-Tenant</div>
+                                                </div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:140px;">
+                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">Repository Pattern</div>
+                                                    <div class="ftree-node text-xs py-0.5">Interface-based</div>
+                                                    <div class="ftree-node text-xs py-0.5">Pagination helpers</div>
+                                                    <div class="ftree-node text-xs py-0.5">Eager Loading</div>
+                                                </div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:130px;">
+                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">Infrastructure</div>
+                                                    <div class="ftree-node text-xs py-0.5">DB Manager</div>
+                                                    <div class="ftree-node text-xs py-0.5">Redis Cache</div>
+                                                    <div class="ftree-node text-xs py-0.5">WebSocket Hub</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Authentication -->
+                                        <div class="ftree-line"><span class="ftree-node"><span class="w-2 h-2 rounded-full bg-amber-500 inline-block flex-shrink-0"></span> <span class="ftree-label">Authentication &amp; Authorization</span> <span class="ftree-badge ftree-badge-amber">Cross-cutting</span></span></div>
+                                        <div class="ftree-line pl-0" style="padding-left:2.5rem;">
+                                            <div class="flex flex-wrap gap-x-1 gap-y-0.5">
+                                                <span class="ftree-node text-xs">Public (no auth)</span>
+                                                <span class="ftree-node text-xs">JWT Bearer</span>
+                                                <span class="ftree-node text-xs">School-scoped JWT</span>
+                                                <span class="ftree-node text-xs">Admin Only</span>
+                                            </div>
+                                            <div class="flex flex-wrap gap-x-1 gap-y-0.5 mt-1">
+                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">JWTAuth()</span>
+                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">EnforceSchoolID()</span>
+                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">TenantResolution()</span>
+                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">AdminOnly()</span>
+                                            </div>
+                                            <div class="flex flex-wrap gap-x-1 gap-y-0.5 mt-1">
+                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">CSRF()</span>
+                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">RateLimit()</span>
+                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">AuditLogging()</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Workers -->
+                                        <div class="ftree-line"><span class="ftree-node"><span class="w-2 h-2 rounded-full bg-sky-500 inline-block flex-shrink-0"></span> <span class="ftree-label">Background Workers (Asynq/Redis)</span> <span class="ftree-badge ftree-badge-sky">Layer 5</span></span></div>
+                                        <div class="ftree-line pl-0" style="padding-left:2.5rem;">
+                                            <span class="ftree-node text-xs" style="background:rgba(200,127,127,0.15);border-radius:0.25rem;color:#F68989;">critical</span>
+                                            <span class="ftree-node text-xs" style="background:rgba(123,154,161,0.15);border-radius:0.25rem;color:#A9D6DF;">provisioning</span>
+                                            <span class="ftree-node text-xs" style="background:rgba(71,85,105,0.3);border-radius:0.25rem;color:#cbd5e1;">default</span>
+                                        </div>
+
+                                        <!-- External -->
+                                        <div class="ftree-line"><span class="ftree-node"><span class="w-2 h-2 rounded-full bg-slate-400 inline-block flex-shrink-0"></span> <span class="ftree-label">External Integrations</span> <span class="ftree-badge ftree-badge-slate">Layer 6</span></span></div>
+                                        <div class="ftree-line pl-0" style="padding-left:2.5rem;">
+                                            <span class="ftree-node text-xs">PostgreSQL</span>
+                                            <span class="ftree-node text-xs">Redis</span>
+                                            <span class="ftree-node text-xs">S3 / Local Storage</span>
+                                            <span class="ftree-node text-xs">SMTP / Email</span>
+                                            <span class="ftree-node text-xs">Prometheus</span>
+                                            <span class="ftree-node text-xs">OpenTelemetry</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Start -->
+            <section id="quickstart" class="max-w-7xl mx-auto px-6 mb-16 section-link">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 rounded-xl bg-secondary-500/20 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-100">Quick Start</h3>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-sage">
+                        <h4 class="font-semibold text-primary-300 mb-3">Prerequisites</h4>
+                        <ul class="space-y-2 text-sm text-slate-400">
+                            <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span> Docker (Postgres :5432, Redis :6379)</li>
+                            <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span> Go 1.26</li>
+                            <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span> Node.js + Yarn 4+</li>
+                            <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span> Air (hot reload)</li>
+                        </ul>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-sage">
+                        <h4 class="font-semibold text-primary-300 mb-3">Setup Commands</h4>
+                        <pre class="text-sm text-slate-300 font-mono bg-slate-950 p-3 rounded-xl border border-slate-800 overflow-x-auto"><span class="text-slate-500"># Backend</span>
+<span class="text-secondary-400">$</span> cd backend
+<span class="text-secondary-400">$</span> cp .env.example .env
+<span class="text-secondary-400">$</span> make db-init && make migrate && make seed
+<span class="text-secondary-400">$</span> air
+
+<span class="text-slate-500"># Frontend (new terminal)</span>
+<span class="text-secondary-400">$</span> cd frontend
+<span class="text-secondary-400">$</span> yarn install
+<span class="text-secondary-400">$</span> yarn dev</pre>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-amber">
+                        <h4 class="font-semibold text-amber-300 mb-3">Key Commands</h4>
+                        <ul class="space-y-2 text-sm text-slate-400">
+                            <li class="flex items-center gap-2"><code class="text-amber-400 text-xs px-1.5 py-0.5 rounded bg-amber-500/10">make db-init DROP_TENANT=true</code> Reset DB</li>
+                            <li class="flex items-center gap-2"><code class="text-amber-400 text-xs px-1.5 py-0.5 rounded bg-amber-500/10">make migrate &amp;&amp; make seed</code> Fresh migration</li>
+                            <li class="flex items-center gap-2"><code class="text-amber-400 text-xs px-1.5 py-0.5 rounded bg-amber-500/10">./bin/server</code> Start server</li>
+                            <li class="flex items-center gap-2"><code class="text-amber-400 text-xs px-1.5 py-0.5 rounded bg-amber-500/10">scripts/test_endpoint.sh</code> Integration tests</li>
+                        </ul>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-sky">
+                        <h4 class="font-semibold text-sky-300 mb-3">Credentials</h4>
+                        <ul class="space-y-2 text-sm text-slate-400">
+                            <li class="flex items-center gap-2"><span class="text-sky-400 font-medium">Super Admin:</span></li>
+                            <li class="flex items-center gap-2 pl-5"><code class="text-sky-400 text-xs">playbit</code> / <code class="text-sky-400 text-xs">Password123!</code></li>
+                            <li class="flex items-center gap-2"><span class="text-sky-400 font-medium">Login:</span> POST /api/v2/auth/login</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Project Structure -->
+            <section id="structure" class="max-w-7xl mx-auto px-6 mb-16 section-link">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-100">Project Structure</h3>
+                </div>
+                <div class="rounded-2xl bg-slate-900/50 border border-slate-800 p-6 glow-amber">
+                    <pre class="text-sm font-mono text-slate-400 overflow-x-auto"><span class="text-slate-600">academio/</span>
+<span class="text-primary-400">backend/</span>
+<span class="text-slate-500">  ├</span> <span class="text-slate-300">cmd/server/main.go</span>          Entry point
+<span class="text-slate-500">  ├</span> <span class="text-slate-300">internal/</span>
+<span class="text-slate-500">  │  ├</span> <span class="text-slate-300">modules/</span>                   42 service modules
+<span class="text-slate-500">  │  │  ├</span> <span class="text-slate-300">{name}/</span>                 <span class="text-slate-500">dto.go, handler.go, service.go, repository.go</span>
+<span class="text-slate-500">  │  ├</span> <span class="text-slate-300">middleware/</span>                RequestID, Auth, CSRF, RateLimiter, etc.
+<span class="text-slate-500">  │  ├</span> <span class="text-slate-300">router/</span>                    Route registration &amp; group setup
+<span class="text-slate-500">  │  ├</span> <span class="text-slate-300">database/</span>
+<span class="text-slate-500">  │  │  ├</span> <span class="text-slate-300">migrations/shared/</span>       <span class="text-slate-500">public schema (User, SchoolConnection)</span>
+<span class="text-slate-500">  │  │  └</span> <span class="text-slate-300">migrations/school/</span>      <span class="text-slate-500">tenant schema (Student, Teacher, etc.)</span>
+<span class="text-slate-500">  │  └</span> <span class="text-slate-300">pkg/</span>                      Shared utilities (logger, helpers)
+<span class="text-slate-500">  ├</span> <span class="text-slate-300">scripts/</span>                    Integration tests
+<span class="text-slate-500">  ├</span> <span class="text-slate-300">Makefile</span>                    Build, migrate, seed, test
+<span class="text-slate-500">  └</span> <span class="text-slate-300">.env</span>                        Environment config
+<span class="text-secondary-400">frontend/</span>
+<span class="text-slate-500">  ├</span> <span class="text-slate-300">src/routes/</span>                 TanStack Router file-based routes
+<span class="text-slate-500">  ├</span> <span class="text-slate-300">src/lib/</span>                    Hooks, API client, utils
+<span class="text-slate-500">  └</span> <span class="text-slate-300">tailwind.config.js</span>          Custom design tokens
+<span class="text-sky-400">docs/</span>
+<span class="text-slate-500">  └</span> <span class="text-slate-300">index.html</span>                  You are here</pre>
+                </div>
+            </section>
+
+            <!-- Engineering Principles -->
+            <section id="principles" class="max-w-7xl mx-auto px-6 mb-16 section-link">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 rounded-xl bg-sky-500/20 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-100">Engineering Principles</h3>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-primary-500">
+                        <div class="text-xs font-semibold text-primary-400 uppercase tracking-wider mb-1">Priority</div>
+                        <div class="text-sm text-slate-300">Correctness &gt; Security &gt; Performance &gt; Scalability &gt; Simplicity &gt; Maintainability</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-secondary-500">
+                        <div class="text-xs font-semibold text-secondary-400 uppercase tracking-wider mb-1">Log &amp; Continue</div>
+                        <div class="text-sm text-slate-300">Analytics/reports queries — log warning, continue. Best-effort; failing on transient blips is worse.</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-sage-500">
+                        <div class="text-xs font-semibold text-sage-400 uppercase tracking-wider mb-1">Return Errors</div>
+                        <div class="text-sm text-slate-300">State mutations (create/update/delete) — return error. Silent failures corrupt status.</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-amber-500">
+                        <div class="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-1">Batch Operations</div>
+                        <div class="text-sm text-slate-300">Collect all errors, return one message — user fixes everything in one pass.</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-sky-500">
+                        <div class="text-xs font-semibold text-sky-400 uppercase tracking-wider mb-1">No Silent Discards</div>
+                        <div class="text-sm text-slate-300">Every error must be handled. Never <code class="text-sky-400">_</code> discard errors unless explicitly documented.</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-rose-500">
+                        <div class="text-xs font-semibold text-rose-400 uppercase tracking-wider mb-1">No Hardcoded Secrets</div>
+                        <div class="text-sm text-slate-300">All credentials from env vars, validated at startup. Fail-fast on missing config.</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-sage-500">
+                        <div class="text-xs font-semibold text-sage-400 uppercase tracking-wider mb-1">Parameterized Queries</div>
+                        <div class="text-sm text-slate-300">No <code class="text-sage-400">fmt.Sprintf</code> for SQL. Use GORM/pgx parameterized queries exclusively.</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-primary-500">
+                        <div class="text-xs font-semibold text-primary-400 uppercase tracking-wider mb-1">Unbounded Queries</div>
+                        <div class="text-sm text-slate-300">Always cap list queries (default 100, max 1000). Use Offset + Limit.</div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-secondary-500">
+                        <div class="text-xs font-semibold text-secondary-400 uppercase tracking-wider mb-1">Context Propagation</div>
+                        <div class="text-sm text-slate-300">No <code class="text-secondary-400">context.Background()</code> in request scope. Always propagate <code class="text-secondary-400">context.Context</code>.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Component Cards -->
+            <section id="components" class="max-w-7xl mx-auto px-6 mb-16">
+                <h3 class="text-2xl font-bold text-slate-100 mb-8">Components</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- Routes Card -->
+                    <div class="card-hover p-6 rounded-2xl bg-primary-900/30 border border-primary-800/50 glow-sage" id="routes">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-primary-500/20 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-slate-100">Routes (42 groups)</h4>
+                        </div>
+                        <ul class="space-y-1.5 text-sm text-slate-400">
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/auth</span> Login, register, 2FA, sessions, tokens</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/academic</span> Sessions, curriculums, assessments, scores</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/cba</span> Questions, papers, assignments, exams</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/finance</span> Accounts, journals, budgets, fees</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/hr</span> Staff, leaves, payroll, appraisals</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/lms</span> Courses, modules, lessons, submissions</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/analytics</span> Overview, enrollment, revenue, forecasts</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/admissions</span> Intakes, applications, screening, offers</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/reports</span> Custom reports, report cards, export</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/alumni</span> Careers, events, donations, mentorships</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">+32 more</span> Transport, hostel, library, inventory, discipline, health, communication...</li>
+                        </ul>
+                    </div>
+
+                    <!-- Database Card -->
+                    <div class="card-hover p-6 rounded-2xl bg-sage-900/30 border border-sage-800/50 glow-sage" id="database">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-sage-500/20 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-sage-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-sage-100">Database (150+ Models)</h4>
+                        </div>
+                        <ul class="space-y-2 text-sm text-sage-400">
+                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span><span class="font-medium text-sage-300">public schema:</span> User, SchoolConnection</li>
+                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span><span class="font-medium text-sage-300">school_{id} schema:</span> Student, Teacher, Level, Subject</li>
+                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>Session, Curriculum, Assessment, Score, Result</li>
+                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>CBA: Question, Paper, Assignment, ExamSession</li>
+                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>LMS: Course, Module, Lesson, Enrollment, Submission</li>
+                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>Finance: Account, Journal, Budget, Fee, Vendor</li>
+                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>HR: Department, Staff, Leave, Payroll, Appraisal</li>
+                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>Admissions: Intake, Application, Offer, Enrollment</li>
+                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>Operations: Hostel, Transport, Inventory, Library</li>
+                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>Engagement: Message, Notification, Alumni, Career</li>
+                        </ul>
+                    </div>
+
+                    <!-- Multi-Tenancy Card -->
+                    <div class="card-hover p-6 rounded-2xl bg-sky-900/30 border border-sky-800/50 glow-sky" id="multi-tenancy">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-sky-500/20 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-sky-100">Multi-Tenancy</h4>
+                        </div>
+                        <ul class="space-y-3 text-sm text-sky-400">
+                            <li class="p-3 rounded-lg bg-sky-800/20">
+                                <div class="font-medium text-sky-300 mb-1">Schema-per-Tenant</div>
+                                <div>Each school gets its own schema <code class="text-xs text-sky-200">school_{id}</code> with isolated tables</div>
+                            </li>
+                            <li class="p-3 rounded-lg bg-sky-800/20">
+                                <div class="font-medium text-sky-300 mb-1">SchemaTablePrefix Plugin</div>
+                                <div>GORM plugin auto-prepends schema name to all table references</div>
+                            </li>
+                            <li class="p-3 rounded-lg bg-sky-800/20">
+                                <div class="font-medium text-sky-300 mb-1">Shared public Schema</div>
+                                <div>User accounts, school connections live in <code class="text-xs text-sky-200">public</code></div>
+                            </li>
+                            <li class="p-3 rounded-lg bg-sky-800/20">
+                                <div class="font-medium text-sky-300 mb-1">Tenant Resolution</div>
+                                <div><code class="text-xs text-sky-200">x-school-id</code> header &rarr; DB connection &rarr; schema-scoped GORM instance</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Authorization Card -->
+                    <div class="card-hover p-6 rounded-2xl bg-amber-900/30 border border-amber-800/50 glow-amber" id="authorization">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-amber-100">Authorization</h4>
+                        </div>
+                        <ul class="space-y-3 text-sm text-amber-400">
+                            <li class="p-3 rounded-lg bg-amber-800/20">
+                                <div class="font-medium text-amber-300 mb-1">JWT (Bearer Token)</div>
+                                <div>Access + refresh tokens with family-based rotation</div>
+                            </li>
+                            <li class="p-3 rounded-lg bg-amber-800/20">
+                                <div class="font-medium text-amber-300 mb-1">School-scoped JWT</div>
+                                <div>EnforceSchoolID + TenantResolution middleware chain</div>
+                            </li>
+                            <li class="p-3 rounded-lg bg-amber-800/20">
+                                <div class="font-medium text-amber-300 mb-1">Admin Only</div>
+                                <div>Super admin routes: impersonation, re-provision, schools list</div>
+                            </li>
+                            <li class="p-3 rounded-lg bg-amber-800/20">
+                                <div class="font-medium text-amber-300 mb-1">2FA / TOTP</div>
+                                <div>Optional two-factor authentication with recovery codes</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Middleware Card -->
+                    <div class="card-hover p-6 rounded-2xl bg-secondary-900/30 border border-secondary-800/50 glow-peach" id="middleware">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-secondary-500/20 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-secondary-100">Middleware Stack</h4>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">Recovery</span>
+                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">RequestID</span>
+                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">Tracing</span>
+                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">Logger</span>
+                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">Security</span>
+                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">CORS</span>
+                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">RateLimit</span>
+                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">BodyLimit</span>
+                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">CSRF</span>
+                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">SchoolID</span>
+                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">JWTAuth</span>
+                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">TenantDB</span>
+                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">AuditLog</span>
+                        </div>
+                    </div>
+
+                    <!-- Job Queues Card -->
+                    <div class="card-hover p-6 rounded-2xl bg-rose-900/30 border border-rose-800/50 glow-amber" id="queues">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-rose-100">Job Queues (Asynq)</h4>
+                        </div>
+                        <ul class="space-y-3 text-sm text-rose-400">
+                            <li class="p-3 rounded-lg bg-rose-800/20 border border-rose-500/20">
+                                <div class="font-medium text-rose-300 mb-1">Critical</div>
+                                <div>Tenant provisioning, welcome emails, urgent notifications</div>
+                            </li>
+                            <li class="p-3 rounded-lg bg-sky-800/20 border border-sky-500/20">
+                                <div class="font-medium text-sky-300 mb-1">Provisioning</div>
+                                <div>School schema creation, data seeding</div>
+                            </li>
+                            <li class="p-3 rounded-lg bg-rose-800/20">
+                                <div class="font-medium text-rose-300 mb-1">Default</div>
+                                <div>Background tasks, batch operations</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- API Endpoint Tester -->
+            <section id="api-tester" class="max-w-7xl mx-auto px-6 mb-16 section-link">
+                <h3 class="text-2xl font-bold text-slate-100 mb-8">Test API Endpoints</h3>
+                <div class="rounded-2xl bg-slate-900/50 border border-slate-800 p-6 glow-sage">
+                    <div class="grid md:grid-cols-4 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-2">Method</label>
+                            <select id="testMethod" class="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 focus:border-primary-500 focus:outline-none">
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PATCH">PATCH</option>
+                                <option value="DELETE">DELETE</option>
+                                <option value="PUT">PUT</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm text-slate-400 mb-2">Endpoint</label>
+                            <input id="testEndpoint" type="text" placeholder="/api/v2/auth/login" value="/api/v2/auth/login" class="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-600 focus:border-primary-500 focus:outline-none">
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="testApi()" class="w-full px-4 py-3 rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-medium transition-colors">Send Request</button>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm text-slate-400 mb-2">Headers</label>
+                        <textarea id="testHeaders" rows="3" placeholder='{"Authorization": "Bearer <token>"}' class="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-600 focus:border-primary-500 focus:outline-none font-mono text-sm"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm text-slate-400 mb-2">Request Body (JSON)</label>
+                        <textarea id="testBody" rows="4" placeholder='{"key": "value"}' class="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-600 focus:border-primary-500 focus:outline-none font-mono text-sm"></textarea>
+                    </div>
+
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-sm text-slate-500">
+                            <span id="testStatus">Status: -</span>
+                            <span class="mx-2">&bull;</span>
+                            <span id="testTime">Time: -</span>
+                        </div>
+                        <button onclick="testApi()" class="text-primary-400 hover:text-primary-300 text-sm">Send &rarr;</button>
+                    </div>
+
+                    <div class="rounded-xl bg-slate-950 border border-slate-800 p-4 max-h-64 overflow-auto">
+                        <pre id="testResponse" class="text-sm text-slate-300 font-mono whitespace-pre-wrap">Response will appear here...</pre>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-lg font-semibold text-slate-100">API Endpoints</h4>
+                        <input type="text" id="endpointSearch" placeholder="Filter endpoints..." oninput="filterEndpoints(this.value)" class="px-3 py-1 rounded-lg bg-slate-800 border border-slate-700 text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:border-primary-500 w-48">
+                    </div>
+                    <div id="endpointGroups" class="space-y-3 max-h-[600px] overflow-y-auto pr-2"></div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="border-t border-slate-800/50 py-8">
+                <div class="max-w-7xl mx-auto px-6 flex items-center justify-between text-sm text-slate-500">
+                    <div>Academio &mdash; Education ERP Backend Architecture</div>
+                    <div class="flex items-center gap-4">
+                        <span>Go 1.26</span>
+                        <span>&bull;</span>
+                        <span>Gin</span>
+                        <span>&bull;</span>
+                        <span>PostgreSQL</span>
+                        <span>&bull;</span>
+                        <span>Redis</span>
+                        <span>&bull;</span>
+                        <span>React 19</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080';
+
+        let statusDot, statusText, statusBadge;
+
+        async function checkBackendStatus() {
+            if (!statusDot) return;
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
+                const response = await fetch(`${API_BASE}/health`, { method: 'GET', signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (response.ok) {
+                    statusDot.classList.remove('bg-primary-500', 'bg-red-500');
+                    statusDot.classList.add('bg-sage-500');
+                    statusText.textContent = 'Online';
+                    statusBadge.classList.add('border-sage-500/30');
+                    statusBadge.classList.remove('border-slate-800');
+                } else {
+                    throw new Error('Non-OK response');
+                }
+            } catch (error) {
+                statusDot.classList.remove('bg-primary-500', 'bg-sage-500');
+                statusDot.classList.add('bg-red-500');
+                statusDot.style.animation = 'none';
+                statusText.textContent = 'Offline';
+                statusBadge.classList.add('border-red-500/30');
+                statusBadge.classList.remove('border-slate-800');
+            }
+        }
+
+        function getAuthMode(path, method) {
+            if (path === '/health' || path.startsWith('/health')) return { label: 'Public', cls: 'bg-sage-500/20 text-sage-400' };
+            if (path.startsWith('/api/v2/public/')) return { label: 'Public', cls: 'bg-sage-500/20 text-sage-400' };
+            if (path === '/api/v2/auth/login' || path === '/api/v2/auth/register') return { label: 'Public', cls: 'bg-sage-500/20 text-sage-400' };
+            if (path === '/api/v2/auth/csrf') return { label: 'Public', cls: 'bg-sage-500/20 text-sage-400' };
+            if (path.startsWith('/api/v2/auth/reset') || path.startsWith('/api/v2/auth/confirm')) return { label: 'Public', cls: 'bg-sage-500/20 text-sage-400' };
+            if (path.startsWith('/api/v2/admin/')) return { label: 'Admin', cls: 'bg-rose-500/20 text-rose-400' };
+            if (path.startsWith('/api/v2/')) return { label: 'JWT+School', cls: 'bg-secondary-500/20 text-secondary-400' };
+            return { label: 'Public', cls: 'bg-sage-500/20 text-sage-400' };
+        }
+
+        async function loadSwaggerEndpoints() {
+            const groupsEl = document.getElementById('endpointGroups');
+            if (!groupsEl) return;
+            groupsEl.innerHTML = '<div class="p-4 text-center text-slate-400">Loading endpoints...</div>';
+            try {
+                const resp = await fetch(`${API_BASE}/swagger/doc.json`);
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const spec = await resp.json();
+                const endpoints = [];
+                for (const [path, methods] of Object.entries(spec.paths || {})) {
+                    for (const [method, details] of Object.entries(methods || {})) {
+                        if (typeof details !== 'object' || !details.summary) continue;
+                        const tags = (details.tags && details.tags.length) ? details.tags : ['Other'];
+                        endpoints.push({ path, method: method.toUpperCase(), summary: details.summary || details.description || path, tag: tags[0], details, auth: getAuthMode(path, method.toUpperCase()) });
+                    }
+                }
+                window._swaggerEndpoints = endpoints;
+                const grouped = {};
+                endpoints.forEach(ep => { if (!grouped[ep.tag]) grouped[ep.tag] = []; grouped[ep.tag].push(ep); });
+                const sorted = Object.entries(grouped).sort((a, b) => a[0].localeCompare(b[0]));
+                const legend = [
+                    { label: 'Public', cls: 'bg-sage-500/20 text-sage-400', desc: 'No auth' },
+                    { label: 'JWT+School', cls: 'bg-secondary-500/20 text-secondary-400', desc: 'JWT + School scope' },
+                    { label: 'Admin', cls: 'bg-rose-500/20 text-rose-400', desc: 'Super admin only' },
+                ];
+                let html = '<div class="flex flex-wrap gap-3 mb-4 px-1">';
+                legend.forEach(l => { html += `<span class="px-2 py-0.5 rounded text-xs font-medium ${l.cls}">${l.label}</span> <span class="text-xs text-slate-500 -ml-2 mr-1">${l.desc}</span>`; });
+                html += '</div>';
+                for (const [tag, eps] of sorted) {
+                    html += `<div class="border border-slate-800 rounded-xl overflow-hidden">
+                        <button onclick="toggleGroup('${tag}')" class="w-full flex items-center justify-between px-4 py-3 bg-slate-800/60 hover:bg-slate-800 transition-colors">
+                            <span class="text-sm font-semibold text-slate-200">${tag}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-slate-500">${eps.length} endpoints</span>
+                                <svg id="arrow-${tag}" class="w-4 h-4 text-slate-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </div>
+                        </button>
+                        <div id="group-${tag}" class="hidden px-3 py-2 space-y-1">`;
+                    eps.forEach(ep => {
+                        const mc = ep.method === 'GET' ? 'bg-sage-500/20 text-sage-400' :
+                                   ep.method === 'POST' ? 'bg-primary-500/20 text-primary-400' :
+                                   ep.method === 'PATCH' ? 'bg-amber-500/20 text-amber-400' :
+                                   ep.method === 'DELETE' ? 'bg-rose-500/20 text-rose-400' :
+                                   'bg-primary-500/20 text-primary-400';
+                        const paramHint = (ep.details && ep.details.requestBody) ? ' &middot; body' : '';
+                        const methodEsc = ep.method.toLowerCase();
+                        const ac = ep.auth ? ep.auth.cls : 'bg-primary-500/20 text-primary-500';
+                        const al = ep.auth ? ep.auth.label : '?';
+                        html += `<div onclick="selectEndpoint('${ep.path}', '${ep.method}')"
+                            class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-800/80 cursor-pointer transition-colors">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold method-${methodEsc}">${ep.method}</span>
+                            <span class="px-2 py-0.5 rounded text-xs font-medium ${ac}">${al}</span>
+                            <div class="flex-1 min-w-0">
+                                <span class="text-sm text-slate-200 font-mono truncate block">${ep.path}</span>
+                                <span class="text-xs text-slate-500 truncate">${ep.summary}${paramHint}</span>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>`;
+                    });
+                    html += '</div></div>';
+                }
+                groupsEl.innerHTML = html;
+            } catch (err) {
+                groupsEl.innerHTML = '<div class="p-4 text-center text-rose-400">Failed to load: ' + err.message + '</div>';
+            }
+        }
+
+        function toggleGroup(tag) {
+            const el = document.getElementById('group-' + tag);
+            const arrow = document.getElementById('arrow-' + tag);
+            if (!el) return;
+            const open = !el.classList.contains('hidden');
+            el.classList.toggle('hidden', open);
+            arrow.classList.toggle('rotate-180', open);
+        }
+
+        function filterEndpoints(query) {
+            const q = query.toLowerCase();
+            const groupEls = document.querySelectorAll('[id^="group-"]');
+            const eps = window._swaggerEndpoints || [];
+            groupEls.forEach(gEl => {
+                const tag = gEl.id.replace('group-', '');
+                const hasMatch = eps.some(ep => ep.tag === tag && (!q || ep.path.toLowerCase().includes(q) || ep.summary.toLowerCase().includes(q)));
+                gEl.classList.toggle('hidden', !hasMatch);
+            });
+        }
+
+        let authState = { token: '', csrf: '' };
+
+        const TEST_DATA = {
+            'POST/api/v2/auth/login': { identifier: 'playbit', password: 'Password123!' },
+            'POST/api/v2/auth/register': { email: 'new@school.com', password: 'SecurePass1', firstname: 'New', lastname: 'User' },
+            'POST/api/v2/auth/reset': { email: 'admin@academio.com' },
+        };
+
+        function setAuthHeaders() {
+            const h = {};
+            if (authState.token) h['Authorization'] = 'Bearer ' + authState.token;
+            if (authState.csrf) h['X-CSRF-Token'] = authState.csrf;
+            return h;
+        }
+
+        async function doLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPass').value;
+            const statusEl = document.getElementById('loginStatus');
+            statusEl.style.display = 'inline';
+            statusEl.textContent = 'Logging in...';
+            statusEl.className = 'text-xs text-amber-400';
+            try {
+                const resp = await fetch(API_BASE + '/api/v2/auth/login', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ identifier: email, password: pass })
+                });
+                const data = await resp.json();
+                const d = data.data || data;
+                if (resp.ok && d.access_token) {
+                    authState.token = d.access_token;
+                    authState.csrf = '';
+                    statusEl.textContent = 'Logged in ✓';
+                    statusEl.className = 'text-xs text-sage-400';
+                    updateAuthUI();
+                } else {
+                    statusEl.textContent = 'Login failed: ' + (d.error || d.message || resp.status);
+                    statusEl.className = 'text-xs text-rose-400';
+                }
+            } catch(e) {
+                statusEl.textContent = 'Error: ' + e.message;
+                statusEl.className = 'text-xs text-rose-400';
+            }
+        }
+
+        function doLogout() {
+            authState = { token: '', csrf: '' };
+            updateAuthUI();
+            const statusEl = document.getElementById('loginStatus');
+            statusEl.textContent = 'Logged out';
+            statusEl.className = 'text-xs text-slate-500';
+        }
+
+        function updateAuthUI() {
+            const badge = document.getElementById('authBadge');
+            if (!badge) return;
+            if (authState.token) {
+                const short = authState.token.substring(0, 16) + '…';
+                badge.innerHTML = '<span class="text-sage-400">●</span> JWT: ' + short;
+                badge.className = 'text-xs text-slate-500';
+            } else {
+                badge.textContent = 'Not authenticated';
+                badge.className = 'text-xs text-slate-500';
+            }
+        }
+
+        function selectEndpoint(path, method) {
+            const pathEl = document.getElementById('testEndpoint');
+            const methodEl = document.getElementById('testMethod');
+            const bodyEl = document.getElementById('testBody');
+            const headersEl = document.getElementById('testHeaders');
+            const responseEl = document.getElementById('testResponse');
+            const statusEl = document.getElementById('testStatus');
+            const timeEl = document.getElementById('testTime');
+            pathEl.value = path;
+            methodEl.value = method;
+            responseEl.textContent = 'Response will appear here...';
+            statusEl.textContent = '-';
+            statusEl.className = 'text-sm text-slate-500';
+            timeEl.textContent = '-';
+            const authH = setAuthHeaders();
+            headersEl.value = Object.keys(authH).length ? JSON.stringify(authH, null, 2) : '';
+            if (['POST','PATCH','PUT','DELETE'].includes(method)) {
+                let data = null;
+                const exactKey = method + path;
+                if (TEST_DATA[exactKey]) data = TEST_DATA[exactKey];
+                if (!data) {
+                    for (const [key, val] of Object.entries(TEST_DATA)) {
+                        if (exactKey.startsWith(key)) { data = val; break; }
+                    }
+                }
+                if (!data) {
+                    const ep = window._swaggerEndpoints?.find(e => e.path === path && e.method === method);
+                    if (ep) data = buildExampleFromSpec(ep.details);
+                }
+                bodyEl.value = data ? JSON.stringify(data, null, 2) : '';
+            } else {
+                bodyEl.value = '';
+            }
+            pathEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function buildExampleFromSpec(details) {
+            if (!details) return null;
+            const rb = details.requestBody;
+            if (!rb || !rb.content) return null;
+            const ct = Object.values(rb.content)[0];
+            if (!ct || !ct.schema) return null;
+            return genExample(ct.schema);
+        }
+
+        function genExample(schema) {
+            if (!schema) return null;
+            if (schema.example !== undefined) return schema.example;
+            if (schema.type === 'object' && schema.properties) {
+                const obj = {};
+                for (const [k, v] of Object.entries(schema.properties)) {
+                    let val = genExample(v);
+                    if (val === null) {
+                        if (v.type === 'integer' || v.type === 'number') val = 0;
+                        else if (v.type === 'boolean') val = false;
+                        else if (v.type === 'array') val = [];
+                        else val = k;
+                    }
+                    obj[k] = val;
+                }
+                return obj;
+            }
+            if (schema.type === 'array' && schema.items) return [genExample(schema.items)];
+            if (schema.type === 'string') {
+                if (schema.format === 'date-time') return '2026-01-01T00:00:00Z';
+                if (schema.format === 'email') return 'test@school.com';
+                if (schema.enum) return schema.enum[0];
+                return 'string';
+            }
+            if (schema.type === 'integer') return 1;
+            if (schema.type === 'number') return 1.0;
+            if (schema.type === 'boolean') return true;
+            return null;
+        }
+
+        async function testApi() {
+            const method = document.getElementById('testMethod').value;
+            const endpoint = document.getElementById('testEndpoint').value;
+            const headers = document.getElementById('testHeaders').value;
+            const body = document.getElementById('testBody').value;
+            const statusEl = document.getElementById('testStatus');
+            const timeEl = document.getElementById('testTime');
+            const responseEl = document.getElementById('testResponse');
+            if (!endpoint) { statusEl.textContent = 'Enter endpoint'; statusEl.className = 'text-sm text-amber-400'; return; }
+            const startTime = Date.now();
+            try {
+                const options = { method: method, headers: { 'Content-Type': 'application/json' } };
+                if (headers) { try { const parsedHeaders = JSON.parse(headers); Object.assign(options.headers, parsedHeaders); } catch (e) {} }
+                if (body && ['POST', 'PATCH', 'PUT', 'DELETE'].includes(method)) { options.body = body; }
+                const fullUrl = endpoint.startsWith('http') ? endpoint : `${API_BASE}${endpoint}`;
+                const response = await fetch(fullUrl, options);
+                const elapsed = Date.now() - startTime;
+                statusEl.textContent = `${response.status} ${response.statusText}`;
+                statusEl.className = response.ok ? 'text-sm text-sage-400' : 'text-sm text-rose-400';
+                timeEl.textContent = `${elapsed}ms`;
+                let responseText = '';
+                try { const data = await response.json(); responseText = JSON.stringify(data, null, 2); } catch (e) { responseText = await response.text(); }
+                responseEl.textContent = responseText;
+            } catch (error) {
+                statusEl.textContent = error.message;
+                statusEl.className = 'text-sm text-rose-400';
+                timeEl.textContent = '-';
+                responseEl.textContent = 'Request failed';
+            }
+        }
+
+        let pz;
+
+        function initPanzoom() {
+            const container = document.getElementById('diagramWrapper');
+            if (!container || typeof Panzoom === 'undefined') return;
+            const parent = container.parentElement;
+            pz = Panzoom(container, { maxZoom: 4, minZoom: 0.3, contain: 'outside', cursor: 'grab' });
+            parent.addEventListener('wheel', e => { if (e.ctrlKey) { e.preventDefault(); pz.zoomWithWheel(e); } });
+        }
+
+        function zoomIn() { if (pz) pz.zoomIn(); }
+        function zoomOut() { if (pz) pz.zoomOut(); }
+        function resetZoom() { if (pz) pz.reset({ animate: true }); }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            statusDot = document.getElementById('statusDot');
+            statusText = document.getElementById('statusText');
+            statusBadge = document.getElementById('statusBadge');
+            checkBackendStatus();
+            loadSwaggerEndpoints();
+            setTimeout(initPanzoom, 500);
+            setInterval(checkBackendStatus, 30000);
+        });
+    </script>
+</body>
+</html>

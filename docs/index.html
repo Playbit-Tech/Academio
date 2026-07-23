@@ -579,19 +579,19 @@
                     </div>
                     <h3 class="text-xl sm:text-2xl font-bold text-slate-100">Quick Start</h3>
                 </div>
-                <div class="grid md:grid-cols-2 gap-4 sm:gap-6">
-                    <div class="p-4 sm:p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-sage">
-                        <h4 class="font-semibold text-primary-300 mb-3 text-sm sm:text-base">Prerequisites</h4>
-                        <ul class="space-y-2 text-sm text-slate-400">
-                            <li class="flex items-start gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1.5"></span> <span class="min-w-0">Docker (Postgres :5432, Redis :6379)</span></li>
-                            <li class="flex items-start gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1.5"></span> <span class="min-w-0">Go 1.26</span></li>
-                            <li class="flex items-start gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1.5"></span> <span class="min-w-0">Node.js + Yarn 4+</span></li>
-                            <li class="flex items-start gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1.5"></span> <span class="min-w-0">Air (hot reload)</span></li>
+                <div class="grid md:grid-cols-2 gap-3 sm:gap-6">
+                    <div class="p-3 sm:p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-sage">
+                        <h4 class="font-semibold text-primary-300 mb-2 sm:mb-3 text-xs sm:text-base">Prerequisites</h4>
+                        <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-slate-400">
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1 sm:mt-1.5"></span> <span class="min-w-0">Docker (Postgres :5432, Redis :6379)</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1 sm:mt-1.5"></span> <span class="min-w-0">Go 1.26</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1 sm:mt-1.5"></span> <span class="min-w-0">Node.js + Yarn 4+</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1 sm:mt-1.5"></span> <span class="min-w-0">Air (hot reload)</span></li>
                         </ul>
                     </div>
-                    <div class="p-4 sm:p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-sage">
-                        <h4 class="font-semibold text-primary-300 mb-3 text-sm sm:text-base">Setup Commands</h4>
-                        <pre class="text-xs sm:text-sm text-slate-300 font-mono bg-slate-950 p-3 rounded-xl border border-slate-800 overflow-x-auto"><span class="text-slate-500"># Backend</span>
+                    <div class="p-3 sm:p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-sage">
+                        <h4 class="font-semibold text-primary-300 mb-2 sm:mb-3 text-xs sm:text-base">Setup Commands</h4>
+                        <pre class="text-[10px] sm:text-sm text-slate-300 font-mono bg-slate-950 p-2 sm:p-3 rounded-xl border border-slate-800 overflow-x-auto"><span class="text-slate-500"># Backend</span>
 <span class="text-secondary-400">$</span> cd backend
 <span class="text-secondary-400">$</span> cp .env.example .env
 <span class="text-secondary-400">$</span> make db-init && make migrate && make seed
@@ -602,20 +602,20 @@
 <span class="text-secondary-400">$</span> yarn install
 <span class="text-secondary-400">$</span> yarn dev</pre>
                     </div>
-                    <div class="p-4 sm:p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-amber">
-                        <h4 class="font-semibold text-amber-300 mb-3 text-sm sm:text-base">Key Commands</h4>
-                        <ul class="space-y-2 text-sm text-slate-400">
-                            <li class="flex items-start gap-2 min-w-0"><code class="text-amber-400 text-xs px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">make db-init DROP_TENANT=true</code> <span class="min-w-0">Reset DB</span></li>
-                            <li class="flex items-start gap-2 min-w-0"><code class="text-amber-400 text-xs px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">make migrate &amp;&amp; make seed</code> <span class="min-w-0">Fresh migration</span></li>
-                            <li class="flex items-start gap-2 min-w-0"><code class="text-amber-400 text-xs px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">./bin/server</code> <span class="min-w-0">Start server</span></li>
-                            <li class="flex items-start gap-2 min-w-0"><code class="text-amber-400 text-xs px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">scripts/test_endpoint.sh</code> <span class="min-w-0">Integration tests</span></li>
+                    <div class="p-3 sm:p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-amber">
+                        <h4 class="font-semibold text-amber-300 mb-2 sm:mb-3 text-xs sm:text-base">Key Commands</h4>
+                        <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-slate-400">
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><code class="text-amber-400 text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">make db-init DROP_TENANT=true</code> <span class="min-w-0 leading-snug">Reset DB</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><code class="text-amber-400 text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">make migrate &amp;&amp; make seed</code> <span class="min-w-0 leading-snug">Fresh migration</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><code class="text-amber-400 text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">./bin/server</code> <span class="min-w-0 leading-snug">Start server</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><code class="text-amber-400 text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">scripts/test_endpoint.sh</code> <span class="min-w-0 leading-snug">Integration tests</span></li>
                         </ul>
                     </div>
-                    <div class="p-4 sm:p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-sky">
-                        <h4 class="font-semibold text-sky-300 mb-3 text-sm sm:text-base">Credentials</h4>
-                        <ul class="space-y-2 text-sm text-slate-400">
-                            <li class="flex items-start gap-2 min-w-0"><span class="text-sky-400 font-medium shrink-0">Super Admin:</span> <span class="min-w-0">playbit / Password123!</span></li>
-                            <li class="flex items-start gap-2 min-w-0"><span class="text-sky-400 font-medium shrink-0">Login:</span> <code class="text-sky-400 text-xs min-w-0 break-all">POST /api/v2/auth/login</code></li>
+                    <div class="p-3 sm:p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-sky">
+                        <h4 class="font-semibold text-sky-300 mb-2 sm:mb-3 text-xs sm:text-base">Credentials</h4>
+                        <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-slate-400">
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span class="text-sky-400 font-medium shrink-0 text-[10px] sm:text-sm">Super Admin:</span> <span class="min-w-0 leading-snug">playbit / Password123!</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span class="text-sky-400 font-medium shrink-0 text-[10px] sm:text-sm">Login:</span> <code class="text-sky-400 text-[10px] sm:text-xs min-w-0 break-all">POST /api/v2/auth/login</code></li>
                         </ul>
                     </div>
                 </div>

@@ -203,65 +203,71 @@
     <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-secondary-500/15 rounded-full blur-[128px] pointer-events-none"></div>
 
     <div class="relative z-10">
+        <!-- Mobile Sidebar Backdrop -->
+        <div id="sidebarBackdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden" onclick="toggleSidebar()"></div>
+
         <!-- Fixed Navigation Sidebar -->
-        <nav class="fixed left-0 top-20 w-64 h-screen bg-slate-900/95 backdrop-blur-sm border-r border-slate-800/50 p-6 overflow-y-auto z-40 transform transition-transform duration-300" id="sidebar">
+        <nav class="fixed left-0 top-20 w-64 max-w-[80vw] h-screen bg-slate-900/95 backdrop-blur-sm border-r border-slate-800/50 p-6 overflow-y-auto z-40 -translate-x-full md:translate-x-0 transition-transform duration-300" id="sidebar">
+            <div class="flex items-center justify-between mb-4 md:hidden">
+                <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Navigation</h3>
+                <button onclick="toggleSidebar()" class="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
             <div class="space-y-4">
-                <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Navigation</h3>
-                <a href="#hero" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4 hidden md:block">Navigation</h3>
+                <a href="#hero" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-primary-400 mr-3"></span>Overview
                 </a>
-                <a href="#architecture" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                <a href="#architecture" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-sage-400 mr-3"></span>Architecture
                 </a>
-                <a href="#quickstart" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                <a href="#quickstart" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-secondary-400 mr-3"></span>Quick Start
                 </a>
-                <a href="#structure" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                <a href="#structure" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-3"></span>Project Structure
                 </a>
-                <a href="#principles" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                <a href="#principles" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-sky-400 mr-3"></span>Principles
                 </a>
-                <a href="#components" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                <a href="#components" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-secondary-400 mr-3"></span>Components
                 </a>
-                <a href="#routes" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                <a href="#routes" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-primary-400 mr-3"></span>Routes
                 </a>
-                <a href="#database" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                <a href="#database" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-sage-400 mr-3"></span>Database
                 </a>
-                <a href="#multi-tenancy" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                <a href="#multi-tenancy" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-sky-400 mr-3"></span>Multi-Tenancy
                 </a>
-                <a href="#authorization" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                <a href="#authorization" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-3"></span>Authorization
                 </a>
-                <a href="#middleware" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                <a href="#middleware" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-secondary-400 mr-3"></span>Middleware
                 </a>
-                <a href="#queues" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                <a href="#queues" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-rose-400 mr-3"></span>Job Queues
                 </a>
-                <a href="#api-tester" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors">
+                <a href="#api-tester" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-slate-400 mr-3"></span>API Tester
                 </a>
             </div>
-            <button onclick="toggleSidebar()" class="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                </svg>
-            </button>
         </nav>
 
         <!-- Main Content -->
         <div class="md:ml-64">
             <!-- Header -->
-            <header class="border-b border-slate-800/50 backdrop-blur-sm bg-slate-950/80 sticky top-0 z-50">
-                <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700 mr-2">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <header class="border-b border-slate-800/50 backdrop-blur-sm bg-slate-950/80 sticky top-0 z-40">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                        <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700 shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                             </svg>
                         </button>
@@ -284,13 +290,13 @@
             </header>
 
             <!-- Hero Section -->
-            <section id="hero" class="max-w-7xl mx-auto px-6 py-16 text-center slide-up">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary mb-8">
+            <section id="hero" class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16 text-center slide-up">
+                <div class="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary mb-6 sm:mb-8">
                     <span class="w-2 h-2 rounded-full bg-primary-400 animate-pulse"></span>
-                    <span class="text-sm text-primary-400">Go 1.26 + Gin + GORM</span>
+                    <span class="text-xs sm:text-sm text-primary-400">Go 1.26 + Gin + GORM</span>
                 </div>
-                <h2 class="text-5xl md:text-6xl font-extrabold mb-6 gradient-text">Academio Architecture</h2>
-                <p class="text-xl text-slate-400 max-w-3xl mx-auto">A multi-tenant School Management &amp; Education ERP platform serving thousands of schools — nursery through university — with admissions, academics, finance, HR, LMS, CBA, and more.</p>
+                <h2 class="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-4 sm:mb-6 gradient-text leading-tight">Academio Architecture</h2>
+                <p class="text-base sm:text-lg md:text-xl text-slate-400 max-w-3xl mx-auto px-2">A multi-tenant School Management &amp; Education ERP platform serving thousands of schools — nursery through university — with admissions, academics, finance, HR, LMS, CBA, and more.</p>
 
                 <div class="flex flex-wrap justify-center gap-3 mt-10">
                     <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Go 1.26</span>
@@ -308,41 +314,41 @@
             </section>
 
             <!-- Stats -->
-            <section class="max-w-7xl mx-auto px-6 mb-16">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="card-hover p-6 rounded-2xl bg-primary-900/30 border border-primary-800/50 text-center glow-sage">
-                        <div class="text-4xl font-bold text-primary-400 mb-2">42</div>
-                        <div class="text-sm text-primary-300">Route Groups</div>
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                    <div class="card-hover p-4 sm:p-6 rounded-2xl bg-primary-900/30 border border-primary-800/50 text-center glow-sage">
+                        <div class="text-2xl sm:text-4xl font-bold text-primary-400 mb-1 sm:mb-2">42</div>
+                        <div class="text-xs sm:text-sm text-primary-300">Route Groups</div>
                     </div>
-                    <div class="card-hover p-6 rounded-2xl bg-sage-900/30 border border-sage-800/50 text-center glow-sage">
-                        <div class="text-4xl font-bold text-sage-400 mb-2">150+</div>
-                        <div class="text-sm text-sage-300">DB Models</div>
+                    <div class="card-hover p-4 sm:p-6 rounded-2xl bg-sage-900/30 border border-sage-800/50 text-center glow-sage">
+                        <div class="text-2xl sm:text-4xl font-bold text-sage-400 mb-1 sm:mb-2">150+</div>
+                        <div class="text-xs sm:text-sm text-sage-300">DB Models</div>
                     </div>
-                    <div class="card-hover p-6 rounded-2xl bg-amber-900/30 border border-amber-800/50 text-center glow-amber">
-                        <div class="text-4xl font-bold text-amber-400 mb-2">4</div>
-                        <div class="text-sm text-amber-300">Auth Layers</div>
+                    <div class="card-hover p-4 sm:p-6 rounded-2xl bg-amber-900/30 border border-amber-800/50 text-center glow-amber">
+                        <div class="text-2xl sm:text-4xl font-bold text-amber-400 mb-1 sm:mb-2">4</div>
+                        <div class="text-xs sm:text-sm text-amber-300">Auth Layers</div>
                     </div>
-                    <div class="card-hover p-6 rounded-2xl bg-secondary-900/30 border border-secondary-800/50 text-center glow-peach">
-                        <div class="text-4xl font-bold text-secondary-400 mb-2">42</div>
-                        <div class="text-sm text-secondary-300">Service Modules</div>
+                    <div class="card-hover p-4 sm:p-6 rounded-2xl bg-secondary-900/30 border border-secondary-800/50 text-center glow-peach">
+                        <div class="text-2xl sm:text-4xl font-bold text-secondary-400 mb-1 sm:mb-2">42</div>
+                        <div class="text-xs sm:text-sm text-secondary-300">Service Modules</div>
                     </div>
                 </div>
             </section>
 
             <!-- Architecture Tree Diagram -->
-            <section id="architecture" class="max-w-7xl mx-auto px-6 mb-16">
-                <div class="flex items-center justify-between mb-4">
+            <section id="architecture" class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                     <div>
-                        <h3 class="text-2xl font-bold text-slate-100 mb-2">System Architecture</h3>
-                        <p class="text-slate-400">Component hierarchy &bull; Ctrl+Scroll to zoom &bull; Drag to pan</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-slate-100 mb-1 sm:mb-2">System Architecture</h3>
+                        <p class="text-xs sm:text-sm text-slate-400">Component hierarchy &bull; Ctrl+Scroll to zoom &bull; Drag to pan</p>
                     </div>
-                    <div class="flex items-center gap-2 text-sm">
+                    <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
                         <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-primary-500"></span> Server</span>
                         <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-sage-500"></span> Routes</span>
                         <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-secondary-500"></span> Services</span>
                         <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Auth</span>
                         <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-sky-500"></span> Data</span>
-                        <div class="flex items-center gap-1 ml-3 pl-3 border-l border-slate-700">
+                        <div class="flex items-center gap-1 sm:ml-3 sm:pl-3 sm:border-l border-slate-700">
                             <button onclick="zoomIn()" class="p-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-primary-500 transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                             </button>
@@ -355,9 +361,9 @@
                 </div>
 
                 <div class="rounded-2xl bg-slate-900/50 border border-slate-800 overflow-hidden shadow-2xl glow-diagram">
-                    <div id="diagramContainer" class="overflow-auto" style="height: 620px; cursor: grab;">
+                    <div id="diagramContainer" class="overflow-auto" style="max-height: 80vh; height: 620px; cursor: grab;">
                         <div id="diagramWrapper">
-                            <div class="p-6" style="min-width: 1000px;">
+                            <div class="p-3 sm:p-6" style="min-width: 700px;">
                                 <div class="ftree font-mono text-sm leading-relaxed select-none">
 
                                     <!-- Gin HTTP Server -->
@@ -560,14 +566,14 @@
             </section>
 
             <!-- Quick Start -->
-            <section id="quickstart" class="max-w-7xl mx-auto px-6 mb-16">
-                <div class="flex items-center gap-3 mb-8">
-                    <div class="w-10 h-10 rounded-xl bg-secondary-500/20 flex items-center justify-center">
-                        <svg class="w-5 h-5 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <section id="quickstart" class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16">
+                <div class="flex items-center gap-3 mb-6 sm:mb-8">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-secondary-500/20 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-100">Quick Start</h3>
+                    <h3 class="text-xl sm:text-2xl font-bold text-slate-100">Quick Start</h3>
                 </div>
                 <div class="grid md:grid-cols-2 gap-6">
                     <div class="p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-sage">
@@ -613,17 +619,17 @@
             </section>
 
             <!-- Project Structure -->
-            <section id="structure" class="max-w-7xl mx-auto px-6 mb-16">
-                <div class="flex items-center gap-3 mb-8">
-                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <section id="structure" class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16">
+                <div class="flex items-center gap-3 mb-6 sm:mb-8">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-100">Project Structure</h3>
+                    <h3 class="text-xl sm:text-2xl font-bold text-slate-100">Project Structure</h3>
                 </div>
-                <div class="rounded-2xl bg-slate-900/50 border border-slate-800 p-6 glow-amber">
-                    <pre class="text-sm font-mono text-slate-400 overflow-x-auto"><span class="text-slate-600">academio/</span>
+                <div class="rounded-2xl bg-slate-900/50 border border-slate-800 p-4 sm:p-6 glow-amber">
+                    <pre class="text-xs sm:text-sm font-mono text-slate-400 overflow-x-auto whitespace-pre"><span class="text-slate-600">academio/</span>
 <span class="text-primary-400">backend/</span>
 <span class="text-slate-500">  ├</span> <span class="text-slate-300">cmd/server/main.go</span>          Entry point
 <span class="text-slate-500">  ├</span> <span class="text-slate-300">internal/</span>
@@ -648,10 +654,10 @@
             </section>
 
             <!-- Engineering Principles -->
-            <section id="principles" class="max-w-7xl mx-auto px-6 mb-16">
-                <div class="flex items-center gap-3 mb-8">
-                    <div class="w-10 h-10 rounded-xl bg-sky-500/20 flex items-center justify-center">
-                        <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <section id="principles" class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16">
+                <div class="flex items-center gap-3 mb-6 sm:mb-8">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-sky-500/20 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
                         </svg>
                     </div>
@@ -698,8 +704,8 @@
             </section>
 
             <!-- Component Cards -->
-            <section id="components" class="max-w-7xl mx-auto px-6 mb-16">
-                <h3 class="text-2xl font-bold text-slate-100 mb-8">Components</h3>
+            <section id="components" class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16">
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-100 mb-6 sm:mb-8">Components</h3>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                     <!-- Routes Card -->
@@ -867,13 +873,13 @@
             </section>
 
             <!-- API Endpoint Tester -->
-            <section id="api-tester" class="max-w-7xl mx-auto px-6 mb-16">
-                <h3 class="text-2xl font-bold text-slate-100 mb-8">Test API Endpoints</h3>
-                <div class="rounded-2xl bg-slate-900/50 border border-slate-800 p-6 glow-sage">
-                    <div class="grid md:grid-cols-4 gap-4 mb-6">
+            <section id="api-tester" class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16">
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-100 mb-6 sm:mb-8">Test API Endpoints</h3>
+                <div class="rounded-2xl bg-slate-900/50 border border-slate-800 p-4 sm:p-6 glow-sage">
+                    <div class="flex flex-col sm:grid sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
                         <div>
-                            <label class="block text-sm text-slate-400 mb-2">Method</label>
-                            <select id="testMethod" class="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 focus:border-primary-500 focus:outline-none">
+                            <label class="block text-sm text-slate-400 mb-1 sm:mb-2">Method</label>
+                            <select id="testMethod" class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 focus:border-primary-500 focus:outline-none text-sm">
                                 <option value="GET">GET</option>
                                 <option value="POST">POST</option>
                                 <option value="PATCH">PATCH</option>
@@ -881,12 +887,12 @@
                                 <option value="PUT">PUT</option>
                             </select>
                         </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-sm text-slate-400 mb-2">Endpoint</label>
-                            <input id="testEndpoint" type="text" placeholder="/api/v2/auth/login" value="/api/v2/auth/login" class="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-600 focus:border-primary-500 focus:outline-none">
+                        <div class="sm:col-span-2">
+                            <label class="block text-sm text-slate-400 mb-1 sm:mb-2">Endpoint</label>
+                            <input id="testEndpoint" type="text" placeholder="/api/v2/auth/login" value="/api/v2/auth/login" class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-600 focus:border-primary-500 focus:outline-none text-sm">
                         </div>
-                        <div class="flex items-end">
-                            <button onclick="testApi()" class="w-full px-4 py-3 rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-medium transition-colors">Send Request</button>
+                        <div>
+                            <button onclick="testApi()" class="w-full px-4 py-2.5 sm:py-3 rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-medium transition-colors text-sm mt-6 sm:mt-0">Send Request</button>
                         </div>
                     </div>
 
@@ -924,10 +930,10 @@
             </section>
 
             <!-- Footer -->
-            <footer class="border-t border-slate-800/50 py-8">
-                <div class="max-w-7xl mx-auto px-6 flex items-center justify-between text-sm text-slate-500">
+            <footer class="border-t border-slate-800/50 py-6 sm:py-8">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-slate-500 text-center sm:text-left">
                     <div>Academio &mdash; Education ERP Backend Architecture</div>
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-3 sm:gap-4">
                         <span>Go 1.26</span>
                         <span>&bull;</span>
                         <span>Gin</span>
@@ -945,6 +951,25 @@
 
     <script>
         const API_BASE = 'http://localhost:8080';
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            if (!sidebar) return;
+            const open = sidebar.classList.contains('translate-x-0');
+            sidebar.classList.toggle('translate-x-0', !open);
+            if (backdrop) backdrop.classList.toggle('hidden', open);
+            document.body.classList.toggle('overflow-hidden', !open);
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            if (!sidebar) return;
+            sidebar.classList.remove('translate-x-0');
+            if (backdrop) backdrop.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
 
         function getAuthMode(path, method) {
             if (path === '/health' || path.startsWith('/health')) return { label: 'Public', cls: 'bg-sage-500/20 text-sage-400' };

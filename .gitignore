@@ -10,4 +10,5 @@ docs/PROJECT.md
 docs/performance-baseline.md
 scripts/
 tmp/
+.tmp/
 start_schoolcare

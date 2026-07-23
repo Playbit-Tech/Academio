@@ -106,15 +106,6 @@
         .glow-diagram { box-shadow: 0 0 60px rgba(165, 167, 143, 0.08), 0 0 30px rgba(165, 167, 143, 0.04); }
         .glow-diagram:hover { box-shadow: 0 0 80px rgba(165, 167, 143, 0.12), 0 0 40px rgba(165, 167, 143, 0.06); }
 
-        .status-dot {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
         .slide-up {
             animation: slideUp 0.5s ease-out forwards;
             opacity: 0;
@@ -186,8 +177,8 @@
             background-size: 60px 60px;
         }
 
-        .section-link {
-            scroll-margin-top: 5rem;
+        [id] {
+            scroll-margin-top: 6rem;
         }
 
         .principle-card {
@@ -281,18 +272,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-4">
-                        <div id="statusBadge" class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/50 border border-slate-800">
-                            <div id="statusDot" class="w-2 h-2 rounded-full bg-slate-500 status-dot"></div>
-                            <span id="statusText" class="text-sm text-slate-400">Checking...</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <input id="loginEmail" type="email" placeholder="admin@academio.com" value="playbit" class="w-32 px-2 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs placeholder-slate-500 focus:outline-none focus:border-primary-500">
-                            <input id="loginPass" type="password" placeholder="Password" value="Password123!" class="w-28 px-2 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs placeholder-slate-500 focus:outline-none focus:border-primary-500">
-                            <button onclick="doLogin()" class="px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs font-medium transition-colors">Login</button>
-                            <button onclick="doLogout()" class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs transition-colors">✕</button>
-                            <span id="authBadge" class="text-xs text-slate-500">Not authenticated</span>
-                            <span id="loginStatus" class="text-xs" style="display:none"></span>
-                        </div>
+
                         <a href="http://localhost:8080/swagger/index.html" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/30 text-primary-400 hover:bg-primary-500 hover:text-white transition-all duration-300">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
@@ -351,7 +331,7 @@
             </section>
 
             <!-- Architecture Tree Diagram -->
-            <section id="architecture" class="max-w-7xl mx-auto px-6 mb-16 section-link">
+            <section id="architecture" class="max-w-7xl mx-auto px-6 mb-16">
                 <div class="flex items-center justify-between mb-4">
                     <div>
                         <h3 class="text-2xl font-bold text-slate-100 mb-2">System Architecture</h3>
@@ -581,7 +561,7 @@
             </section>
 
             <!-- Quick Start -->
-            <section id="quickstart" class="max-w-7xl mx-auto px-6 mb-16 section-link">
+            <section id="quickstart" class="max-w-7xl mx-auto px-6 mb-16">
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-10 h-10 rounded-xl bg-secondary-500/20 flex items-center justify-center">
                         <svg class="w-5 h-5 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -634,7 +614,7 @@
             </section>
 
             <!-- Project Structure -->
-            <section id="structure" class="max-w-7xl mx-auto px-6 mb-16 section-link">
+            <section id="structure" class="max-w-7xl mx-auto px-6 mb-16">
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
                         <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -669,7 +649,7 @@
             </section>
 
             <!-- Engineering Principles -->
-            <section id="principles" class="max-w-7xl mx-auto px-6 mb-16 section-link">
+            <section id="principles" class="max-w-7xl mx-auto px-6 mb-16">
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-10 h-10 rounded-xl bg-sky-500/20 flex items-center justify-center">
                         <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -888,7 +868,7 @@
             </section>
 
             <!-- API Endpoint Tester -->
-            <section id="api-tester" class="max-w-7xl mx-auto px-6 mb-16 section-link">
+            <section id="api-tester" class="max-w-7xl mx-auto px-6 mb-16">
                 <h3 class="text-2xl font-bold text-slate-100 mb-8">Test API Endpoints</h3>
                 <div class="rounded-2xl bg-slate-900/50 border border-slate-800 p-6 glow-sage">
                     <div class="grid md:grid-cols-4 gap-4 mb-6">
@@ -966,34 +946,6 @@
 
     <script>
         const API_BASE = 'http://localhost:8080';
-
-        let statusDot, statusText, statusBadge;
-
-        async function checkBackendStatus() {
-            if (!statusDot) return;
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 3000);
-                const response = await fetch(`${API_BASE}/health`, { method: 'GET', signal: controller.signal });
-                clearTimeout(timeoutId);
-                if (response.ok) {
-                    statusDot.classList.remove('bg-primary-500', 'bg-red-500');
-                    statusDot.classList.add('bg-sage-500');
-                    statusText.textContent = 'Online';
-                    statusBadge.classList.add('border-sage-500/30');
-                    statusBadge.classList.remove('border-slate-800');
-                } else {
-                    throw new Error('Non-OK response');
-                }
-            } catch (error) {
-                statusDot.classList.remove('bg-primary-500', 'bg-sage-500');
-                statusDot.classList.add('bg-red-500');
-                statusDot.style.animation = 'none';
-                statusText.textContent = 'Offline';
-                statusBadge.classList.add('border-red-500/30');
-                statusBadge.classList.remove('border-slate-800');
-            }
-        }
 
         function getAuthMode(path, method) {
             if (path === '/health' || path.startsWith('/health')) return { label: 'Public', cls: 'bg-sage-500/20 text-sage-400' };
@@ -1106,57 +1058,6 @@
             if (authState.token) h['Authorization'] = 'Bearer ' + authState.token;
             if (authState.csrf) h['X-CSRF-Token'] = authState.csrf;
             return h;
-        }
-
-        async function doLogin() {
-            const email = document.getElementById('loginEmail').value;
-            const pass = document.getElementById('loginPass').value;
-            const statusEl = document.getElementById('loginStatus');
-            statusEl.style.display = 'inline';
-            statusEl.textContent = 'Logging in...';
-            statusEl.className = 'text-xs text-amber-400';
-            try {
-                const resp = await fetch(API_BASE + '/api/v2/auth/login', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ identifier: email, password: pass })
-                });
-                const data = await resp.json();
-                const d = data.data || data;
-                if (resp.ok && d.access_token) {
-                    authState.token = d.access_token;
-                    authState.csrf = '';
-                    statusEl.textContent = 'Logged in ✓';
-                    statusEl.className = 'text-xs text-sage-400';
-                    updateAuthUI();
-                } else {
-                    statusEl.textContent = 'Login failed: ' + (d.error || d.message || resp.status);
-                    statusEl.className = 'text-xs text-rose-400';
-                }
-            } catch(e) {
-                statusEl.textContent = 'Error: ' + e.message;
-                statusEl.className = 'text-xs text-rose-400';
-            }
-        }
-
-        function doLogout() {
-            authState = { token: '', csrf: '' };
-            updateAuthUI();
-            const statusEl = document.getElementById('loginStatus');
-            statusEl.textContent = 'Logged out';
-            statusEl.className = 'text-xs text-slate-500';
-        }
-
-        function updateAuthUI() {
-            const badge = document.getElementById('authBadge');
-            if (!badge) return;
-            if (authState.token) {
-                const short = authState.token.substring(0, 16) + '…';
-                badge.innerHTML = '<span class="text-sage-400">●</span> JWT: ' + short;
-                badge.className = 'text-xs text-slate-500';
-            } else {
-                badge.textContent = 'Not authenticated';
-                badge.className = 'text-xs text-slate-500';
-            }
         }
 
         function selectEndpoint(path, method) {
@@ -1280,13 +1181,8 @@
         function resetZoom() { if (pz) pz.reset({ animate: true }); }
 
         window.addEventListener('DOMContentLoaded', () => {
-            statusDot = document.getElementById('statusDot');
-            statusText = document.getElementById('statusText');
-            statusBadge = document.getElementById('statusBadge');
-            checkBackendStatus();
             loadSwaggerEndpoints();
             setTimeout(initPanzoom, 500);
-            setInterval(checkBackendStatus, 30000);
         });
     </script>
 </body>

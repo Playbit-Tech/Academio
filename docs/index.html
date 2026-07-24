@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,9 +68,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/panzoom/9.4.3/panzoom.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
 
         .gradient-text {
             background: linear-gradient(135deg, #A5A78F 0%, #D4A574 40%, #FF7E5F 100%);
@@ -91,20 +96,45 @@
             box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5);
         }
 
-        .glow-sage { box-shadow: 0 0 60px rgba(165, 167, 143, 0.08), 0 0 30px rgba(107, 142, 90, 0.05); }
-        .glow-sage:hover { box-shadow: 0 0 80px rgba(165, 167, 143, 0.12), 0 0 40px rgba(107, 142, 90, 0.08); }
+        .glow-sage {
+            box-shadow: 0 0 60px rgba(165, 167, 143, 0.08), 0 0 30px rgba(107, 142, 90, 0.05);
+        }
 
-        .glow-peach { box-shadow: 0 0 60px rgba(255, 126, 95, 0.08), 0 0 30px rgba(255, 126, 95, 0.05); }
-        .glow-peach:hover { box-shadow: 0 0 80px rgba(255, 126, 95, 0.12), 0 0 40px rgba(255, 126, 95, 0.08); }
+        .glow-sage:hover {
+            box-shadow: 0 0 80px rgba(165, 167, 143, 0.12), 0 0 40px rgba(107, 142, 90, 0.08);
+        }
 
-        .glow-amber { box-shadow: 0 0 60px rgba(212, 165, 116, 0.08), 0 0 30px rgba(212, 165, 116, 0.05); }
-        .glow-amber:hover { box-shadow: 0 0 80px rgba(212, 165, 116, 0.12), 0 0 40px rgba(212, 165, 116, 0.08); }
+        .glow-peach {
+            box-shadow: 0 0 60px rgba(255, 126, 95, 0.08), 0 0 30px rgba(255, 126, 95, 0.05);
+        }
 
-        .glow-sky { box-shadow: 0 0 60px rgba(123, 154, 161, 0.08), 0 0 30px rgba(123, 154, 161, 0.05); }
-        .glow-sky:hover { box-shadow: 0 0 80px rgba(123, 154, 161, 0.12), 0 0 40px rgba(123, 154, 161, 0.08); }
+        .glow-peach:hover {
+            box-shadow: 0 0 80px rgba(255, 126, 95, 0.12), 0 0 40px rgba(255, 126, 95, 0.08);
+        }
 
-        .glow-diagram { box-shadow: 0 0 60px rgba(165, 167, 143, 0.08), 0 0 30px rgba(165, 167, 143, 0.04); }
-        .glow-diagram:hover { box-shadow: 0 0 80px rgba(165, 167, 143, 0.12), 0 0 40px rgba(165, 167, 143, 0.06); }
+        .glow-amber {
+            box-shadow: 0 0 60px rgba(212, 165, 116, 0.08), 0 0 30px rgba(212, 165, 116, 0.05);
+        }
+
+        .glow-amber:hover {
+            box-shadow: 0 0 80px rgba(212, 165, 116, 0.12), 0 0 40px rgba(212, 165, 116, 0.08);
+        }
+
+        .glow-sky {
+            box-shadow: 0 0 60px rgba(123, 154, 161, 0.08), 0 0 30px rgba(123, 154, 161, 0.05);
+        }
+
+        .glow-sky:hover {
+            box-shadow: 0 0 80px rgba(123, 154, 161, 0.12), 0 0 40px rgba(123, 154, 161, 0.08);
+        }
+
+        .glow-diagram {
+            box-shadow: 0 0 60px rgba(165, 167, 143, 0.08), 0 0 30px rgba(165, 167, 143, 0.04);
+        }
+
+        .glow-diagram:hover {
+            box-shadow: 0 0 80px rgba(165, 167, 143, 0.12), 0 0 40px rgba(165, 167, 143, 0.06);
+        }
 
         .slide-up {
             animation: slideUp 0.5s ease-out forwards;
@@ -112,8 +142,15 @@
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .slide-up-delayed {
@@ -135,38 +172,181 @@
             box-shadow: 0 4px 12px rgba(165, 167, 143, 0.3);
         }
 
-        .method-get    { background: rgba(107, 142, 90, 0.15); color: #8DD290; }
-        .method-post   { background: rgba(165, 167, 143, 0.15); color: #B8BE9B; }
-        .method-patch  { background: rgba(212, 165, 116, 0.15); color: #F8D290; }
-        .method-delete { background: rgba(200, 127, 127, 0.15); color: #F68989; }
-        .method-put    { background: rgba(255, 126, 95, 0.15); color: #FFA98A; }
+        .method-get {
+            background: rgba(107, 142, 90, 0.15);
+            color: #8DD290;
+        }
 
-        .ftree { position: relative; padding: 0.25rem 0; }
-        .ftree-line { position: relative; padding: 0.2rem 0 0.2rem 2rem; margin-left: 1rem; }
-        .ftree-line::before { content: ''; position: absolute; left: 0; top: 50%; width: 1.25rem; height: 2px; background: #334155; }
-        .ftree-line::after { content: ''; position: absolute; left: 0; top: 0; bottom: 50%; width: 2px; background: #334155; }
-        .ftree-line:last-child::after { bottom: auto; height: 50%; }
-        .ftree-line:only-child::before { display: none; }
-        .ftree-line:only-child::after { display: none; }
-        .ftree-root-line { position: relative; padding: 0.2rem 0 0.2rem 1rem; margin-left: 0.5rem; }
-        .ftree-root-line::before { content: ''; position: absolute; left: 0; top: 50%; width: 0.75rem; height: 2px; background: #334155; }
-        .ftree-parent { position: relative; padding-left: 1rem; }
-        .ftree-parent::before { content: ''; position: absolute; left: 1rem; top: 0; bottom: 0; width: 2px; background: #334155; }
-        .ftree-parent:last-child::before { bottom: 50%; }
-        .ftree-node { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0.75rem; border-radius: 0.5rem; font-size: 0.8rem; cursor: default; transition: background 0.15s; }
-        .ftree-node:hover { background: rgba(165, 167, 143, 0.08); }
-        .ftree-label { font-weight: 600; color: #e2e8f0; letter-spacing: -0.01em; }
-        .ftree-desc { font-size: 0.7rem; color: #64748b; }
-        .ftree-badge { font-size: 0.6rem; padding: 0.1rem 0.45rem; border-radius: 999px; font-weight: 600; letter-spacing: 0.02em; }
-        .ftree-badge-primary { background: rgba(165, 167, 143, 0.15); color: #B8BE9B; }
-        .ftree-badge-sage { background: rgba(107, 142, 90, 0.15); color: #8DD290; }
-        .ftree-badge-secondary { background: rgba(255, 126, 95, 0.15); color: #FFA98A; }
-        .ftree-badge-amber { background: rgba(212, 165, 116, 0.15); color: #F8D290; }
-        .ftree-badge-sky { background: rgba(123, 154, 161, 0.15); color: #A9D6DF; }
-        .ftree-badge-rose { background: rgba(200, 127, 127, 0.15); color: #F68989; }
-        .ftree-badge-slate { background: rgba(100, 116, 139, 0.15); color: #94a3b8; }
+        .method-post {
+            background: rgba(165, 167, 143, 0.15);
+            color: #B8BE9B;
+        }
 
-        #diagramContainer svg, #diagramContainer .ftree {
+        .method-patch {
+            background: rgba(212, 165, 116, 0.15);
+            color: #F8D290;
+        }
+
+        .method-delete {
+            background: rgba(200, 127, 127, 0.15);
+            color: #F68989;
+        }
+
+        .method-put {
+            background: rgba(255, 126, 95, 0.15);
+            color: #FFA98A;
+        }
+
+        .ftree {
+            position: relative;
+            padding: 0.25rem 0;
+        }
+
+        .ftree-line {
+            position: relative;
+            padding: 0.2rem 0 0.2rem 2rem;
+            margin-left: 1rem;
+        }
+
+        .ftree-line::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 1.25rem;
+            height: 2px;
+            background: #334155;
+        }
+
+        .ftree-line::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 50%;
+            width: 2px;
+            background: #334155;
+        }
+
+        .ftree-line:last-child::after {
+            bottom: auto;
+            height: 50%;
+        }
+
+        .ftree-line:only-child::before {
+            display: none;
+        }
+
+        .ftree-line:only-child::after {
+            display: none;
+        }
+
+        .ftree-root-line {
+            position: relative;
+            padding: 0.2rem 0 0.2rem 1rem;
+            margin-left: 0.5rem;
+        }
+
+        .ftree-root-line::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 0.75rem;
+            height: 2px;
+            background: #334155;
+        }
+
+        .ftree-parent {
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .ftree-parent::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #334155;
+        }
+
+        .ftree-parent:last-child::before {
+            bottom: 50%;
+        }
+
+        .ftree-node {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            cursor: default;
+            transition: background 0.15s;
+        }
+
+        .ftree-node:hover {
+            background: rgba(165, 167, 143, 0.08);
+        }
+
+        .ftree-label {
+            font-weight: 600;
+            color: #e2e8f0;
+            letter-spacing: -0.01em;
+        }
+
+        .ftree-desc {
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+
+        .ftree-badge {
+            font-size: 0.6rem;
+            padding: 0.1rem 0.45rem;
+            border-radius: 999px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .ftree-badge-primary {
+            background: rgba(165, 167, 143, 0.15);
+            color: #B8BE9B;
+        }
+
+        .ftree-badge-sage {
+            background: rgba(107, 142, 90, 0.15);
+            color: #8DD290;
+        }
+
+        .ftree-badge-secondary {
+            background: rgba(255, 126, 95, 0.15);
+            color: #FFA98A;
+        }
+
+        .ftree-badge-amber {
+            background: rgba(212, 165, 116, 0.15);
+            color: #F8D290;
+        }
+
+        .ftree-badge-sky {
+            background: rgba(123, 154, 161, 0.15);
+            color: #A9D6DF;
+        }
+
+        .ftree-badge-rose {
+            background: rgba(200, 127, 127, 0.15);
+            color: #F68989;
+        }
+
+        .ftree-badge-slate {
+            background: rgba(100, 116, 139, 0.15);
+            color: #94a3b8;
+        }
+
+        #diagramContainer svg,
+        #diagramContainer .ftree {
             display: block;
         }
 
@@ -182,19 +362,46 @@
         }
 
         @media (max-width: 767px) {
-            .nav-link { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+            .nav-link {
+                padding-top: 0.625rem;
+                padding-bottom: 0.625rem;
+            }
         }
 
         .principle-card {
             border-left: 3px solid;
         }
 
-        .prose-custom h3 { color: #B8BE9B; margin-top: 1.5rem; margin-bottom: 0.5rem; }
-        .prose-custom p { color: #94a3b8; line-height: 1.7; margin-bottom: 0.75rem; }
-        .prose-custom code { color: #D4A574; font-size: 0.85em; }
-        .prose-custom ul { color: #94a3b8; padding-left: 1.25rem; margin-bottom: 0.75rem; }
-        .prose-custom li { margin-bottom: 0.35rem; }
-        .prose-custom strong { color: #e2e8f0; }
+        .prose-custom h3 {
+            color: #B8BE9B;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .prose-custom p {
+            color: #94a3b8;
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+        }
+
+        .prose-custom code {
+            color: #D4A574;
+            font-size: 0.85em;
+        }
+
+        .prose-custom ul {
+            color: #94a3b8;
+            padding-left: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .prose-custom li {
+            margin-bottom: 0.35rem;
+        }
+
+        .prose-custom strong {
+            color: #e2e8f0;
+        }
     </style>
 </head>
 
@@ -204,61 +411,93 @@
 
     <!-- Gradient Orbs -->
     <div class="fixed top-0 left-1/4 w-96 h-96 bg-primary-500/15 rounded-full blur-[128px] pointer-events-none"></div>
-    <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-secondary-500/15 rounded-full blur-[128px] pointer-events-none"></div>
+    <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-secondary-500/15 rounded-full blur-[128px] pointer-events-none">
+    </div>
 
     <div class="relative z-10">
         <!-- Mobile Sidebar Backdrop -->
-        <div id="sidebarBackdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden" onclick="toggleSidebar()"></div>
+        <div id="sidebarBackdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden"
+            onclick="toggleSidebar()"></div>
 
         <!-- Fixed Navigation Sidebar -->
-        <nav class="fixed left-0 top-20 w-64 max-w-[80vw] h-screen bg-slate-900/95 backdrop-blur-sm border-r border-slate-800/50 p-6 overflow-y-auto z-40 -translate-x-full md:translate-x-0 transition-transform duration-300" id="sidebar">
+        <nav class="fixed left-0 top-20 w-64 max-w-[80vw] h-screen bg-slate-900/95 backdrop-blur-sm border-r border-slate-800/50 p-6 overflow-y-auto z-40 -translate-x-full md:translate-x-0 transition-transform duration-300"
+            id="sidebar">
             <div class="flex items-center justify-between mb-4 md:hidden">
                 <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Navigation</h3>
-                <button onclick="toggleSidebar()" class="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700">
+                <button onclick="toggleSidebar()"
+                    class="p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
                     </svg>
                 </button>
             </div>
             <div class="space-y-4">
-                <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4 hidden md:block">Navigation</h3>
-                <a href="#hero" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
+                <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4 hidden md:block">
+                    Navigation</h3>
+                <a href="#hero"
+                    class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors"
+                    onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-primary-400 mr-3"></span>Overview
                 </a>
-                <a href="#architecture" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
+                <a href="#architecture"
+                    class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors"
+                    onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-sage-400 mr-3"></span>Architecture
                 </a>
-                <a href="#quickstart" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
+                <a href="#quickstart"
+                    class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors"
+                    onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-secondary-400 mr-3"></span>Quick Start
                 </a>
-                <a href="#structure" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
+                <a href="#structure"
+                    class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors"
+                    onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-3"></span>Project Structure
                 </a>
-                <a href="#principles" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
+                <a href="#principles"
+                    class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors"
+                    onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-sky-400 mr-3"></span>Principles
                 </a>
-                <a href="#components" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
+                <a href="#components"
+                    class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors"
+                    onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-secondary-400 mr-3"></span>Components
                 </a>
-                <a href="#routes" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
+                <a href="#routes"
+                    class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors"
+                    onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-primary-400 mr-3"></span>Routes
                 </a>
-                <a href="#database" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
+                <a href="#database"
+                    class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors"
+                    onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-sage-400 mr-3"></span>Database
                 </a>
-                <a href="#multi-tenancy" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
+                <a href="#multi-tenancy"
+                    class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors"
+                    onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-sky-400 mr-3"></span>Multi-Tenancy
                 </a>
-                <a href="#authorization" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
+                <a href="#authorization"
+                    class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors"
+                    onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-3"></span>Authorization
                 </a>
-                <a href="#middleware" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
+                <a href="#middleware"
+                    class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors"
+                    onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-secondary-400 mr-3"></span>Middleware
                 </a>
-                <a href="#queues" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
+                <a href="#queues"
+                    class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors"
+                    onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-rose-400 mr-3"></span>Job Queues
                 </a>
-                <a href="#api-tester" class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors" onclick="closeSidebar()">
+                <a href="#api-tester"
+                    class="nav-link block py-2 px-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800/50 hover:text-white transition-colors"
+                    onclick="closeSidebar()">
                     <span class="inline-block w-2 h-2 rounded-full bg-slate-400 mr-3"></span>API Tester
                 </a>
             </div>
@@ -270,22 +509,27 @@
             <header class="border-b border-slate-800/50 backdrop-blur-sm bg-slate-950/80 sticky top-0 z-40">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
                     <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                        <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700 shrink-0">
+                        <button onclick="toggleSidebar()"
+                            class="md:hidden p-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700 shrink-0">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16m-7 6h7"></path>
                             </svg>
                         </button>
                         <img src="logo.svg" alt="Academio" class="h-8 sm:h-10 w-auto" />
                         <div class="min-w-0">
                             <h1 class="font-bold text-base sm:text-lg text-white truncate">Academio</h1>
-                            <p class="text-[10px] sm:text-xs text-slate-500 hidden sm:block">Education ERP — Backend Architecture</p>
+                            <p class="text-[10px] sm:text-xs text-slate-500 hidden sm:block">Education ERP — Backend
+                                Architecture</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-4">
 
-                        <a href="https://github.com/playbittechnologies/academio" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-all duration-300 shrink-0">
+                        <a href="https://github.com/playbits/schoolcare-be-v2" target="_blank" rel="noopener noreferrer"
+                            class="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-all duration-300 shrink-0">
                             <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                <path
+                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                             </svg>
                             <span class="text-xs sm:text-sm font-medium">Repository</span>
                         </a>
@@ -295,44 +539,64 @@
 
             <!-- Hero Section -->
             <section id="hero" class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16 text-center slide-up">
-                <div class="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary mb-6 sm:mb-8">
+                <div
+                    class="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary mb-6 sm:mb-8">
                     <span class="w-2 h-2 rounded-full bg-primary-400 animate-pulse"></span>
                     <span class="text-xs sm:text-sm text-primary-400">Go 1.26 + Gin + GORM</span>
                 </div>
-                <h2 class="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-4 sm:mb-6 gradient-text leading-tight">Academio Architecture</h2>
-                <p class="text-base sm:text-lg md:text-xl text-slate-400 max-w-3xl mx-auto px-2">A multi-tenant School Management &amp; Education ERP platform serving thousands of schools — nursery through university — with admissions, academics, finance, HR, LMS, CBA, and more.</p>
+                <h2 class="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-4 sm:mb-6 gradient-text leading-tight">
+                    Academio Architecture</h2>
+                <p class="text-base sm:text-lg md:text-xl text-slate-400 max-w-3xl mx-auto px-2">A multi-tenant School
+                    Management &amp; Education ERP platform serving thousands of schools — nursery through university —
+                    with admissions, academics, finance, HR, LMS, CBA, and more.</p>
 
                 <div class="flex flex-wrap justify-center gap-3 mt-10">
-                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Go 1.26</span>
-                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Gin</span>
-                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">GORM</span>
-                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">PostgreSQL</span>
-                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Redis</span>
-                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Asynq</span>
-                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">JWT</span>
-                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Swagger</span>
-                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Prometheus</span>
-                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Grafana</span>
-                    <span class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">WebSocket</span>
+                    <span
+                        class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Go
+                        1.26</span>
+                    <span
+                        class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Gin</span>
+                    <span
+                        class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">GORM</span>
+                    <span
+                        class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">PostgreSQL</span>
+                    <span
+                        class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Redis</span>
+                    <span
+                        class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Asynq</span>
+                    <span
+                        class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">JWT</span>
+                    <span
+                        class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Swagger</span>
+                    <span
+                        class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Prometheus</span>
+                    <span
+                        class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">Grafana</span>
+                    <span
+                        class="tech-badge px-4 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 text-sm font-medium">WebSocket</span>
                 </div>
             </section>
 
             <!-- Stats -->
             <section class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-                    <div class="card-hover p-4 sm:p-6 rounded-2xl bg-primary-900/30 border border-primary-800/50 text-center glow-sage">
+                    <div
+                        class="card-hover p-4 sm:p-6 rounded-2xl bg-primary-900/30 border border-primary-800/50 text-center glow-sage">
                         <div class="text-2xl sm:text-4xl font-bold text-primary-400 mb-1 sm:mb-2">42</div>
                         <div class="text-xs sm:text-sm text-primary-300">Route Groups</div>
                     </div>
-                    <div class="card-hover p-4 sm:p-6 rounded-2xl bg-sage-900/30 border border-sage-800/50 text-center glow-sage">
+                    <div
+                        class="card-hover p-4 sm:p-6 rounded-2xl bg-sage-900/30 border border-sage-800/50 text-center glow-sage">
                         <div class="text-2xl sm:text-4xl font-bold text-sage-400 mb-1 sm:mb-2">150+</div>
                         <div class="text-xs sm:text-sm text-sage-300">DB Models</div>
                     </div>
-                    <div class="card-hover p-4 sm:p-6 rounded-2xl bg-amber-900/30 border border-amber-800/50 text-center glow-amber">
+                    <div
+                        class="card-hover p-4 sm:p-6 rounded-2xl bg-amber-900/30 border border-amber-800/50 text-center glow-amber">
                         <div class="text-2xl sm:text-4xl font-bold text-amber-400 mb-1 sm:mb-2">4</div>
                         <div class="text-xs sm:text-sm text-amber-300">Auth Layers</div>
                     </div>
-                    <div class="card-hover p-4 sm:p-6 rounded-2xl bg-secondary-900/30 border border-secondary-800/50 text-center glow-peach">
+                    <div
+                        class="card-hover p-4 sm:p-6 rounded-2xl bg-secondary-900/30 border border-secondary-800/50 text-center glow-peach">
                         <div class="text-2xl sm:text-4xl font-bold text-secondary-400 mb-1 sm:mb-2">42</div>
                         <div class="text-xs sm:text-sm text-secondary-300">Service Modules</div>
                     </div>
@@ -344,106 +608,159 @@
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                     <div>
                         <h3 class="text-xl sm:text-2xl font-bold text-slate-100 mb-1 sm:mb-2">System Architecture</h3>
-                        <p class="text-xs sm:text-sm text-slate-400">Component hierarchy &bull; Ctrl+Scroll to zoom &bull; Drag to pan</p>
+                        <p class="text-xs sm:text-sm text-slate-400">Component hierarchy &bull; Ctrl+Scroll to zoom
+                            &bull; Drag to pan</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-                        <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-primary-500"></span> Server</span>
-                        <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-sage-500"></span> Routes</span>
-                        <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-secondary-500"></span> Services</span>
-                        <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Auth</span>
-                        <span class="flex items-center gap-1 text-slate-500"><span class="w-2 h-2 rounded-full bg-sky-500"></span> Data</span>
+                        <span class="flex items-center gap-1 text-slate-500"><span
+                                class="w-2 h-2 rounded-full bg-primary-500"></span> Server</span>
+                        <span class="flex items-center gap-1 text-slate-500"><span
+                                class="w-2 h-2 rounded-full bg-sage-500"></span> Routes</span>
+                        <span class="flex items-center gap-1 text-slate-500"><span
+                                class="w-2 h-2 rounded-full bg-secondary-500"></span> Services</span>
+                        <span class="flex items-center gap-1 text-slate-500"><span
+                                class="w-2 h-2 rounded-full bg-amber-500"></span> Auth</span>
+                        <span class="flex items-center gap-1 text-slate-500"><span
+                                class="w-2 h-2 rounded-full bg-sky-500"></span> Data</span>
                         <div class="flex items-center gap-1 sm:ml-3 sm:pl-3 sm:border-l border-slate-700">
-                            <button onclick="zoomIn()" class="p-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-primary-500 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                            <button onclick="zoomIn()"
+                                class="p-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-primary-500 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
                             </button>
-                            <button onclick="zoomOut()" class="p-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-primary-500 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" /></svg>
+                            <button onclick="zoomOut()"
+                                class="p-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-primary-500 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M20 12H4" />
+                                </svg>
                             </button>
-                            <button onclick="resetZoom()" class="px-2 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-primary-500 transition-colors text-xs">Reset</button>
+                            <button onclick="resetZoom()"
+                                class="px-2 py-1.5 rounded-lg bg-slate-800 border border-slate-700 hover:border-primary-500 transition-colors text-xs">Reset</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="rounded-2xl bg-slate-900/50 border border-slate-800 shadow-2xl glow-diagram" style="max-width:100%;">
-                    <div id="diagramContainer" class="overflow-auto" style="max-height: 80vh; height: 620px; cursor: grab; max-width:100%;">
+                <div class="rounded-2xl bg-slate-900/50 border border-slate-800 shadow-2xl glow-diagram"
+                    style="max-width:100%;">
+                    <div id="diagramContainer" class="overflow-auto"
+                        style="max-height: 80vh; height: 620px; cursor: grab; max-width:100%;">
                         <div id="diagramWrapper">
                             <div class="p-3 sm:p-6" style="min-width: 680px;">
                                 <div class="ftree font-mono text-sm leading-relaxed select-none">
 
                                     <!-- Gin HTTP Server -->
-                                    <div class="ftree-node"><span class="w-2.5 h-2.5 rounded-full bg-primary-500 inline-block flex-shrink-0"></span> <span class="ftree-label">Gin HTTP Server (:8080)</span> <span class="ftree-badge ftree-badge-primary">Layer 1</span></div>
+                                    <div class="ftree-node"><span
+                                            class="w-2.5 h-2.5 rounded-full bg-primary-500 inline-block flex-shrink-0"></span>
+                                        <span class="ftree-label">Gin HTTP Server (:8080)</span> <span
+                                            class="ftree-badge ftree-badge-primary">Layer 1</span></div>
                                     <div class="ftree">
-                                        <div class="ftree-line"><span class="ftree-node"><span class="ftree-label">Middleware Pipeline</span> <span class="ftree-desc">[execution order]</span></span></div>
+                                        <div class="ftree-line"><span class="ftree-node"><span
+                                                    class="ftree-label">Middleware Pipeline</span> <span
+                                                    class="ftree-desc">[execution order]</span></span></div>
                                         <div class="ftree-line pl-0" style="padding-left:2.5rem;">
-                                            <span class="ftree-node"><span class="ftree-label">Recovery</span> <span class="ftree-desc">panic &rarr; JSON</span></span>
-                                            <span class="ftree-node"><span class="ftree-label">RequestID</span> <span class="ftree-desc">X-Request-ID</span></span>
-                                            <span class="ftree-node"><span class="ftree-label">Tracing</span> <span class="ftree-desc">OpenTelemetry</span></span>
-                                            <span class="ftree-node"><span class="ftree-label">ErrorHandler</span> <span class="ftree-desc">global catch</span></span>
-                                            <span class="ftree-node"><span class="ftree-label">Logger</span> <span class="ftree-desc">structured logging</span></span>
-                                            <span class="ftree-node"><span class="ftree-label">SecurityHeaders</span> <span class="ftree-desc">HSTS, CSP</span></span>
-                                            <span class="ftree-node"><span class="ftree-label">CORS</span> <span class="ftree-desc">domain allowlist</span></span>
-                                            <span class="ftree-node"><span class="ftree-label">BodyLimit</span> <span class="ftree-desc">request size cap</span></span>
-                                            <span class="ftree-node"><span class="ftree-label">SchoolID</span> <span class="ftree-desc">x-school-id header</span></span>
-                                            <span class="ftree-node"><span class="ftree-label">RateLimiter</span> <span class="ftree-desc">Redis-backed</span></span>
-                                            <span class="ftree-node"><span class="ftree-label">CSRF</span> <span class="ftree-desc">token validation</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">Recovery</span> <span
+                                                    class="ftree-desc">panic &rarr; JSON</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">RequestID</span> <span
+                                                    class="ftree-desc">X-Request-ID</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">Tracing</span> <span
+                                                    class="ftree-desc">OpenTelemetry</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">ErrorHandler</span> <span
+                                                    class="ftree-desc">global catch</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">Logger</span> <span
+                                                    class="ftree-desc">structured logging</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">SecurityHeaders</span>
+                                                <span class="ftree-desc">HSTS, CSP</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">CORS</span> <span
+                                                    class="ftree-desc">domain allowlist</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">BodyLimit</span> <span
+                                                    class="ftree-desc">request size cap</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">SchoolID</span> <span
+                                                    class="ftree-desc">x-school-id header</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">RateLimiter</span> <span
+                                                    class="ftree-desc">Redis-backed</span></span>
+                                            <span class="ftree-node"><span class="ftree-label">CSRF</span> <span
+                                                    class="ftree-desc">token validation</span></span>
                                         </div>
 
-                                        <div class="ftree-line"><span class="ftree-node"><span class="w-2 h-2 rounded-full bg-sage-500 inline-block flex-shrink-0"></span> <span class="ftree-label">Route Groups (42 groups)</span> <span class="ftree-badge ftree-badge-sage">Layer 2</span></span></div>
+                                        <div class="ftree-line"><span class="ftree-node"><span
+                                                    class="w-2 h-2 rounded-full bg-sage-500 inline-block flex-shrink-0"></span>
+                                                <span class="ftree-label">Route Groups (42 groups)</span> <span
+                                                    class="ftree-badge ftree-badge-sage">Layer 2</span></span></div>
                                         <div class="ftree-line pl-0" style="padding-left:2.5rem;">
-                                            <div class="ftree" style="display:inline-flex; gap:0.75rem; align-items:flex-start; flex-wrap:wrap;">
-                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:130px;">
-                                                    <div class="text-xs font-semibold text-slate-400 mb-1 px-1">Public</div>
+                                            <div class="ftree"
+                                                style="display:inline-flex; gap:0.75rem; align-items:flex-start; flex-wrap:wrap;">
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2"
+                                                    style="min-width:130px;">
+                                                    <div class="text-xs font-semibold text-slate-400 mb-1 px-1">Public
+                                                    </div>
                                                     <div class="ftree-node text-xs py-0.5">/health</div>
                                                     <div class="ftree-node text-xs py-0.5">/metrics</div>
                                                     <div class="ftree-node text-xs py-0.5">/swagger</div>
                                                     <div class="ftree-node text-xs py-0.5">/auth/login</div>
                                                     <div class="ftree-node text-xs py-0.5">/auth/register</div>
                                                 </div>
-                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:130px;">
-                                                    <div class="text-xs font-semibold text-amber-400 mb-1 px-1">Auth</div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2"
+                                                    style="min-width:130px;">
+                                                    <div class="text-xs font-semibold text-amber-400 mb-1 px-1">Auth
+                                                    </div>
                                                     <div class="ftree-node text-xs py-0.5">/auth/* (12)</div>
                                                     <div class="ftree-node text-xs py-0.5">2FA, TOTP</div>
                                                     <div class="ftree-node text-xs py-0.5">Sessions</div>
                                                 </div>
-                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:140px;">
-                                                    <div class="text-xs font-semibold text-primary-400 mb-1 px-1">Core</div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2"
+                                                    style="min-width:140px;">
+                                                    <div class="text-xs font-semibold text-primary-400 mb-1 px-1">Core
+                                                    </div>
                                                     <div class="ftree-node text-xs py-0.5">/schools</div>
                                                     <div class="ftree-node text-xs py-0.5">/users</div>
                                                     <div class="ftree-node text-xs py-0.5">/tenants</div>
                                                     <div class="ftree-node text-xs py-0.5">/admin</div>
                                                 </div>
-                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:140px;">
-                                                    <div class="text-xs font-semibold text-secondary-400 mb-1 px-1">Academic</div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2"
+                                                    style="min-width:140px;">
+                                                    <div class="text-xs font-semibold text-secondary-400 mb-1 px-1">
+                                                        Academic</div>
                                                     <div class="ftree-node text-xs py-0.5">/academic</div>
                                                     <div class="ftree-node text-xs py-0.5">/grading</div>
                                                     <div class="ftree-node text-xs py-0.5">/timetables</div>
                                                     <div class="ftree-node text-xs py-0.5">/exams</div>
                                                     <div class="ftree-node text-xs py-0.5">/cba</div>
                                                 </div>
-                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:140px;">
-                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">Finance &amp; HR</div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2"
+                                                    style="min-width:140px;">
+                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">Finance
+                                                        &amp; HR</div>
                                                     <div class="ftree-node text-xs py-0.5">/finance</div>
                                                     <div class="ftree-node text-xs py-0.5">/bills</div>
                                                     <div class="ftree-node text-xs py-0.5">/payments</div>
                                                     <div class="ftree-node text-xs py-0.5">/hr</div>
                                                 </div>
-                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:140px;">
-                                                    <div class="text-xs font-semibold text-sage-400 mb-1 px-1">Operations</div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2"
+                                                    style="min-width:140px;">
+                                                    <div class="text-xs font-semibold text-sage-400 mb-1 px-1">
+                                                        Operations</div>
                                                     <div class="ftree-node text-xs py-0.5">/library</div>
                                                     <div class="ftree-node text-xs py-0.5">/hostels</div>
                                                     <div class="ftree-node text-xs py-0.5">/transport</div>
                                                     <div class="ftree-node text-xs py-0.5">/inventory</div>
                                                 </div>
-                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:150px;">
-                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">Engagement</div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2"
+                                                    style="min-width:150px;">
+                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">Engagement
+                                                    </div>
                                                     <div class="ftree-node text-xs py-0.5">/lms, /alumni</div>
                                                     <div class="ftree-node text-xs py-0.5">/messages</div>
                                                     <div class="ftree-node text-xs py-0.5">/communication</div>
                                                     <div class="ftree-node text-xs py-0.5">/pastoral</div>
                                                     <div class="ftree-node text-xs py-0.5">/conferences</div>
                                                 </div>
-                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:150px;">
-                                                    <div class="text-xs font-semibold text-primary-400 mb-1 px-1">Insights</div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2"
+                                                    style="min-width:150px;">
+                                                    <div class="text-xs font-semibold text-primary-400 mb-1 px-1">
+                                                        Insights</div>
                                                     <div class="ftree-node text-xs py-0.5">/analytics</div>
                                                     <div class="ftree-node text-xs py-0.5">/dashboard</div>
                                                     <div class="ftree-node text-xs py-0.5">/reports</div>
@@ -454,7 +771,11 @@
                                         </div>
 
                                         <!-- Service Layer -->
-                                        <div class="ftree-line"><span class="ftree-node"><span class="w-2 h-2 rounded-full bg-secondary-500 inline-block flex-shrink-0"></span> <span class="ftree-label">Service Layer (42 modules)</span> <span class="ftree-badge ftree-badge-secondary">Layer 3</span></span></div>
+                                        <div class="ftree-line"><span class="ftree-node"><span
+                                                    class="w-2 h-2 rounded-full bg-secondary-500 inline-block flex-shrink-0"></span>
+                                                <span class="ftree-label">Service Layer (42 modules)</span> <span
+                                                    class="ftree-badge ftree-badge-secondary">Layer 3</span></span>
+                                        </div>
                                         <div class="ftree-line pl-0" style="padding-left:2.5rem;">
                                             <div class="flex flex-wrap gap-x-1 gap-y-0.5">
                                                 <span class="ftree-node text-xs">Auth</span>
@@ -497,23 +818,33 @@
                                         </div>
 
                                         <!-- Data Layer -->
-                                        <div class="ftree-line"><span class="ftree-node"><span class="w-2 h-2 rounded-full bg-sky-500 inline-block flex-shrink-0"></span> <span class="ftree-label">Data Layer</span> <span class="ftree-badge ftree-badge-sky">Layer 4</span></span></div>
+                                        <div class="ftree-line"><span class="ftree-node"><span
+                                                    class="w-2 h-2 rounded-full bg-sky-500 inline-block flex-shrink-0"></span>
+                                                <span class="ftree-label">Data Layer</span> <span
+                                                    class="ftree-badge ftree-badge-sky">Layer 4</span></span></div>
                                         <div class="ftree-line pl-0" style="padding-left:2.5rem;">
-                                            <div class="ftree" style="display:inline-flex; gap:0.75rem; align-items:flex-start;">
-                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:140px;">
-                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">GORM ORM</div>
+                                            <div class="ftree"
+                                                style="display:inline-flex; gap:0.75rem; align-items:flex-start;">
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2"
+                                                    style="min-width:140px;">
+                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">GORM ORM
+                                                    </div>
                                                     <div class="ftree-node text-xs py-0.5">150+ Models</div>
                                                     <div class="ftree-node text-xs py-0.5">Auto Migrations</div>
                                                     <div class="ftree-node text-xs py-0.5">Schema-per-Tenant</div>
                                                 </div>
-                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:140px;">
-                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">Repository Pattern</div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2"
+                                                    style="min-width:140px;">
+                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">Repository
+                                                        Pattern</div>
                                                     <div class="ftree-node text-xs py-0.5">Interface-based</div>
                                                     <div class="ftree-node text-xs py-0.5">Pagination helpers</div>
                                                     <div class="ftree-node text-xs py-0.5">Eager Loading</div>
                                                 </div>
-                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2" style="min-width:130px;">
-                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">Infrastructure</div>
+                                                <div class="rounded-lg bg-slate-800/40 border border-slate-700/50 p-2"
+                                                    style="min-width:130px;">
+                                                    <div class="text-xs font-semibold text-sky-400 mb-1 px-1">
+                                                        Infrastructure</div>
                                                     <div class="ftree-node text-xs py-0.5">DB Manager</div>
                                                     <div class="ftree-node text-xs py-0.5">Redis Cache</div>
                                                     <div class="ftree-node text-xs py-0.5">WebSocket Hub</div>
@@ -522,7 +853,11 @@
                                         </div>
 
                                         <!-- Authentication -->
-                                        <div class="ftree-line"><span class="ftree-node"><span class="w-2 h-2 rounded-full bg-amber-500 inline-block flex-shrink-0"></span> <span class="ftree-label">Authentication &amp; Authorization</span> <span class="ftree-badge ftree-badge-amber">Cross-cutting</span></span></div>
+                                        <div class="ftree-line"><span class="ftree-node"><span
+                                                    class="w-2 h-2 rounded-full bg-amber-500 inline-block flex-shrink-0"></span>
+                                                <span class="ftree-label">Authentication &amp; Authorization</span>
+                                                <span class="ftree-badge ftree-badge-amber">Cross-cutting</span></span>
+                                        </div>
                                         <div class="ftree-line pl-0" style="padding-left:2.5rem;">
                                             <div class="flex flex-wrap gap-x-1 gap-y-0.5">
                                                 <span class="ftree-node text-xs">Public (no auth)</span>
@@ -531,28 +866,44 @@
                                                 <span class="ftree-node text-xs">Admin Only</span>
                                             </div>
                                             <div class="flex flex-wrap gap-x-1 gap-y-0.5 mt-1">
-                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">JWTAuth()</span>
-                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">EnforceSchoolID()</span>
-                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">TenantResolution()</span>
-                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">AdminOnly()</span>
+                                                <span class="ftree-node text-xs"
+                                                    style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">JWTAuth()</span>
+                                                <span class="ftree-node text-xs"
+                                                    style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">EnforceSchoolID()</span>
+                                                <span class="ftree-node text-xs"
+                                                    style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">TenantResolution()</span>
+                                                <span class="ftree-node text-xs"
+                                                    style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">AdminOnly()</span>
                                             </div>
                                             <div class="flex flex-wrap gap-x-1 gap-y-0.5 mt-1">
-                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">CSRF()</span>
-                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">RateLimit()</span>
-                                                <span class="ftree-node text-xs" style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">AuditLogging()</span>
+                                                <span class="ftree-node text-xs"
+                                                    style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">CSRF()</span>
+                                                <span class="ftree-node text-xs"
+                                                    style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">RateLimit()</span>
+                                                <span class="ftree-node text-xs"
+                                                    style="background:rgba(100,116,139,0.1);border-radius:0.25rem;">AuditLogging()</span>
                                             </div>
                                         </div>
 
                                         <!-- Workers -->
-                                        <div class="ftree-line"><span class="ftree-node"><span class="w-2 h-2 rounded-full bg-sky-500 inline-block flex-shrink-0"></span> <span class="ftree-label">Background Workers (Asynq/Redis)</span> <span class="ftree-badge ftree-badge-sky">Layer 5</span></span></div>
+                                        <div class="ftree-line"><span class="ftree-node"><span
+                                                    class="w-2 h-2 rounded-full bg-sky-500 inline-block flex-shrink-0"></span>
+                                                <span class="ftree-label">Background Workers (Asynq/Redis)</span> <span
+                                                    class="ftree-badge ftree-badge-sky">Layer 5</span></span></div>
                                         <div class="ftree-line pl-0" style="padding-left:2.5rem;">
-                                            <span class="ftree-node text-xs" style="background:rgba(200,127,127,0.15);border-radius:0.25rem;color:#F68989;">critical</span>
-                                            <span class="ftree-node text-xs" style="background:rgba(123,154,161,0.15);border-radius:0.25rem;color:#A9D6DF;">provisioning</span>
-                                            <span class="ftree-node text-xs" style="background:rgba(71,85,105,0.3);border-radius:0.25rem;color:#cbd5e1;">default</span>
+                                            <span class="ftree-node text-xs"
+                                                style="background:rgba(200,127,127,0.15);border-radius:0.25rem;color:#F68989;">critical</span>
+                                            <span class="ftree-node text-xs"
+                                                style="background:rgba(123,154,161,0.15);border-radius:0.25rem;color:#A9D6DF;">provisioning</span>
+                                            <span class="ftree-node text-xs"
+                                                style="background:rgba(71,85,105,0.3);border-radius:0.25rem;color:#cbd5e1;">default</span>
                                         </div>
 
                                         <!-- External -->
-                                        <div class="ftree-line"><span class="ftree-node"><span class="w-2 h-2 rounded-full bg-slate-400 inline-block flex-shrink-0"></span> <span class="ftree-label">External Integrations</span> <span class="ftree-badge ftree-badge-slate">Layer 6</span></span></div>
+                                        <div class="ftree-line"><span class="ftree-node"><span
+                                                    class="w-2 h-2 rounded-full bg-slate-400 inline-block flex-shrink-0"></span>
+                                                <span class="ftree-label">External Integrations</span> <span
+                                                    class="ftree-badge ftree-badge-slate">Layer 6</span></span></div>
                                         <div class="ftree-line pl-0" style="padding-left:2.5rem;">
                                             <span class="ftree-node text-xs">PostgreSQL</span>
                                             <span class="ftree-node text-xs">Redis</span>
@@ -572,9 +923,12 @@
             <!-- Quick Start -->
             <section id="quickstart" class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16">
                 <div class="flex items-center gap-3 mb-6 sm:mb-8">
-                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-secondary-500/20 flex items-center justify-center shrink-0">
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    <div
+                        class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-secondary-500/20 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-secondary-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                     </div>
                     <h3 class="text-xl sm:text-2xl font-bold text-slate-100">Quick Start</h3>
@@ -583,15 +937,24 @@
                     <div class="p-4 sm:p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-sage">
                         <h4 class="font-semibold text-primary-300 mb-2 sm:mb-3 text-xs sm:text-base">Prerequisites</h4>
                         <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-slate-400">
-                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1 sm:mt-1.5"></span> <span class="min-w-0">Docker (Postgres :5432, Redis :6379)</span></li>
-                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1 sm:mt-1.5"></span> <span class="min-w-0">Go 1.26</span></li>
-                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1 sm:mt-1.5"></span> <span class="min-w-0">Node.js + Yarn 4+</span></li>
-                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1 sm:mt-1.5"></span> <span class="min-w-0">Air (hot reload)</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1 sm:mt-1.5"></span>
+                                <span class="min-w-0">Docker (Postgres :5432, Redis :6379)</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1 sm:mt-1.5"></span>
+                                <span class="min-w-0">Go 1.26</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1 sm:mt-1.5"></span>
+                                <span class="min-w-0">Node.js + Yarn 4+</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1 sm:mt-1.5"></span>
+                                <span class="min-w-0">Air (hot reload)</span></li>
                         </ul>
                     </div>
                     <div class="p-4 sm:p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-sage">
                         <h4 class="font-semibold text-primary-300 mb-2 sm:mb-3 text-xs sm:text-base">Setup Commands</h4>
-                        <pre class="text-[10px] sm:text-sm text-slate-300 font-mono bg-slate-950 p-2 sm:p-3 rounded-xl border border-slate-800 overflow-x-auto"><span class="text-slate-500"># Backend</span>
+                        <pre
+                            class="text-[10px] sm:text-sm text-slate-300 font-mono bg-slate-950 p-2 sm:p-3 rounded-xl border border-slate-800 overflow-x-auto"><span class="text-slate-500"># Backend</span>
 <span class="text-secondary-400">$</span> cd backend
 <span class="text-secondary-400">$</span> cp .env.example .env
 <span class="text-secondary-400">$</span> make db-init && make migrate && make seed
@@ -605,17 +968,30 @@
                     <div class="p-4 sm:p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-amber">
                         <h4 class="font-semibold text-amber-300 mb-2 sm:mb-3 text-xs sm:text-base">Key Commands</h4>
                         <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-slate-400">
-                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><code class="text-amber-400 text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">make db-init DROP_TENANT=true</code> <span class="min-w-0 leading-snug">Reset DB</span></li>
-                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><code class="text-amber-400 text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">make migrate &amp;&amp; make seed</code> <span class="min-w-0 leading-snug">Fresh migration</span></li>
-                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><code class="text-amber-400 text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">./bin/server</code> <span class="min-w-0 leading-snug">Start server</span></li>
-                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><code class="text-amber-400 text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">scripts/test_endpoint.sh</code> <span class="min-w-0 leading-snug">Integration tests</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><code
+                                    class="text-amber-400 text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">make db-init DROP_TENANT=true</code>
+                                <span class="min-w-0 leading-snug">Reset DB</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><code
+                                    class="text-amber-400 text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">make migrate &amp;&amp; make seed</code>
+                                <span class="min-w-0 leading-snug">Fresh migration</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><code
+                                    class="text-amber-400 text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">./bin/server</code>
+                                <span class="min-w-0 leading-snug">Start server</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><code
+                                    class="text-amber-400 text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded bg-amber-500/10 shrink-0 whitespace-nowrap">scripts/test_endpoint.sh</code>
+                                <span class="min-w-0 leading-snug">Integration tests</span></li>
                         </ul>
                     </div>
                     <div class="p-4 sm:p-6 rounded-2xl bg-slate-900/50 border border-slate-800 glow-sky">
                         <h4 class="font-semibold text-sky-300 mb-2 sm:mb-3 text-xs sm:text-base">Credentials</h4>
                         <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-slate-400">
-                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span class="text-sky-400 font-medium shrink-0 text-[10px] sm:text-sm">Super Admin:</span> <span class="min-w-0 leading-snug">playbit / Password123!</span></li>
-                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span class="text-sky-400 font-medium shrink-0 text-[10px] sm:text-sm">Login:</span> <code class="text-sky-400 text-[10px] sm:text-xs min-w-0 break-all">POST /api/v2/auth/login</code></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span
+                                    class="text-sky-400 font-medium shrink-0 text-[10px] sm:text-sm">Super Admin:</span>
+                                <span class="min-w-0 leading-snug">playbit / Password123!</span></li>
+                            <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span
+                                    class="text-sky-400 font-medium shrink-0 text-[10px] sm:text-sm">Login:</span> <code
+                                    class="text-sky-400 text-[10px] sm:text-xs min-w-0 break-all">POST /api/v2/auth/login</code>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -624,15 +1000,19 @@
             <!-- Project Structure -->
             <section id="structure" class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16">
                 <div class="flex items-center gap-3 mb-6 sm:mb-8">
-                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0">
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                    <div
+                        class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
                         </svg>
                     </div>
                     <h3 class="text-xl sm:text-2xl font-bold text-slate-100">Project Structure</h3>
                 </div>
                 <div class="rounded-2xl bg-slate-900/50 border border-slate-800 p-4 sm:p-6 glow-amber">
-                    <pre class="text-xs sm:text-sm font-mono text-slate-400 overflow-x-auto whitespace-pre"><span class="text-slate-600">academio/</span>
+                    <pre
+                        class="text-xs sm:text-sm font-mono text-slate-400 overflow-x-auto whitespace-pre"><span class="text-slate-600">academio/</span>
 <span class="text-primary-400">backend/</span>
 <span class="text-slate-500">  ├</span> <span class="text-slate-300">cmd/server/main.go</span>          Entry point
 <span class="text-slate-500">  ├</span> <span class="text-slate-300">internal/</span>
@@ -659,49 +1039,79 @@
             <!-- Engineering Principles -->
             <section id="principles" class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16">
                 <div class="flex items-center gap-3 mb-6 sm:mb-8">
-                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-sky-500/20 flex items-center justify-center shrink-0">
-                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                    <div
+                        class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-sky-500/20 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-sky-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z">
+                            </path>
                         </svg>
                     </div>
                     <h3 class="text-2xl font-bold text-slate-100">Engineering Principles</h3>
                 </div>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-primary-500">
+                    <div
+                        class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-primary-500">
                         <div class="text-xs font-semibold text-primary-400 uppercase tracking-wider mb-1">Priority</div>
-                        <div class="text-sm text-slate-300">Correctness &gt; Security &gt; Performance &gt; Scalability &gt; Simplicity &gt; Maintainability</div>
+                        <div class="text-sm text-slate-300">Correctness &gt; Security &gt; Performance &gt; Scalability
+                            &gt; Simplicity &gt; Maintainability</div>
                     </div>
-                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-secondary-500">
-                        <div class="text-xs font-semibold text-secondary-400 uppercase tracking-wider mb-1">Log &amp; Continue</div>
-                        <div class="text-sm text-slate-300">Analytics/reports queries — log warning, continue. Best-effort; failing on transient blips is worse.</div>
+                    <div
+                        class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-secondary-500">
+                        <div class="text-xs font-semibold text-secondary-400 uppercase tracking-wider mb-1">Log &amp;
+                            Continue</div>
+                        <div class="text-sm text-slate-300">Analytics/reports queries — log warning, continue.
+                            Best-effort; failing on transient blips is worse.</div>
                     </div>
-                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-sage-500">
-                        <div class="text-xs font-semibold text-sage-400 uppercase tracking-wider mb-1">Return Errors</div>
-                        <div class="text-sm text-slate-300">State mutations (create/update/delete) — return error. Silent failures corrupt status.</div>
+                    <div
+                        class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-sage-500">
+                        <div class="text-xs font-semibold text-sage-400 uppercase tracking-wider mb-1">Return Errors
+                        </div>
+                        <div class="text-sm text-slate-300">State mutations (create/update/delete) — return error.
+                            Silent failures corrupt status.</div>
                     </div>
-                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-amber-500">
-                        <div class="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-1">Batch Operations</div>
-                        <div class="text-sm text-slate-300">Collect all errors, return one message — user fixes everything in one pass.</div>
+                    <div
+                        class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-amber-500">
+                        <div class="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-1">Batch Operations
+                        </div>
+                        <div class="text-sm text-slate-300">Collect all errors, return one message — user fixes
+                            everything in one pass.</div>
                     </div>
                     <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-sky-500">
-                        <div class="text-xs font-semibold text-sky-400 uppercase tracking-wider mb-1">No Silent Discards</div>
-                        <div class="text-sm text-slate-300">Every error must be handled. Never <code class="text-sky-400">_</code> discard errors unless explicitly documented.</div>
+                        <div class="text-xs font-semibold text-sky-400 uppercase tracking-wider mb-1">No Silent Discards
+                        </div>
+                        <div class="text-sm text-slate-300">Every error must be handled. Never <code
+                                class="text-sky-400">_</code> discard errors unless explicitly documented.</div>
                     </div>
-                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-rose-500">
-                        <div class="text-xs font-semibold text-rose-400 uppercase tracking-wider mb-1">No Hardcoded Secrets</div>
-                        <div class="text-sm text-slate-300">All credentials from env vars, validated at startup. Fail-fast on missing config.</div>
+                    <div
+                        class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-rose-500">
+                        <div class="text-xs font-semibold text-rose-400 uppercase tracking-wider mb-1">No Hardcoded
+                            Secrets</div>
+                        <div class="text-sm text-slate-300">All credentials from env vars, validated at startup.
+                            Fail-fast on missing config.</div>
                     </div>
-                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-sage-500">
-                        <div class="text-xs font-semibold text-sage-400 uppercase tracking-wider mb-1">Parameterized Queries</div>
-                        <div class="text-sm text-slate-300">No <code class="text-sage-400">fmt.Sprintf</code> for SQL. Use GORM/pgx parameterized queries exclusively.</div>
+                    <div
+                        class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-sage-500">
+                        <div class="text-xs font-semibold text-sage-400 uppercase tracking-wider mb-1">Parameterized
+                            Queries</div>
+                        <div class="text-sm text-slate-300">No <code class="text-sage-400">fmt.Sprintf</code> for SQL.
+                            Use GORM/pgx parameterized queries exclusively.</div>
                     </div>
-                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-primary-500">
-                        <div class="text-xs font-semibold text-primary-400 uppercase tracking-wider mb-1">Unbounded Queries</div>
-                        <div class="text-sm text-slate-300">Always cap list queries (default 100, max 1000). Use Offset + Limit.</div>
+                    <div
+                        class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-primary-500">
+                        <div class="text-xs font-semibold text-primary-400 uppercase tracking-wider mb-1">Unbounded
+                            Queries</div>
+                        <div class="text-sm text-slate-300">Always cap list queries (default 100, max 1000). Use Offset
+                            + Limit.</div>
                     </div>
-                    <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-secondary-500">
-                        <div class="text-xs font-semibold text-secondary-400 uppercase tracking-wider mb-1">Context Propagation</div>
-                        <div class="text-sm text-slate-300">No <code class="text-secondary-400">context.Background()</code> in request scope. Always propagate <code class="text-secondary-400">context.Context</code>.</div>
+                    <div
+                        class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 principle-card border-l-secondary-500">
+                        <div class="text-xs font-semibold text-secondary-400 uppercase tracking-wider mb-1">Context
+                            Propagation</div>
+                        <div class="text-sm text-slate-300">No <code
+                                class="text-secondary-400">context.Background()</code> in request scope. Always
+                            propagate <code class="text-secondary-400">context.Context</code>.</div>
                     </div>
                 </div>
             </section>
@@ -712,60 +1122,102 @@
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                     <!-- Routes Card -->
-                    <div class="card-hover p-6 rounded-2xl bg-primary-900/30 border border-primary-800/50 glow-sage" id="routes">
+                    <div class="card-hover p-6 rounded-2xl bg-primary-900/30 border border-primary-800/50 glow-sage"
+                        id="routes">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="w-10 h-10 rounded-xl bg-primary-500/20 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                                <svg class="w-5 h-5 text-primary-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 6h16M4 12h16m-7 6h7"></path>
                                 </svg>
                             </div>
                             <h4 class="font-semibold text-slate-100">Routes (42 groups)</h4>
                         </div>
                         <ul class="space-y-1.5 text-sm text-slate-400">
-                            <li class="flex items-center gap-2"><span class="text-primary-300">/auth</span> Login, register, 2FA, sessions, tokens</li>
-                            <li class="flex items-center gap-2"><span class="text-primary-300">/academic</span> Sessions, curriculums, assessments, scores</li>
-                            <li class="flex items-center gap-2"><span class="text-primary-300">/cba</span> Questions, papers, assignments, exams</li>
-                            <li class="flex items-center gap-2"><span class="text-primary-300">/finance</span> Accounts, journals, budgets, fees</li>
-                            <li class="flex items-center gap-2"><span class="text-primary-300">/hr</span> Staff, leaves, payroll, appraisals</li>
-                            <li class="flex items-center gap-2"><span class="text-primary-300">/lms</span> Courses, modules, lessons, submissions</li>
-                            <li class="flex items-center gap-2"><span class="text-primary-300">/analytics</span> Overview, enrollment, revenue, forecasts</li>
-                            <li class="flex items-center gap-2"><span class="text-primary-300">/admissions</span> Intakes, applications, screening, offers</li>
-                            <li class="flex items-center gap-2"><span class="text-primary-300">/reports</span> Custom reports, report cards, export</li>
-                            <li class="flex items-center gap-2"><span class="text-primary-300">/alumni</span> Careers, events, donations, mentorships</li>
-                            <li class="flex items-center gap-2"><span class="text-primary-300">+32 more</span> Transport, hostel, library, inventory, discipline, health, communication...</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/auth</span> Login,
+                                register, 2FA, sessions, tokens</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/academic</span>
+                                Sessions, curriculums, assessments, scores</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/cba</span> Questions,
+                                papers, assignments, exams</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/finance</span> Accounts,
+                                journals, budgets, fees</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/hr</span> Staff, leaves,
+                                payroll, appraisals</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/lms</span> Courses,
+                                modules, lessons, submissions</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/analytics</span>
+                                Overview, enrollment, revenue, forecasts</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/admissions</span>
+                                Intakes, applications, screening, offers</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/reports</span> Custom
+                                reports, report cards, export</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">/alumni</span> Careers,
+                                events, donations, mentorships</li>
+                            <li class="flex items-center gap-2"><span class="text-primary-300">+32 more</span>
+                                Transport, hostel, library, inventory, discipline, health, communication...</li>
                         </ul>
                     </div>
 
                     <!-- Database Card -->
-                    <div class="card-hover p-6 rounded-2xl bg-sage-900/30 border border-sage-800/50 glow-sage" id="database">
+                    <div class="card-hover p-6 rounded-2xl bg-sage-900/30 border border-sage-800/50 glow-sage"
+                        id="database">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="w-10 h-10 rounded-xl bg-sage-500/20 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-sage-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                                <svg class="w-5 h-5 text-sage-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4">
+                                    </path>
                                 </svg>
                             </div>
                             <h4 class="font-semibold text-sage-100">Database (150+ Models)</h4>
                         </div>
                         <ul class="space-y-2 text-sm text-sage-400">
-                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span><span class="font-medium text-sage-300">public schema:</span> User, SchoolConnection</li>
-                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span><span class="font-medium text-sage-300">school_{id} schema:</span> Student, Teacher, Level, Subject</li>
-                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>Session, Curriculum, Assessment, Score, Result</li>
-                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>CBA: Question, Paper, Assignment, ExamSession</li>
-                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>LMS: Course, Module, Lesson, Enrollment, Submission</li>
-                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>Finance: Account, Journal, Budget, Fee, Vendor</li>
-                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>HR: Department, Staff, Leave, Payroll, Appraisal</li>
-                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>Admissions: Intake, Application, Offer, Enrollment</li>
-                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>Operations: Hostel, Transport, Inventory, Library</li>
-                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sage-500"></span>Engagement: Message, Notification, Alumni, Career</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-sage-500"></span><span
+                                    class="font-medium text-sage-300">public schema:</span> User, SchoolConnection</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-sage-500"></span><span
+                                    class="font-medium text-sage-300">school_{id} schema:</span> Student, Teacher,
+                                Level, Subject</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-sage-500"></span>Session, Curriculum, Assessment,
+                                Score, Result</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-sage-500"></span>CBA: Question, Paper, Assignment,
+                                ExamSession</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-sage-500"></span>LMS: Course, Module, Lesson,
+                                Enrollment, Submission</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-sage-500"></span>Finance: Account, Journal, Budget,
+                                Fee, Vendor</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-sage-500"></span>HR: Department, Staff, Leave,
+                                Payroll, Appraisal</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-sage-500"></span>Admissions: Intake, Application,
+                                Offer, Enrollment</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-sage-500"></span>Operations: Hostel, Transport,
+                                Inventory, Library</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-sage-500"></span>Engagement: Message, Notification,
+                                Alumni, Career</li>
                         </ul>
                     </div>
 
                     <!-- Multi-Tenancy Card -->
-                    <div class="card-hover p-6 rounded-2xl bg-sky-900/30 border border-sky-800/50 glow-sky" id="multi-tenancy">
+                    <div class="card-hover p-6 rounded-2xl bg-sky-900/30 border border-sky-800/50 glow-sky"
+                        id="multi-tenancy">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="w-10 h-10 rounded-xl bg-sky-500/20 flex items-center justify-center">
                                 <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                    </path>
                                 </svg>
                             </div>
                             <h4 class="font-semibold text-sky-100">Multi-Tenancy</h4>
@@ -773,7 +1225,8 @@
                         <ul class="space-y-3 text-sm text-sky-400">
                             <li class="p-3 rounded-lg bg-sky-800/20">
                                 <div class="font-medium text-sky-300 mb-1">Schema-per-Tenant</div>
-                                <div>Each school gets its own schema <code class="text-xs text-sky-200">school_{id}</code> with isolated tables</div>
+                                <div>Each school gets its own schema <code
+                                        class="text-xs text-sky-200">school_{id}</code> with isolated tables</div>
                             </li>
                             <li class="p-3 rounded-lg bg-sky-800/20">
                                 <div class="font-medium text-sky-300 mb-1">SchemaTablePrefix Plugin</div>
@@ -781,21 +1234,27 @@
                             </li>
                             <li class="p-3 rounded-lg bg-sky-800/20">
                                 <div class="font-medium text-sky-300 mb-1">Shared public Schema</div>
-                                <div>User accounts, school connections live in <code class="text-xs text-sky-200">public</code></div>
+                                <div>User accounts, school connections live in <code
+                                        class="text-xs text-sky-200">public</code></div>
                             </li>
                             <li class="p-3 rounded-lg bg-sky-800/20">
                                 <div class="font-medium text-sky-300 mb-1">Tenant Resolution</div>
-                                <div><code class="text-xs text-sky-200">x-school-id</code> header &rarr; DB connection &rarr; schema-scoped GORM instance</div>
+                                <div><code class="text-xs text-sky-200">x-school-id</code> header &rarr; DB connection
+                                    &rarr; schema-scoped GORM instance</div>
                             </li>
                         </ul>
                     </div>
 
                     <!-- Authorization Card -->
-                    <div class="card-hover p-6 rounded-2xl bg-amber-900/30 border border-amber-800/50 glow-amber" id="authorization">
+                    <div class="card-hover p-6 rounded-2xl bg-amber-900/30 border border-amber-800/50 glow-amber"
+                        id="authorization">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                                    </path>
                                 </svg>
                             </div>
                             <h4 class="font-semibold text-amber-100">Authorization</h4>
@@ -821,38 +1280,58 @@
                     </div>
 
                     <!-- Middleware Card -->
-                    <div class="card-hover p-6 rounded-2xl bg-secondary-900/30 border border-secondary-800/50 glow-peach" id="middleware">
+                    <div class="card-hover p-6 rounded-2xl bg-secondary-900/30 border border-secondary-800/50 glow-peach"
+                        id="middleware">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="w-10 h-10 rounded-xl bg-secondary-500/20 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                <svg class="w-5 h-5 text-secondary-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
                                 </svg>
                             </div>
                             <h4 class="font-semibold text-secondary-100">Middleware Stack</h4>
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">Recovery</span>
-                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">RequestID</span>
-                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">Tracing</span>
-                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">Logger</span>
-                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">Security</span>
-                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">CORS</span>
-                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">RateLimit</span>
-                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">BodyLimit</span>
-                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">CSRF</span>
-                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">SchoolID</span>
-                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">JWTAuth</span>
-                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">TenantDB</span>
-                            <span class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">AuditLog</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">Recovery</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">RequestID</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">Tracing</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">Logger</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">Security</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">CORS</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">RateLimit</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">BodyLimit</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">CSRF</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">SchoolID</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">JWTAuth</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">TenantDB</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-500/10 border border-secondary-500/30 text-secondary-400 text-xs">AuditLog</span>
                         </div>
                     </div>
 
                     <!-- Job Queues Card -->
-                    <div class="card-hover p-6 rounded-2xl bg-rose-900/30 border border-rose-800/50 glow-amber" id="queues">
+                    <div class="card-hover p-6 rounded-2xl bg-rose-900/30 border border-rose-800/50 glow-amber"
+                        id="queues">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </div>
                             <h4 class="font-semibold text-rose-100">Job Queues (Asynq)</h4>
@@ -882,7 +1361,8 @@
                     <div class="flex flex-col sm:grid sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
                         <div>
                             <label class="block text-sm text-slate-400 mb-1 sm:mb-2">Method</label>
-                            <select id="testMethod" class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 focus:border-primary-500 focus:outline-none text-sm">
+                            <select id="testMethod"
+                                class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 focus:border-primary-500 focus:outline-none text-sm">
                                 <option value="GET">GET</option>
                                 <option value="POST">POST</option>
                                 <option value="PATCH">PATCH</option>
@@ -892,21 +1372,27 @@
                         </div>
                         <div class="sm:col-span-2">
                             <label class="block text-sm text-slate-400 mb-1 sm:mb-2">Endpoint</label>
-                            <input id="testEndpoint" type="text" placeholder="/api/v2/auth/login" value="/api/v2/auth/login" class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-600 focus:border-primary-500 focus:outline-none text-sm">
+                            <input id="testEndpoint" type="text" placeholder="/api/v2/auth/login"
+                                value="/api/v2/auth/login"
+                                class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-600 focus:border-primary-500 focus:outline-none text-sm">
                         </div>
                         <div>
-                            <button onclick="testApi()" class="w-full px-4 py-2.5 sm:py-3 rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-medium transition-colors text-sm mt-6 sm:mt-0">Send Request</button>
+                            <button onclick="testApi()"
+                                class="w-full px-4 py-2.5 sm:py-3 rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-medium transition-colors text-sm mt-6 sm:mt-0">Send
+                                Request</button>
                         </div>
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm text-slate-400 mb-2">Headers</label>
-                        <textarea id="testHeaders" rows="3" placeholder='{"Authorization": "Bearer <token>"}' class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-600 focus:border-primary-500 focus:outline-none font-mono text-sm"></textarea>
+                        <textarea id="testHeaders" rows="3" placeholder='{"Authorization": "Bearer <token>"}'
+                            class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-600 focus:border-primary-500 focus:outline-none font-mono text-sm"></textarea>
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm text-slate-400 mb-2">Request Body (JSON)</label>
-                        <textarea id="testBody" rows="4" placeholder='{"key": "value"}' class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-600 focus:border-primary-500 focus:outline-none font-mono text-sm"></textarea>
+                        <textarea id="testBody" rows="4" placeholder='{"key": "value"}'
+                            class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-600 focus:border-primary-500 focus:outline-none font-mono text-sm"></textarea>
                     </div>
 
                     <div class="flex items-center justify-between mb-4">
@@ -915,49 +1401,54 @@
                             <span class="mx-2">&bull;</span>
                             <span id="testTime">Time: -</span>
                         </div>
-                        <button onclick="testApi()" class="text-primary-400 hover:text-primary-300 text-sm">Send &rarr;</button>
+                        <button onclick="testApi()" class="text-primary-400 hover:text-primary-300 text-sm">Send
+                            &rarr;</button>
                     </div>
 
                     <div class="rounded-xl bg-slate-950 border border-slate-800 p-4 max-h-64 overflow-auto">
-                        <pre id="testResponse" class="text-sm text-slate-300 font-mono whitespace-pre-wrap">Response will appear here...</pre>
+                        <pre id="testResponse"
+                            class="text-sm text-slate-300 font-mono whitespace-pre-wrap">Response will appear here...</pre>
                     </div>
                 </div>
 
                 <div class="mt-6">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                         <h4 class="text-lg font-semibold text-slate-100">API Endpoints</h4>
-                        <input type="text" id="endpointSearch" placeholder="Filter endpoints..." oninput="filterEndpoints(this.value)" class="w-full sm:w-48 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:border-primary-500">
+                        <input type="text" id="endpointSearch" placeholder="Filter endpoints..."
+                            oninput="filterEndpoints(this.value)"
+                            class="w-full sm:w-48 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:border-primary-500">
                     </div>
                     <div id="endpointGroups" class="space-y-3 max-h-[600px] overflow-y-auto pr-2"></div>
                 </div>
             </section>
 
-        <!-- Footer -->
-        <footer class="border-t border-primary-800/50 py-8">
-            <div class="max-w-7xl mx-auto px-6 flex items-center justify-between text-sm text-primary-600">
-                <div class="flex items-center gap-4">
-                    <div>Academio — Education ERP Backend Architecture</div>
-                    <a href="https://github.com/playbittechnologies/academio" target="_blank" rel="noopener noreferrer"
-                       class="flex items-center gap-2 hover:text-primary-400 transition-colors">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                        <span>View on GitHub</span>
-                    </a>
+            <!-- Footer -->
+            <footer class="border-t border-primary-800/50 py-8">
+                <div class="max-w-7xl mx-auto px-6 flex items-center justify-between text-sm text-primary-600">
+                    <div class="flex items-center gap-4">
+                        <div>Academio — Education ERP Backend Architecture</div>
+                        <a href="https://github.com/playbits/schoolcare-be-v2" target="_blank" rel="noopener noreferrer"
+                            class="flex items-center gap-2 hover:text-primary-400 transition-colors">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                            </svg>
+                            <span>View on GitHub</span>
+                        </a>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span>Go 1.26</span>
+                        <span>•</span>
+                        <span>Gin</span>
+                        <span>•</span>
+                        <span>PostgreSQL</span>
+                        <span>•</span>
+                        <span>Redis</span>
+                        <span>•</span>
+                        <span>React 19</span>
+                    </div>
                 </div>
-                <div class="flex items-center gap-4">
-                    <span>Go 1.26</span>
-                    <span>•</span>
-                    <span>Gin</span>
-                    <span>•</span>
-                    <span>PostgreSQL</span>
-                    <span>•</span>
-                    <span>Redis</span>
-                    <span>•</span>
-                    <span>React 19</span>
-                </div>
-            </div>
-        </footer>
+            </footer>
         </div>
     </div>
 
@@ -1034,10 +1525,10 @@
                         <div id="group-${tag}" class="hidden px-3 py-2 space-y-1">`;
                     eps.forEach(ep => {
                         const mc = ep.method === 'GET' ? 'bg-sage-500/20 text-sage-400' :
-                                   ep.method === 'POST' ? 'bg-primary-500/20 text-primary-400' :
-                                   ep.method === 'PATCH' ? 'bg-amber-500/20 text-amber-400' :
-                                   ep.method === 'DELETE' ? 'bg-rose-500/20 text-rose-400' :
-                                   'bg-primary-500/20 text-primary-400';
+                            ep.method === 'POST' ? 'bg-primary-500/20 text-primary-400' :
+                                ep.method === 'PATCH' ? 'bg-amber-500/20 text-amber-400' :
+                                    ep.method === 'DELETE' ? 'bg-rose-500/20 text-rose-400' :
+                                        'bg-primary-500/20 text-primary-400';
                         const paramHint = (ep.details && ep.details.requestBody) ? ' &middot; body' : '';
                         const methodEsc = ep.method.toLowerCase();
                         const ac = ep.auth ? ep.auth.cls : 'bg-primary-500/20 text-primary-500';
@@ -1112,7 +1603,7 @@
             timeEl.textContent = '-';
             const authH = setAuthHeaders();
             headersEl.value = Object.keys(authH).length ? JSON.stringify(authH, null, 2) : '';
-            if (['POST','PATCH','PUT','DELETE'].includes(method)) {
+            if (['POST', 'PATCH', 'PUT', 'DELETE'].includes(method)) {
                 let data = null;
                 const exactKey = method + path;
                 if (TEST_DATA[exactKey]) data = TEST_DATA[exactKey];
@@ -1183,7 +1674,7 @@
             const startTime = Date.now();
             try {
                 const options = { method: method, headers: { 'Content-Type': 'application/json' } };
-                if (headers) { try { const parsedHeaders = JSON.parse(headers); Object.assign(options.headers, parsedHeaders); } catch (e) {} }
+                if (headers) { try { const parsedHeaders = JSON.parse(headers); Object.assign(options.headers, parsedHeaders); } catch (e) { } }
                 if (body && ['POST', 'PATCH', 'PUT', 'DELETE'].includes(method)) { options.body = body; }
                 const fullUrl = endpoint.startsWith('http') ? endpoint : `${API_BASE}${endpoint}`;
                 const response = await fetch(fullUrl, options);
@@ -1222,4 +1713,5 @@
         });
     </script>
 </body>
+
 </html>

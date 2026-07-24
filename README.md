@@ -1,23 +1,24 @@
-# SchoolCare v2
+# Academio
 
 School management system — monorepo with a Go/Gin API backend and a React 19 SPA frontend.
 
-<a href="https://playbits.github.io/schoolcare-v2/" target="_blank"><img src="https://img.shields.io/badge/docs-github_pages-8DD290?style=flat&logo=github" alt="Docs"></a>
+<a href="https://playbits.github.io/Academio/" target="_blank"><img src="https://img.shields.io/badge/docs-github_pages-8DD290?style=flat&logo=github" alt="Docs"></a>
+<a href="https://github.com/Playbits/Academio" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github" alt="GitHub"></a>
 
 ## Repositories
 
 | Component | Description | Repository |
 |-----------|-------------|------------|
-| **Parent** (this repo) | Monorepo orchestration, dev script | `Playbits/schoolcare-v2` |
-| **Backend** (submodule) | Go/Gin REST API + PostgreSQL + Redis | `Playbits/schoolcare-be-v2` |
-| **Frontend** (submodule) | React 19 + Vite 8 SPA | `Playbits/schoolcare-fe-v2` |
+| **Parent** (this repo) | Monorepo orchestration, dev script | `Playbits/Academio` |
+| **Backend** (submodule) | Go/Gin REST API + PostgreSQL + Redis | `Playbits/Academio-Be` |
+| **Frontend** (submodule) | React 19 + Vite 8 SPA | `Playbits/Academio-fe` |
 
 ## Quick Start
 
 ```bash
 # Clone with submodules
-git clone --recurse-submodules git@github.com:Playbits/schoolcare-v2.git
-cd schoolcare-v2
+git clone --recurse-submodules git@github.com:Playbits/Academio.git
+cd Academio
 
 # Start everything (Docker + backend + frontend + Antigravity IDE)
 start_schoolcare

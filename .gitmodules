@@ -4,3 +4,6 @@
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/Playbits/schoolcare-fe-v2.git
+[submodule "mobile"]
+	path = mobile
+	url = git@github.com:Playbits/academio-mobile.git

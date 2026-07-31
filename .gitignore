@@ -1,12 +1,15 @@
 # Internal engineering — do not publish
+ACADEMIO_IMPLEMENTATION_PLAN.md
 AGENTS.md
 .commandcode/
 docs/architecture/
 docs/audits/
+docs/FSD/
 docs/ops/
 docs/plans/
 docs/reports/
 docs/**.md
+sample-teachers*.xlsx
 scripts/
 tmp/
 .tmp/

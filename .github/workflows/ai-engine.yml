@@ -1,0 +1,70 @@
+name: AI Engine CI
+on:
+  push:
+    branches: [main]
+    paths: ['ai-engine/**', '.github/workflows/ai-engine.yml']
+  pull_request:
+    paths: ['ai-engine/**', '.github/workflows/ai-engine.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-engine-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai-engine
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+      - name: Sync frozen lockfile
+        run: uv sync --frozen
+      - name: Ruff lint
+        run: uv run ruff check .
+
+  typecheck:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai-engine
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+      - name: Sync frozen lockfile
+        run: uv sync --frozen
+      - name: Pyright typecheck
+        run: uv run pyright
+
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai-engine
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+      - name: Sync frozen lockfile
+        run: uv sync --frozen
+      - name: Pytest
+        run: uv run pytest -v
+
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - name: Build engine image
+        run: docker build -t ai-engine:ci ./ai-engine

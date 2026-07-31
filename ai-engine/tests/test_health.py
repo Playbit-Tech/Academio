@@ -1,7 +1,10 @@
+from collections.abc import AsyncGenerator
+
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-from app.config import Settings, settings as app_settings
+from app.config import Settings
+from app.config import settings as app_settings
 from app.main import app
 
 
@@ -16,7 +19,7 @@ def settings() -> Settings:
 
 
 @pytest.fixture
-async def client(settings: Settings) -> AsyncClient:
+async def client(settings: Settings) -> AsyncGenerator[AsyncClient]:
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://test"
     ) as c:

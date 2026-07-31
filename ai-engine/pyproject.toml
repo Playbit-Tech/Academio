@@ -1,0 +1,32 @@
+[project]
+name = "ai-engine"
+version = "0.1.0"
+description = "Academio AI engine — Python compute service (Phase 1 skeleton)"
+requires-python = ">=3.13"
+dependencies = [
+  "fastapi[standard]>=0.140,<0.141",
+  "pydantic-settings>=2.13",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8",
+  "pytest-asyncio>=0.26",
+  "ruff>=0.11",
+  "pyright>=1.1",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.pyright]
+pythonVersion = "3.13"
+include = ["app", "tests"]

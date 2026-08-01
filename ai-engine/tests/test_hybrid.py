@@ -4,6 +4,7 @@ in test_search.py. Pure functions keep the suite green without AI_PGVECTOR_DSN.
 """
 
 from app.rag.hybrid import build_filters_where, rrf_merge
+from app.rag.rerank import compress_context, rank_and_cite
 
 
 def _dense(doc: str, chunk: int, text: str = "dense text", score: float = 0.9) -> dict:
@@ -108,3 +109,79 @@ def test_filters_none_and_empty_produce_no_clause() -> None:
     where, params = build_filters_where([])
     assert where == ""
     assert params == []
+
+
+# --- rerank.py (Task 2 cases) ---
+
+
+def _merged_row(doc: str, chunk: int, text: str = "some chunk text", score: float = 0.75) -> dict:
+    # Ranked rows (rank_and_cite output shape) — citation present, as in the
+    # real /v1/search flow where compress_context receives ranked results.
+    return {
+        "document_id": doc,
+        "chunk_index": chunk,
+        "text": text,
+        "collection": "default",
+        "score": score,
+        "citation": f"{doc}#{chunk}",
+    }
+
+
+def test_rank_and_cite_citation_format() -> None:
+    """(a) citation == 'doc1#3' format, score rounded to 6dp, top_k respected."""
+    merged = [
+        _merged_row("doc1", 3, score=0.123456789),
+        _merged_row("doc2", 1, score=0.5),
+    ]
+    out = rank_and_cite(merged, top_k=1)
+    assert len(out) == 1
+    assert out[0]["citation"] == "doc1#3"
+    assert out[0]["score"] == 0.123457
+    assert out[0]["text"] == "some chunk text"
+    assert out[0]["document_id"] == "doc1"
+
+
+def test_compress_context_dedupes_identical_texts() -> None:
+    """(b) Identical normalized text -> kept once."""
+    rows = [
+        _merged_row("a", 0, "duplicate text"),
+        _merged_row("b", 0, "duplicate text"),
+    ]
+    context, kept = compress_context(rows)
+    assert len(kept) == 1
+    assert "[a#0]" in context
+    assert "[b#0]" not in context
+
+
+def test_compress_context_caps_total_chars() -> None:
+    """(c) Sum of kept text lengths <= max_chars."""
+    rows = [_merged_row(f"d{i}", 0, f"chunk number {i} " + "x" * 50) for i in range(10)]
+    _, kept = compress_context(rows, max_chars=120)
+    total = sum(len(r["text"]) for r in kept)
+    assert total <= 120
+    assert len(kept) < 10  # cap actually engaged
+
+
+def test_compress_context_empty_input() -> None:
+    """(d) Empty results -> ("", [])."""
+    assert compress_context([]) == ("", [])
+
+
+def test_compress_context_oversized_chunk_dropped_not_crash() -> None:
+    """(e) A single chunk longer than max_chars -> dropped, context stays valid."""
+    rows = [_merged_row("big", 0, "y" * 500), _merged_row("small", 0, "ok")]
+    context, kept = compress_context(rows, max_chars=100)
+    assert kept == [] or kept[0]["document_id"] == "small"
+    assert "big#0" not in context
+    assert isinstance(context, str)
+
+
+def test_compress_context_normalizes_whitespace_before_dedup() -> None:
+    """(f) Two texts differing only in whitespace collapse to one."""
+    rows = [
+        _merged_row("a", 0, "hello   world"),
+        _merged_row("b", 0, "hello world"),
+    ]
+    _, kept = compress_context(rows)
+    assert len(kept) == 1
+    assert kept[0]["document_id"] == "a"

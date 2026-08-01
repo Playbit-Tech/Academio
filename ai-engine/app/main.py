@@ -1,13 +1,9 @@
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import Depends, FastAPI
 
-from app.config import settings
+from app.api.embed import router as embed_router
+from app.security import require_token
 
 app = FastAPI(title="Academio AI Engine")
-
-
-def require_token(x_ai_engine_token: str | None = Header(default=None)) -> None:
-    if not settings.AI_ENGINE_TOKEN or x_ai_engine_token != settings.AI_ENGINE_TOKEN:
-        raise HTTPException(status_code=401, detail="invalid service token")
 
 
 @app.get("/health")
@@ -18,3 +14,6 @@ async def health() -> dict:
 @app.get("/v1/health", dependencies=[Depends(require_token)])
 async def v1_health() -> dict:
     return {"status": "ok"}
+
+
+app.include_router(embed_router)

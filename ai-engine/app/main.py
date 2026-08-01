@@ -1,5 +1,6 @@
 from fastapi import Depends, FastAPI
 
+from app.api.chat import router as chat_router
 from app.api.embed import router as embed_router
 from app.api.providers import router as providers_router
 from app.security import require_token
@@ -17,5 +18,6 @@ async def v1_health() -> dict:
     return {"status": "ok"}
 
 
+app.include_router(chat_router)
 app.include_router(embed_router)
 app.include_router(providers_router)

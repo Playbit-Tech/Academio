@@ -1,0 +1,114 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: executing
+stopped_at: Completed 02-01 (canon embedding lock, PGV-04a); wave 1 done, next 02-03
+last_updated: "2026-08-01T06:00:54.040Z"
+last_activity: 2026-08-01
+progress:
+  total_phases: 7
+  completed_phases: 1
+  total_plans: 11
+  completed_plans: 7
+  percent: 64
+---
+
+# Project State
+
+## Project Reference
+
+See: .planning/PROJECT.md (updated 2026-08-01)
+
+**Core value:** Document intelligence that works — upload documents, get extract → chunk → embed → searchable knowledge through the AI assistant, tenant isolation intact, without breaking the existing Go AI layer.
+**Current focus:** Phase 2 — pgvector migration
+
+## Current Position
+
+Phase: 2
+Plan: Wave 1 complete (02-01 + 02-02 done); next: 02-03
+Status: Ready to execute
+Last activity: 2026-08-01
+
+Progress: [██████░░░░] 64%
+
+## Performance Metrics
+
+**Velocity:**
+
+- Total plans completed: 6
+- Average duration: 10min
+- Total execution time: 10min
+
+**By Phase:**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| 01 | 5 | - | - |
+
+**Recent Trend:**
+
+- Last 5 plans: -
+- Trend: -
+
+*Updated after each plan completion*
+| Phase 01-foundation P01 | 10min | 3 tasks | 13 files |
+| Phase 01-foundation P04 | 5 | 2 tasks | 5 files |
+| Phase 01-foundation P02 | 25 | 2 tasks | 5 files |
+| Phase 01-foundation P03 | 3 | 2 tasks | 1 files |
+| Phase 01-foundation P05 | 3 | 2 tasks | 1 files |
+| Phase 02-pgvector-migration P02 | 5 | 2 tasks | 4 files |
+| Phase 02-pgvector-migration P02-01 | 15 | 2 tasks | 6 files |
+
+## Accumulated Context
+
+### Decisions
+
+Decisions are logged in PROJECT.md Key Decisions table.
+Recent decisions affecting current work:
+
+- [Phase 1]: ai-engine/ is a tracked root directory (submodule-ready; no remote exists yet — .gitmodules only has backend/frontend/mobile)
+- [Phase 1]: EngineClient seam is the backbone of ALL AI traffic → AI_ENGINE_URL/TOKEN validation is UNCONDITIONAL in config.validate() (Rule B12), not gated on AI_ENABLED; config_test.go fixture updated accordingly
+- [Phase 1]: ai-engine compose service has NO published host port — internal network only; healthcheck uses python urllib (python:3.13-slim ships no curl), targets unauthenticated GET /health
+- [Phase 1]: No `depends_on: api → ai-engine` — backend boots while engine is down; circuit breaker handles runtime outages
+- [Phase 1]: Compose api env carries AI_ENGINE_URL=http://ai-engine:8000 + shared token (default local-dev-token) so unconditional validation passes in compose
+- [Phase 1]: Root CI workflow ai-engine.yml mirrors docs.yml conventions; setup-uv pinned to v9.0.0 commit SHA; uv sync --frozen (lockfile committed)
+- [Phase 2, blocker]: `ai_vectors` lives in `school_{id}` TENANT schemas (structural isolation; NOT shared + partial indexes)
+- [Phase 2, blocker]: Canonical embedding model + dimension locked BEFORE pgvector DDL (PGV-04a; 1536-dim default, ≤2000 for HNSW; Nigerian-language multilingual eval first)
+- [Phase 2]: pgvector image pinned ≥0.8.2 (CVE-2026-3172)
+- [Phase 3]: `proto/aiengine.proto` written at start of Python phase; REST satisfies it 1:1
+- [Phase 3]: `/v1/providers` added to PYE-04 (required by INT-02)
+- [Phase 3]: Direct SDKs only (`anthropic` + `openai` base_url); NO LiteLLM, NO Python gateway, NO Celery
+- [Phase 4]: Doc pipeline = ONE Go→Python `/v1/documents` call (PIP-01)
+- [Phase 4]: SSE relay = riskiest new Go code; 4 failure modes with fixes (INT-01)
+- [Phase 5]: INT-03 quota/audit/rate-limit ship WITH first endpoints — first plan in phase, not a bolt-on
+- [Phase 6]: RAG eval harness + cross-tenant probe suite ship in CI (TES-01)
+- [Phase 01-foundation]: ai-engine/ bootstraps via uv sync (Python 3.13, fastapi 0.140.13, committed uv.lock) — verified clean-state; smoke tests + ruff + pyright gates clean
+- [Phase 01-foundation]: Service-token auth contract: X-AI-Engine-Token header only (never URL/JWT); empty token -> 401 on every protected route (no insecure bypass); /health unauthenticated by design for container healthchecks
+- [Phase 01-foundation]: AI engine seam (AI_ENGINE_URL/TOKEN) validation is UNCONDITIONAL in config.validate() (Rule B12/FND-04) — not gated on AI_ENABLED, not in validateProduction(); .env.example documents both as REQUIRED; dev token local-dev-token matches compose default
+- [Phase 01-foundation]: ChatStream carries NO overall timeout — context-bound by design (FND-03); caller cancels on client disconnect via NewRequestWithContext
+- [Phase 01-foundation]: Timeouts applied per-endpoint via context.WithTimeout (chat 30s, extract 5m, health 10s), not http.Client.Timeout — transport stays budget-agnostic
+- [Phase 01-foundation]: X-Request-ID sourced from middleware.GetRequestIDFromCtx; uuid.NewString() fallback when absent (never blindly attacker-controlled)
+- [Phase 01-foundation]: SSE reader primitive: bufio.Scanner custom split on blank lines with 1MB buffer (>64KB default) — never blind io.Copy; comment/heartbeat tolerance
+- [Phase 01-foundation]: ai-engine compose service has NO published host port — internal network only; verified live via docker inspect PortBindings {} + host curl refused (T-03-02)
+- [Phase 01-foundation]: Healthcheck uses python stdlib urllib one-liner (python:3.13-slim ships no curl), timeout=3, start_period 10s — targets unauthenticated GET /health
+- [Phase 01-foundation]: Root CI workflow ai-engine.yml mirrors docs.yml conventions; setup-uv pinned to v9.0.0 commit SHA; uv sync --frozen (lockfile committed)
+- [Phase 01-foundation]: docker-build job has no uv steps and no registry login — proves multi-stage Dockerfile on clean runner; workflow sets no secrets (T-05-03)
+- [Phase 02-pgvector-migration]: Pinned pgvector/pgvector:0.8.6-pg18-trixie (>=0.8.2, CVE-2026-3172); verified PGDATA /var/lib/postgresql/18/docker identical to running postgres:alpine 18.4 so shared-postgres-data volume survives the swap with zero data loss
+- [Phase 02-pgvector-migration]: Vector extension installed via core migration 2026_08_01_000000_enable_vector_extension into public schema (default search_path at core-migration time, precedes school DDL); tenant migration repeats IF NOT EXISTS as harmless no-op
+- [Phase 02-pgvector-migration]: PGV-04a canon locked: AI_EMBEDDING_DIM=1536 (text-embedding-3-small) in config with fail-fast validate() (<=0 or >2000 error, Rule B12); Nigerian-language adequacy spike test added (skips cleanly without AI_OPENAI_API_KEY, D-01 canon stands pending eval, T-PGV-01-03)
+
+### Pending Todos
+
+None yet.
+
+### Blockers/Concerns
+
+- [Phase 2] PGV-04a canonical embedding decision must be locked during Phase 2 planning, before any `ai_vectors` DDL — includes a Nigerian-language eval spike.
+- [Phase 5] INT-03 controls must be the first plan in Phase 5; do not defer to Phase 6 hardening.
+
+## Session Continuity
+
+Last session: 2026-08-01T06:00:53.967Z
+Stopped at: Completed 02-01 (canon embedding lock, PGV-04a); wave 1 done, next 02-03
+Resume file: None

@@ -1,6 +1,6 @@
 """Cost table tests (D-03) — parity with backend/internal/ai/cost.go semantics."""
 
-from app.providers.cost import DEFAULT_PROVIDER, DEFAULT_COSTS, calculate_cost, estimate_tokens
+from app.providers.cost import DEFAULT_COSTS, DEFAULT_PROVIDER, calculate_cost, estimate_tokens
 
 
 def test_ollama_always_free() -> None:

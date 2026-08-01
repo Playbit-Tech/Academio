@@ -21,7 +21,9 @@ from typing import Any
 
 
 def format_event(event_type: str, data: dict[str, Any]) -> str:
-    payload = json.dumps({"type": event_type, "data": data}, separators=(",", ":"), ensure_ascii=True)
+    payload = json.dumps(
+        {"type": event_type, "data": data}, separators=(",", ":"), ensure_ascii=True
+    )
     return f"data: {payload}\n\n"
 
 
@@ -33,6 +35,16 @@ def done_event() -> str:
     return format_event("done", {})
 
 
-def usage_event(provider: str, model: str, input_tokens: int, output_tokens: int, cost: float) -> str:
-    return format_event("usage", {"provider": provider, "model": model,
-                                  "input_tokens": input_tokens, "output_tokens": output_tokens, "cost": cost})
+def usage_event(
+    provider: str, model: str, input_tokens: int, output_tokens: int, cost: float
+) -> str:
+    return format_event(
+        "usage",
+        {
+            "provider": provider,
+            "model": model,
+            "input_tokens": input_tokens,
+            "output_tokens": output_tokens,
+            "cost": cost,
+        },
+    )

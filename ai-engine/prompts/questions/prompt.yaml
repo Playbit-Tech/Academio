@@ -1,0 +1,4 @@
+name: questions
+version: "1.0"
+description: Generate questions with an answer key for a subject and topic
+model_hint: anthropic:claude-3-5-sonnet-latest

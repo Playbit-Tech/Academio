@@ -1,0 +1,1 @@
+Analyse {{ student_name }}'s attendance over {{ period }}: {{ attendance_summary }}. Identify patterns and risks.

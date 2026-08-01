@@ -1,0 +1,4 @@
+name: lesson-plans
+version: "1.0"
+description: Create a lesson plan for a subject, level, and topic
+model_hint: anthropic:claude-3-5-sonnet-latest

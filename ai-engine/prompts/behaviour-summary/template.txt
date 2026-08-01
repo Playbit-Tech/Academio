@@ -1,0 +1,2 @@
+Summarise {{ student_name }}'s behaviour for {{ period }} from these teacher notes:
+{{ notes }}

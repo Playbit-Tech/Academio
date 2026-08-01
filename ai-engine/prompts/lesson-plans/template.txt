@@ -1,0 +1,1 @@
+Create a lesson plan for {{ subject }} in {{ level }}, topic {{ topic }}, duration {{ duration_minutes }} minutes.

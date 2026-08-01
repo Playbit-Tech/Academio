@@ -1,0 +1,2 @@
+Write report card comments for {{ student_name }} ({{ level }}) based on these observations:
+{{ observations }}

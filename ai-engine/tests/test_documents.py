@@ -8,6 +8,7 @@ the REAL DB write path is exercised deterministically.
 """
 
 import os
+import uuid
 from collections.abc import AsyncGenerator
 from pathlib import Path
 
@@ -161,6 +162,126 @@ async def test_documents_pipeline_store(
             "DELETE FROM school_1.ai_vectors WHERE document_id IN (%s, %s)",
             (doc_id, second.json()["document_id"]),
         )
+
+
+async def test_ingest_document_no_text_passthrough_unit(tmp_path: Path) -> None:
+    """(D-02) Ungated unit test — no-text path echoes the caller document_id.
+
+    No DB needed: the no-text branch returns before touching the pool, so this
+    runs everywhere (no AI_PGVECTOR_DSN gate).
+    """
+    from app.documents.pipeline import ingest_document
+
+    p = tmp_path / "empty.txt"
+    p.write_text("   ", encoding="utf-8")  # whitespace-only -> 0 chunks
+    res = await ingest_document(str(p), "school_1", document_id="fixed-id")
+    assert res["status"] == "success"
+    assert res["document_id"] == "fixed-id"
+    assert res["chunks"] == 0
+
+
+async def test_documents_no_text_echoes_document_id(
+    client: AsyncClient, settings: Settings, tmp_path: Path
+) -> None:
+    """(D-02) Route-level: optional document_id passes through on a no-text file."""
+    p = tmp_path / "blank.txt"
+    p.write_text("", encoding="utf-8")
+    resp = await client.post(
+        "/v1/documents",
+        json={"document_path": str(p), "collection": "default", "document_id": "fixed-id"},
+        headers=_headers(settings, schema="school_1"),
+    )
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert body["document_id"] == "fixed-id"
+    assert body["chunks"] == 0
+
+
+@LIVE_DB
+async def test_documents_idempotent_retry_same_document_id(
+    client: AsyncClient, settings: Settings, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """(D-02, ROADMAP criterion 4) Re-POSTing the same document_id is a no-op.
+
+    A worker crash mid-ingest followed by a retry with the SAME document_id
+    must hit ON CONFLICT (document_id, chunk_index) DO NOTHING — inserted 0
+    rows, no duplicate vectors.
+    """
+    monkeypatch.setattr("app.documents.pipeline.EmbeddingClient", FakeEmbeddingClient)
+    pool = await get_pool()
+    async with pool.connection() as conn:
+        cur = await conn.execute(
+            "SELECT 1 FROM information_schema.schemata WHERE schema_name = 'school_1'"
+        )
+        if await cur.fetchone() is None:
+            pytest.skip("school_1 tenant schema does not exist")
+        # Clean slate: stale rows from an interrupted run must not skew the counts.
+        await conn.execute("DELETE FROM school_1.ai_vectors WHERE document_id = 'fixed-id'")
+
+    p = tmp_path / "retry.txt"
+    p.write_text("Academio idempotent ingest retry test. " * 20, encoding="utf-8")
+
+    first = await client.post(
+        "/v1/documents",
+        json={
+            "document_path": str(p),
+            "collection": "test-collection",
+            "document_id": "fixed-id",
+        },
+        headers=_headers(settings, schema="school_1"),
+    )
+    assert first.status_code == 200, first.text
+    body = first.json()
+    assert body["document_id"] == "fixed-id"
+    assert body["chunks"] > 0
+
+    # Retry with the SAME document_id (the worker restart scenario) — no-op.
+    second = await client.post(
+        "/v1/documents",
+        json={
+            "document_path": str(p),
+            "collection": "test-collection",
+            "document_id": "fixed-id",
+        },
+        headers=_headers(settings, schema="school_1"),
+    )
+    assert second.status_code == 200, second.text
+    assert second.json()["document_id"] == "fixed-id"
+    assert second.json()["chunks"] == 0
+
+    async with pool.connection() as conn:
+        await conn.execute("DELETE FROM school_1.ai_vectors WHERE document_id = 'fixed-id'")
+
+
+@LIVE_DB
+async def test_documents_default_uuid4_document_id(
+    client: AsyncClient, settings: Settings, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """(D-02 regression) No document_id -> uuid4-shaped id (Phase 3 default intact)."""
+    monkeypatch.setattr("app.documents.pipeline.EmbeddingClient", FakeEmbeddingClient)
+    pool = await get_pool()
+    async with pool.connection() as conn:
+        cur = await conn.execute(
+            "SELECT 1 FROM information_schema.schemata WHERE schema_name = 'school_1'"
+        )
+        if await cur.fetchone() is None:
+            pytest.skip("school_1 tenant schema does not exist")
+
+    p = tmp_path / "regress.txt"
+    p.write_text("Academio default document id regression test. " * 20, encoding="utf-8")
+
+    resp = await client.post(
+        "/v1/documents",
+        json={"document_path": str(p), "collection": "test-collection"},
+        headers=_headers(settings, schema="school_1"),
+    )
+    assert resp.status_code == 200, resp.text
+    doc_id = resp.json()["document_id"]
+    assert doc_id
+    assert str(uuid.UUID(doc_id)) == doc_id  # uuid4-shaped (Phase 3 default preserved)
+
+    async with pool.connection() as conn:
+        await conn.execute("DELETE FROM school_1.ai_vectors WHERE document_id = %s", (doc_id,))
 
 
 async def test_extract_requires_token(client: AsyncClient) -> None:

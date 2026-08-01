@@ -34,6 +34,9 @@ class ExtractRequestIn(BaseModel):
 class DocumentsRequestIn(BaseModel):
     document_path: str
     collection: str = "default"
+    # D-02: stable id supplied by the Go worker (ai_documents.id). Retries reuse it
+    # so ON CONFLICT (document_id, chunk_index) DO NOTHING makes ingest idempotent.
+    document_id: str | None = None
 
 
 def _assert_within_uploads(document_path: str) -> None:
@@ -92,7 +95,9 @@ async def documents(
     schema_name = _school_header(x_school_schema)
     _assert_within_uploads(req.document_path)
     try:
-        return await ingest_document(req.document_path, schema_name, req.collection)
+        return await ingest_document(
+            req.document_path, schema_name, req.collection, req.document_id
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
     except EmbeddingNotConfiguredError as e:

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 02-05-PLAN.md
-last_updated: "2026-08-01T06:48:23.951Z"
+status: verifying
+stopped_at: Completed 02-06-PLAN.md (pgvector cutover, Qdrant retired)
+last_updated: "2026-08-01T07:06:33.484Z"
 last_activity: 2026-08-01
 progress:
   total_phases: 7
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 11
-  completed_plans: 10
-  percent: 91
+  completed_plans: 11
+  percent: 100
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-08-01)
 
 Phase: 2
 Plan: 6 of 6
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-08-01
 
 Progress: [███████░░░] 73%
@@ -62,6 +62,7 @@ Progress: [███████░░░] 73%
 | Phase 02-pgvector-migration P03 | 8 | 2 tasks | 1 files |
 | Phase 02 P04 | 15 | 2 tasks | 5 files |
 | Phase 02-pgvector-migration P05 | 7 | 1 tasks | 1 files |
+| Phase 02-pgvector-migration P06 | 10 | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -106,6 +107,9 @@ Recent decisions affecting current work:
 - [Phase 02]: tenantFor returns validated schema string; Search/Delete build qualified names from it instead of repos.SchemaName() which is empty on ForSchoolSchema path (plan 02-04)
 - [Phase 02-pgvector-migration]: Qdrant unreachable no-ops with exit 0 (safe no-op); only transport failures classify as no-op, all other failures exit non-zero
 - [Phase 02-pgvector-migration]: Copy is idempotent: clear-then-copy per collection (DELETE WHERE collection = ? then CreateInBatches 500) through the tenant factory schema-scoped session
+- [Phase 02-pgvector-migration]: AI_PGVECTOR_DSN required unconditionally in config.validate() (mirrors AI_ENGINE_URL precedent; no default, Rule B6/B12) — server never starts without a vector backend
+- [Phase 02-pgvector-migration]: Config swap + router wiring landed in the SAME commit (T-PGV-06-03) so there is no window where RAG is silently disabled (RESEARCH pitfall 6)
+- [Phase 02-pgvector-migration]: D-14 startup probe: embedder invoked with probe text; error or dimension mismatch vs AI_EMBEDDING_DIM -> logger.Fatal (fail-fast, cmd/server precedent)
 
 ### Pending Todos
 
@@ -118,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-08-01T06:48:23.947Z
-Stopped at: Completed 02-05-PLAN.md
+Last session: 2026-08-01T07:06:33.479Z
+Stopped at: Completed 02-06-PLAN.md (pgvector cutover, Qdrant retired)
 Resume file: None

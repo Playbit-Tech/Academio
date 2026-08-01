@@ -11,7 +11,7 @@ This milestone adds an **additive Python AI engine** to the existing Go educatio
 ## Phases
 
 - [x] **Phase 1: Foundation** - `ai-engine/` submodule, docker-compose service, Go EngineClient seam, service-token config, CI (completed 2026-07-31)
-- [ ] **Phase 2: pgvector Migration** - image swap, tenant-schema `ai_vectors` + HNSW, canonical embedding lock, Store impl, Qdrant cutover
+- [x] **Phase 2: pgvector Migration** - image swap, tenant-schema `ai_vectors` + HNSW, canonical embedding lock, Store impl, Qdrant cutover (completed 2026-08-01)
 - [ ] **Phase 3: Python AI Engine** - FastAPI service, multi-provider SDKs, document intelligence, prompt library, gRPC proto, tenant RAG
 - [ ] **Phase 4: SSE Streaming + Document Pipeline** - SSE relay route, async ingest pipeline, document endpoints
 - [ ] **Phase 5: Go Integration & Orchestrator** - providers status, rate limit/quota/audit/cache, ModelRouter wiring
@@ -56,7 +56,7 @@ Plans:
 - [x] 02-03-PLAN.md — PGV-04: tenant `school_{id}.ai_vectors` DDL + HNSW index + unique(doc, chunk) (wave 2)
 - [x] 02-04-PLAN.md — PGV-03: PGVectorStore behind `vector.Store` (tenancy from ctx, 1 - distance, metadata contract) + tests (wave 3)
 - [x] 02-05-PLAN.md — PGV-05: Qdrant → pgvector copy tool with parity asserts (wave 3)
-- [ ] 02-06-PLAN.md — PGV-06: AI_QDRANT_* → AI_PGVECTOR_DSN swap, PGVectorStore wiring + dim probe, Qdrant retirement from compose/k8s (wave 4)
+- [x] 02-06-PLAN.md — PGV-06: AI_QDRANT_* → AI_PGVECTOR_DSN swap, PGVectorStore wiring + dim probe, Qdrant retirement from compose/k8s (wave 4)
 
 ### Phase 3: Python AI Engine
 **Goal**: A stateless Python compute service provides multi-provider LLM access, document intelligence, embeddings, and tenant-aware RAG behind a gRPC-ready contract — the engine the pipeline and streaming layers call into.
@@ -122,7 +122,7 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 5/5 | Complete   | 2026-07-31 |
-| 2. pgvector Migration | 3/6 | In Progress|  |
+| 2. pgvector Migration | 6/6 | Complete   | 2026-08-01 |
 | 3. Python AI Engine | TBD | Not started | - |
 | 4. SSE Streaming + Document Pipeline | TBD | Not started | - |
 | 5. Go Integration & Orchestrator | TBD | Not started | - |

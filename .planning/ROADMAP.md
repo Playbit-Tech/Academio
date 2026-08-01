@@ -55,7 +55,7 @@ Plans:
 - [x] 02-02-PLAN.md — PGV-01/02: pgvector image swap + versioned core `CREATE EXTENSION IF NOT EXISTS vector` (wave 1)
 - [x] 02-03-PLAN.md — PGV-04: tenant `school_{id}.ai_vectors` DDL + HNSW index + unique(doc, chunk) (wave 2)
 - [x] 02-04-PLAN.md — PGV-03: PGVectorStore behind `vector.Store` (tenancy from ctx, 1 - distance, metadata contract) + tests (wave 3)
-- [ ] 02-05-PLAN.md — PGV-05: Qdrant → pgvector copy tool with parity asserts (wave 3)
+- [x] 02-05-PLAN.md — PGV-05: Qdrant → pgvector copy tool with parity asserts (wave 3)
 - [ ] 02-06-PLAN.md — PGV-06: AI_QDRANT_* → AI_PGVECTOR_DSN swap, PGVectorStore wiring + dim probe, Qdrant retirement from compose/k8s (wave 4)
 
 ### Phase 3: Python AI Engine

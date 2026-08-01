@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-04-PLAN.md
-last_updated: "2026-08-01T06:34:01.177Z"
+stopped_at: Completed 02-05-PLAN.md
+last_updated: "2026-08-01T06:48:23.951Z"
 last_activity: 2026-08-01
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 11
-  completed_plans: 9
-  percent: 82
+  completed_plans: 10
+  percent: 91
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-08-01)
 ## Current Position
 
 Phase: 2
-Plan: 5 of 6
+Plan: 6 of 6
 Status: Ready to execute
 Last activity: 2026-08-01
 
@@ -61,6 +61,7 @@ Progress: [███████░░░] 73%
 | Phase 02-pgvector-migration P02-01 | 15 | 2 tasks | 6 files |
 | Phase 02-pgvector-migration P03 | 8 | 2 tasks | 1 files |
 | Phase 02 P04 | 15 | 2 tasks | 5 files |
+| Phase 02-pgvector-migration P05 | 7 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -103,6 +104,8 @@ Recent decisions affecting current work:
 - [Phase 02-pgvector-migration]: Applied the ai_vectors migration to all 12 existing school_N schemas via ApplySchoolMigrationsForSchema (temp gitignored runner in backend/tmp/) instead of cmd/migrate-schemas, which is pre-existing-broken (queries nonexistent database_name column) and only handles schema_name IS NULL schools; server binary rebuilt so future tenant provisioning includes the migration
 - [Phase 02]: Fixed SchemaTablePrefix plugin to rewrite Statement.TableExpr: GORM v1.31.2 QuoteTo prefers TableExpr over the plugin-mutated Statement.Table, so .Table('ai_vectors') silently hit the unqualified table; now resolves to school_{id}.ai_vectors (plan 02-04)
 - [Phase 02]: tenantFor returns validated schema string; Search/Delete build qualified names from it instead of repos.SchemaName() which is empty on ForSchoolSchema path (plan 02-04)
+- [Phase 02-pgvector-migration]: Qdrant unreachable no-ops with exit 0 (safe no-op); only transport failures classify as no-op, all other failures exit non-zero
+- [Phase 02-pgvector-migration]: Copy is idempotent: clear-then-copy per collection (DELETE WHERE collection = ? then CreateInBatches 500) through the tenant factory schema-scoped session
 
 ### Pending Todos
 
@@ -115,6 +118,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-08-01T06:33:08.210Z
-Stopped at: Completed 02-04-PLAN.md
+Last session: 2026-08-01T06:48:23.947Z
+Stopped at: Completed 02-05-PLAN.md
 Resume file: None

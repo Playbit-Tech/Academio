@@ -20,7 +20,7 @@
 - [x] **PGV-03**: `internal/ai/vector/pgvector.go` implementing existing `vector.Store` interface (zero RAG/agent changes)
 - [x] **PGV-04**: `ai_vectors` table in `school_{id}` TENANT schemas + metadata columns + HNSW index (schema-per-tenant; NOT shared+partial-indexes)
 - [x] **PGV-04a**: Canonical embedding model + dimension locked BEFORE DDL (Go+Python share; 1536-dim default; Nigerian-language multilingual eval first)
-- [ ] **PGV-05**: Qdrant → pgvector data migration tool (low risk: no live collections)
+- [x] **PGV-05**: Qdrant → pgvector data migration tool (low risk: no live collections)
 - [ ] **PGV-06**: Config swapped `AI_QDRANT_*` → pgvector DSN, Qdrant container retired after cutover
 
 ### Python AI Engine
@@ -99,7 +99,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | PGV-03 | Phase 2 | Complete |
 | PGV-04 | Phase 2 | Complete |
 | PGV-04a | Phase 2 | Complete |
-| PGV-05 | Phase 2 | Pending |
+| PGV-05 | Phase 2 | Complete |
 | PGV-06 | Phase 2 | Pending |
 | PYE-01 | Phase 3 | Pending |
 | PYE-02 | Phase 3 | Pending |

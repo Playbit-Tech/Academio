@@ -36,7 +36,9 @@ ALL_AI_FIELDS = [
 
 def test_defaults_locked() -> None:
     """The plan's locked defaults hold on a fresh Settings (no env)."""
-    s = Settings(_env_file=None)
+    # _env_file=None isolates from any local dotenv; pyright does not model
+    # pydantic-settings' init-only kwarg in its synthesized BaseModel.__init__.
+    s = Settings(_env_file=None)  # pyright: ignore[reportCallIssue]
     assert s.AI_EMBEDDING_DIM == 1536
     assert s.AI_OLLAMA_BASE_URL == "http://localhost:11434"
     assert s.AI_EMBEDDING_BATCH_SIZE == 128
@@ -45,7 +47,13 @@ def test_defaults_locked() -> None:
 
 def test_env_override_reads_back() -> None:
     """Explicit values (the env path) read back exactly."""
-    s = Settings(AI_ANTHROPIC_API_KEY="k-test", AI_PGVECTOR_DSN="postgres://x", _env_file=None)
+    # _env_file=None isolates from any local dotenv; pyright does not model
+    # pydantic-settings' init-only kwarg in its synthesized BaseModel.__init__.
+    s = Settings(
+        AI_ANTHROPIC_API_KEY="k-test",
+        AI_PGVECTOR_DSN="postgres://x",
+        _env_file=None,  # pyright: ignore[reportCallIssue]
+    )
     assert s.AI_ANTHROPIC_API_KEY == "k-test"
     assert s.AI_PGVECTOR_DSN == "postgres://x"
 

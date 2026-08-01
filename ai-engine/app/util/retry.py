@@ -27,5 +27,12 @@ provider_retry = dict(
 embed_retry = dict(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=1, max=10),
-    retry=retry_if_exception_type(httpx.HTTPStatusError),
+    retry=retry_if_exception_type(
+        (
+            httpx.TransportError,
+            httpx.TimeoutException,
+            openai.APIConnectionError,
+            openai.APITimeoutError,
+        )
+    ),
 )

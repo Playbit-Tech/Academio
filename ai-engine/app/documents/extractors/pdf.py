@@ -26,12 +26,18 @@ async def extract_pdf(path: str) -> ExtractionResult:
     reader = PdfReader(path)
     pages = min(len(reader.pages), MAX_PAGES)
     res = ExtractionResult(pages=pages)
+    # F5: convert the PDF to images ONCE (up to the page cap), then route each
+    # page to pypdf (digital) or OCR (scanned). Converting per scanned page
+    # re-parses the whole document O(pages^2) — instead render once at OCR DPI
+    # and index the returned PIL images.
+    page_images = convert_from_path(path, dpi=OCR_DPI)[:pages]
     for i in range(pages):
         page_text = (reader.pages[i].extract_text() or "").strip()
         if len(page_text) > DIGITAL_THRESHOLD:
             res.text += f"\n\n[page {i + 1}]\n{page_text}"
         else:
-            res.text += f"\n\n[page {i + 1}]\n{_ocr_page(path, i)}"
+            img = page_images[i] if i < len(page_images) else None
+            res.text += f"\n\n[page {i + 1}]\n{_ocr_image(img) if img is not None else ''}"
             res.ocr_pages += 1
     res.chars = len(res.text)
     if len(reader.pages) > MAX_PAGES:
@@ -39,13 +45,7 @@ async def extract_pdf(path: str) -> ExtractionResult:
     return res
 
 
-def _ocr_page(path: str, page_index: int) -> str:
-    images = convert_from_path(
-        path, dpi=OCR_DPI, first_page=page_index + 1, last_page=page_index + 1
-    )
-    text_parts = []
-    for img in images:
-        # Pillow preprocessing for OCR quality (D-04): grayscale + autocontrast
-        gray = ImageOps.autocontrast(ImageOps.grayscale(img))
-        text_parts.append(pytesseract.image_to_string(gray))
-    return "\n".join(text_parts).strip()
+def _ocr_image(img) -> str:
+    # Pillow preprocessing for OCR quality (D-04): grayscale + autocontrast
+    gray = ImageOps.autocontrast(ImageOps.grayscale(img))
+    return pytesseract.image_to_string(gray).strip()

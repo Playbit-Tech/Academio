@@ -2,7 +2,7 @@
 
 from app.config import Settings
 
-# The 25 AI_* fields (D-01 provider keys + embedding/vector/prompt/doc gates).
+# The 27 AI_* fields (D-01 provider keys + embedding/vector/prompt/doc gates).
 # Keep in sync with app/config.py — the count assertion below enforces an
 # exact match; update both together if the surface grows.
 ALL_AI_FIELDS = [
@@ -31,6 +31,9 @@ ALL_AI_FIELDS = [
     "AI_PROVIDER_COOLDOWN_SECONDS",
     "AI_MAX_DOC_PAGES",
     "AI_MAX_DOC_MB",
+    # Review F2/F4 additions (containment root, SSE heartbeat cadence)
+    "AI_UPLOADS_DIR",
+    "AI_HEARTBEAT_INTERVAL_SECONDS",
 ]
 
 

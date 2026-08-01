@@ -185,3 +185,39 @@ async def test_extract_route_parses_txt(
     assert body["status"] == "success"
     assert body["pages"] == 1
     assert body["chars"] == len("extract seam")
+
+
+async def test_extract_path_outside_uploads_rejected(
+    client: AsyncClient, settings: Settings, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Review F2: with AI_UPLOADS_DIR set, a path outside the volume -> 400."""
+    root = tmp_path / "uploads"
+    root.mkdir()
+    monkeypatch.setattr(app_settings, "AI_UPLOADS_DIR", str(root))
+    outside = tmp_path / "outside.txt"
+    outside.write_text("outside volume", encoding="utf-8")
+    resp = await client.post(
+        "/v1/extract",
+        json={"document_path": str(outside)},
+        headers=_headers(settings),
+    )
+    assert resp.status_code == 400
+    assert "AI_UPLOADS_DIR" in resp.json()["detail"]
+
+
+async def test_extract_path_within_uploads_allowed(
+    client: AsyncClient, settings: Settings, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Review F2: a path inside the volume still works."""
+    root = tmp_path / "uploads"
+    root.mkdir()
+    monkeypatch.setattr(app_settings, "AI_UPLOADS_DIR", str(root))
+    inside = root / "doc.txt"
+    inside.write_text("inside volume", encoding="utf-8")
+    resp = await client.post(
+        "/v1/extract",
+        json={"document_path": str(inside)},
+        headers=_headers(settings),
+    )
+    assert resp.status_code == 200
+    assert resp.json()["status"] == "success"

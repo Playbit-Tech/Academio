@@ -10,6 +10,7 @@ require_token comes from app.security (03-04 extracted it there to break the
 main <-> api circular import — see the 03-04 SUMMARY deviation note).
 """
 
+import asyncio
 import re
 from collections.abc import AsyncIterator
 from typing import Any
@@ -167,9 +168,22 @@ async def chat_stream(req: ChatRequestIn, request: Request) -> StreamingResponse
     async def gen() -> AsyncIterator[str]:
         yield heartbeat()  # immediate keep-alive (D-02; heartbeats <= 30s)
         try:
-            async for evt in clients[provider_name].stream(
-                model, messages, max_tokens
-            ):
+            stream = clients[provider_name].stream(model, messages, max_tokens)
+            while True:
+                # F4: bound each upstream wait so a stalled provider cannot
+                # violate the D-02 heartbeat guarantee — emit a keep-alive on
+                # timeout and keep the stream alive.
+                try:
+                    evt = await asyncio.wait_for(
+                        anext(stream), timeout=settings.AI_HEARTBEAT_INTERVAL_SECONDS
+                    )
+                except TimeoutError:
+                    if await request.is_disconnected():
+                        return
+                    yield heartbeat()
+                    continue
+                except StopAsyncIteration:
+                    break
                 if await request.is_disconnected():  # context-bound stream (T-03-03-06)
                     return
                 if "delta" in evt:

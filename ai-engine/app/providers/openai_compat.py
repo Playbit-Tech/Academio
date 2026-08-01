@@ -24,8 +24,16 @@ _AZURE_SUFFIXES = ("/openai/v1", "/openai")
 
 class OpenAICompatProvider:
     def __init__(self, info: ProviderInfo) -> None:  # ProviderInfo from registry
+        if not info.key_env:
+            raise ValueError(f"provider {info.name}: key_env is required")
+        api_key = getattr(settings, info.key_env, "")
+        if not api_key:
+            # F6: fail fast (Rule B6 spirit) — never construct with a literal
+            # placeholder key; the route maps this to 503 like
+            # EmbeddingNotConfiguredError.
+            raise ValueError(f"provider {info.name}: {info.key_env} is not set")
         kwargs: dict[str, Any] = {
-            "api_key": info.key_env and getattr(settings, info.key_env) or "missing",
+            "api_key": api_key,
             "timeout": settings.AI_LLM_TIMEOUT_SECONDS,
         }
         if info.name == "azure":

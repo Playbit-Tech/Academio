@@ -222,3 +222,21 @@ async def test_providers_route_cooldown(
     assert by_name["openrouter"]["status"] == "cooldown"
     assert by_name["openrouter"]["cooldown_until"] is not None
     assert len(fake.calls) == 3
+
+
+def test_openai_compat_fails_fast_without_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Review F6: OpenAICompatProvider must not construct with a placeholder key."""
+    from app.providers.openai_compat import OpenAICompatProvider
+
+    monkeypatch.setattr(app_settings, "AI_OPENROUTER_API_KEY", "")
+    with pytest.raises(ValueError, match="AI_OPENROUTER_API_KEY is not set"):
+        OpenAICompatProvider(_info())
+
+
+def test_openai_compat_constructs_with_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    """F6 positive path: with the key set, construction succeeds."""
+    from app.providers.openai_compat import OpenAICompatProvider
+
+    monkeypatch.setattr(app_settings, "AI_OPENROUTER_API_KEY", "test-key")
+    provider = OpenAICompatProvider(_info())
+    assert provider._client is not None

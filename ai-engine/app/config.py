@@ -39,9 +39,16 @@ class Settings(BaseSettings):
     # Prompt library (D-08)
     AI_PROMPTS_DIR: str = "./prompts"
 
+    # Uploads volume root (F2 containment): document_path must resolve inside
+    # this directory, else the extract/documents routes reject with 400.
+    AI_UPLOADS_DIR: str = ""  # empty = containment disabled (local dev)
+
     # Chat caps / timeouts (DoS bounds)
     AI_MAX_TOKENS: int = 1024
     AI_LLM_TIMEOUT_SECONDS: float = 60.0
+    # SSE keep-alive cadence (D-02 heartbeats <= 30s); a stalled upstream is
+    # interrupted at this interval and a heartbeat is emitted instead (F4)
+    AI_HEARTBEAT_INTERVAL_SECONDS: float = 25.0
 
     # Chunker defaults (used by 03-05)
     AI_CHUNK_SIZE: int = 1000

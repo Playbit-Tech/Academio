@@ -25,6 +25,7 @@ dependencies = [
     { name = "pytesseract" },
     { name = "python-docx" },
     { name = "python-pptx" },
+    { name = "pyyaml" },
     { name = "tenacity" },
 ]
 
@@ -52,6 +53,7 @@ requires-dist = [
     { name = "pytesseract", specifier = ">=0.3.13" },
     { name = "python-docx", specifier = ">=1.2.0" },
     { name = "python-pptx", specifier = ">=1.0.2" },
+    { name = "pyyaml", specifier = ">=6" },
     { name = "tenacity", specifier = ">=9.1.4" },
 ]
 

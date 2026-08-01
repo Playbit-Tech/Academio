@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 02-06-PLAN.md (pgvector cutover, Qdrant retired)
-last_updated: "2026-08-01T07:06:33.484Z"
-last_activity: 2026-08-01
+status: executing
+stopped_at: Phase 05 context gathered (all 5 gray areas decided by agent discretion)
+last_updated: "2026-08-01T19:18:59.292Z"
+last_activity: 2026-08-01 -- Phase 05 execution started
 progress:
   total_phases: 7
-  completed_phases: 2
-  total_plans: 11
-  completed_plans: 11
-  percent: 100
+  completed_phases: 4
+  total_plans: 26
+  completed_plans: 23
+  percent: 88
 ---
 
 # Project State
@@ -21,22 +21,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-01)
 
 **Core value:** Document intelligence that works — upload documents, get extract → chunk → embed → searchable knowledge through the AI assistant, tenant isolation intact, without breaking the existing Go AI layer.
-**Current focus:** Phase 2 — pgvector migration
+**Current focus:** Phase 05 — go-integration-orchestrator
 
 ## Current Position
 
-Phase: 2
-Plan: 6 of 6
-Status: Phase complete — ready for verification
-Last activity: 2026-08-01
+Phase: 05 (go-integration-orchestrator) — EXECUTING
+Plan: 1 of 3
+Status: Executing Phase 05
+Last activity: 2026-08-01 -- Phase 05 execution started
 
-Progress: [███████░░░] 73%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 6
+- Total plans completed: 11
 - Average duration: 10min
 - Total execution time: 10min
 
@@ -45,6 +45,7 @@ Progress: [███████░░░] 73%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 5 | - | - |
+| 04 | 5 | - | - |
 
 **Recent Trend:**
 
@@ -63,6 +64,11 @@ Progress: [███████░░░] 73%
 | Phase 02 P04 | 15 | 2 tasks | 5 files |
 | Phase 02-pgvector-migration P05 | 7 | 1 tasks | 1 files |
 | Phase 02-pgvector-migration P06 | 10 | 3 tasks | 8 files |
+| Phase 03-python-ai-engine P01 | 12 | 2 tasks | 1 files |
+| Phase 03-python-ai-engine P03-02 | 14 | 4 tasks | 12 files |
+| Phase 03-python-ai-engine P04 | 14 | 3 tasks | 9 files |
+| Phase 03-python-ai-engine P05 | 25 | 3 tasks | 17 files |
+| Phase 03-python-ai-engine P03-06 | 14 | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -110,6 +116,32 @@ Recent decisions affecting current work:
 - [Phase 02-pgvector-migration]: AI_PGVECTOR_DSN required unconditionally in config.validate() (mirrors AI_ENGINE_URL precedent; no default, Rule B6/B12) — server never starts without a vector backend
 - [Phase 02-pgvector-migration]: Config swap + router wiring landed in the SAME commit (T-PGV-06-03) so there is no window where RAG is silently disabled (RESEARCH pitfall 6)
 - [Phase 02-pgvector-migration]: D-14 startup probe: embedder invoked with probe text; error or dimension mismatch vs AI_EMBEDDING_DIM -> logger.Fatal (fail-fast, cmd/server precedent)
+- [Phase 03-python-ai-engine]: Proto lives at repo ROOT (proto/aiengine.proto), sibling of backend/ and ai-engine/ — single source of truth importable by both submodules (D-11)
+- [Phase 03-python-ai-engine]: Service AiEngine exposes exactly 6 RPCs mapped 1:1 to REST: Chat, ChatStream, Embed, Extract, IngestDocument, Search
+- [Phase 03-python-ai-engine]: GET /v1/health and GET /v1/providers are deliberately NOT proto RPCs — infrastructure/ops surface, not domain calls
+- [Phase 03-python-ai-engine]: ChatRequest.Model carries provider:model composite; Usage normalized (provider, model, input/output tokens, cost) on every ChatResponse (D-03, ROADMAP criterion 2)
+- [Phase 03-python-ai-engine]: IngestDocumentRequest/SearchRequest carry schema_name with ^school_[0-9]+$ + existence validation semantics (D-07/D-09) — no global fallback
+- [Phase 03-python-ai-engine]: No gRPC runtime, no codegen, zero changes to backend/internal/ai/engine/* in this plan (PYE-04a, T-03-01-02)
+- [Phase 03-python-ai-engine]: All 13 Phase 3 deps uv-locked (anthropic/openai/psycopg/pgvector/tenacity/doc parsers); fastapi pin <0.141 preserved
+- [Phase 03-python-ai-engine]: Settings exposes 25 AI_* fields with locked defaults + http(s):// base_url fail-fast (T-03-02-03)
+- [Phase 03-python-ai-engine]: parse_model_composite splits provider:model on first colon (D-03); registry knows configured providers
+- [Phase 03-python-ai-engine]: Compose provider keys are empty-safe ${VAR:-}; AI_ENABLED NOT wired (Phase 5 gate)
+- [Phase 03-python-ai-engine]: AI_OLLAMA_BASE_URL compose default host.docker.internal + host-gateway extra_hosts (Linux W4)
+- [Phase 03-python-ai-engine]: require_token extracted to app/security.py to break app.main<->api circular import (plan sketch imported from app.main)
+- [Phase 03-python-ai-engine]: tenacity decorators applied via _retried() Any-helper — pyright overload workaround (call-site safe)
+- [Phase 03-python-ai-engine]: GET /v1/providers returns D-10 contract {provider, status, latency_ms, last_checked, cooldown_until}; unconfigured providers report unavailable inside 200, never 500
+- [Phase 03-python-ai-engine]: Schema identifier interpolated via psycopg sql.Identifier (not raw f-string) - pyright-typed AND defense-in-depth quoting over the ^school_[0-9]+$ allowlist
+- [Phase 03-python-ai-engine]: Pillow bomb guard set on Image.MAX_IMAGE_PIXELS (Pillow 12.3.0 reads Image module global, NOT ImageFile)
+- [Phase 03-python-ai-engine]: require_token imported from app.security (not app.main - circular import, 03-04 pattern)
+- [Phase 03-python-ai-engine]: chunker test expectation corrected: stride-800 algorithm yields 4 chunks for 2500 chars; 2400 chars is the 3-chunk case
+- [Phase 03-python-ai-engine]: /v1/documents maps EmbeddingNotConfiguredError -> 503 (fail-loud, parity with /v1/embed)
+- [Phase 03-python-ai-engine]: Hybrid search (D-06): HNSW <=> dense + PG ts_rank BM25 fused with RRF k=60 behind POST /v1/search, schema-validated per request (D-07/D-09)
+- [Phase 05-01-go-integration-orchestrator]: AI Orchestrator middleware (ai_orchestrator.go) enforces per-school 300 req/min / per-user 60 req/min / stream 20 req/min via the SHARED Redis sliding-window RateLimiter with ai:rl:{scope}:{school_id} and ai:rl:{scope}:{school_id}:{user_id} keys; returns 429 + Retry-After (D-02/D-03/D-04); applied to the whole /api/v2/ai group in router.go after auth, before handlers
+- [Phase 05-01]: AIOrchestratorService handles quota pre-flight (D-05/D-06: daily cap + per-request cost via ai.CalculateCost), tenant-scoped cache (D-10/D-11: ai:cache:{school}:{endpoint}:{sha256(prompt+model)}, chat 10m/search 5m/providers 15s), post-call RecordUsage (D-05/D-08: Redis INCRBY atomic counter + ai_usage_log ledger row), and D-15 timeout layering (Go 35s > Python 30s); fail-open on Redis for quota pre-flight, fail-loud on ledger writes (B9)
+- [Phase 05-01]: ai_usage_log migration + model in public schema (shared, no PII, T-05-03): school_id, user_id, provider, model, input_tokens, output_tokens, cost_cents, request_id, created_at; registered in core.go and models/schema.go AllModels(); cost converted USD float -> integer cents round-half-up so SUM(cost_cents) == Redis counter (A3)
+- [Phase 05-01]: Config adds AI_RATE_LIMIT_PER_SCHOOL (300), AI_RATE_LIMIT_PER_USER (60), AI_RATE_LIMIT_STREAM_PER_USER (20), AI_QUOTA_DAILY_SPEND_CENTS (0=unlimited), AI_QUOTA_MAX_REQUEST_CENTS (0=unlimited); validate() fails fast on <=0 rate limits and negative quota (Rule B12)
+- [Phase 05-01]: Handler post-call RecordUsage wired on Chat (real tokens + cost from engine usage) and Search (zero-cost ledger row for observability); WithOrchestrator attaches service; router setup instantiates orchestrator when AI enabled + Redis present
+- [Phase 05-01]: Streaming stays on the engine relay seam (engine.ChatStream) — context-bound (FND-03), preserves Phase 4 SSE envelope (delta/citation/usage); orchestrator GenerateText/GenerateTextStream wrappers are the D-16 routing seam that becomes active in 05-02 when Python providers join the ModelRouter (fixed Go-side timeout on a whole SSE session would kill legitimately long streams)
 
 ### Pending Todos
 
@@ -122,6 +154,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-08-01T07:06:33.479Z
-Stopped at: Completed 02-06-PLAN.md (pgvector cutover, Qdrant retired)
-Resume file: None
+Last session: 2026-08-01T16:10:11.055Z
+Stopped at: Phase 05-01 (AI Orchestrator) implemented — middleware, service, ledger, config, router wiring, tests all green (go build + go vet clean; middleware/services/models/config/ai/modules-ai suites pass)
+Resume file: .planning/phases/05-go-integration-orchestrator/05-01-PLAN.md

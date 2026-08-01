@@ -25,21 +25,21 @@
 
 ### Python AI Engine
 
-- [ ] **PYE-01**: Python multi-provider abstraction (Anthropic, DeepSeek, OpenRouter, Azure OpenAI, Ollama) via direct SDKs; NO Python gateway, NO LiteLLM
-- [ ] **PYE-02**: Document intelligence: PDF, DOCX, PPTX, TXT, CSV, image OCR (Tesseract), chunking, embeddings, semantic search, re-ranking, knowledge indexing
-- [ ] **PYE-03**: Versioned prompt library (report comments, lesson plans, questions, rubrics, behaviour summary, attendance analysis, parent letters, meeting minutes, translation)
-- [ ] **PYE-04**: Python endpoints: `/health`, `/v1/chat`, `/v1/chat/stream` (SSE), `/v1/embed`, `/v1/extract`, `/v1/documents`, `/v1/search`, `/v1/providers`
-- [ ] **PYE-04a**: `proto/aiengine.proto` gRPC contract written in Phase 2 (transports over REST in v1)
-- [ ] **PYE-05**: Tenant-aware RAG in Python (hybrid search, metadata filtering, chunk ranking, citations, context compression)
+- [x] **PYE-01**: Python multi-provider abstraction (Anthropic, DeepSeek, OpenRouter, Azure OpenAI, Ollama) via direct SDKs; NO Python gateway, NO LiteLLM
+- [x] **PYE-02**: Document intelligence: PDF, DOCX, PPTX, TXT, CSV, image OCR (Tesseract), chunking, embeddings, semantic search, re-ranking, knowledge indexing
+- [x] **PYE-03**: Versioned prompt library (report comments, lesson plans, questions, rubrics, behaviour summary, attendance analysis, parent letters, meeting minutes, translation)
+- [x] **PYE-04**: Python endpoints: `/health`, `/v1/chat`, `/v1/chat/stream` (SSE), `/v1/embed`, `/v1/extract`, `/v1/documents`, `/v1/search`, `/v1/providers`
+- [x] **PYE-04a**: `proto/aiengine.proto` gRPC contract written in Phase 2 (transports over REST in v1)
+- [x] **PYE-05**: Tenant-aware RAG in Python (hybrid search, metadata filtering, chunk ranking, citations, context compression)
 
 ### Document Pipeline
 
-- [ ] **PIP-01**: Document pipeline: upload → Go validates → save → asynq enqueue (`ai:doc-ingest`) → Go worker → single Python `/v1/documents` call → extract/chunk/embed → pgvector → event → notify
-- [ ] **PIP-02**: `POST /api/v2/ai/documents` + `GET /api/v2/ai/documents/:id/status` endpoints
+- [x] **PIP-01**: Document pipeline: upload → Go validates → save → asynq enqueue (`ai:doc-ingest`) → Go worker → single Python `/v1/documents` call → extract/chunk/embed → pgvector → event → notify
+- [x] **PIP-02**: `POST /api/v2/ai/documents` + `GET /api/v2/ai/documents/:id/status` endpoints
 
 ### Go Integration & API Surface
 
-- [ ] **INT-01**: `POST /api/v2/ai/chat/stream` SSE route with failure-mode-safe relay (SSE-aware scanner, context propagation, bounded channel, in-band errors, `X-Accel-Buffering: no`, heartbeats, shared event envelope)
+- [x] **INT-01**: `POST /api/v2/ai/chat/stream` SSE route with failure-mode-safe relay (SSE-aware scanner, context propagation, bounded channel, in-band errors, `X-Accel-Buffering: no`, heartbeats, shared event envelope)
 - [ ] **INT-02**: `GET /api/v2/ai/providers` multi-provider status endpoint
 - [ ] **INT-03**: AI Orchestrator: rate limiting, quota enforcement, AI-usage audit events, Redis prompt/response caching, retries/circuit breakers on Python calls, strict timeout layering (Go→Python > Python→LLM)
 - [ ] **INT-04**: Python providers wired into Go `ModelRouter` as additional `providerEntry`s (two-level routing)
@@ -101,15 +101,15 @@ Deferred to future release. Tracked but not in current roadmap.
 | PGV-04a | Phase 2 | Complete |
 | PGV-05 | Phase 2 | Complete |
 | PGV-06 | Phase 2 | Complete |
-| PYE-01 | Phase 3 | Pending |
-| PYE-02 | Phase 3 | Pending |
-| PYE-03 | Phase 3 | Pending |
-| PYE-04 | Phase 3 | Pending |
-| PYE-04a | Phase 3 | Pending |
-| PYE-05 | Phase 3 | Pending |
-| INT-01 | Phase 4 | Pending |
-| PIP-01 | Phase 4 | Pending |
-| PIP-02 | Phase 4 | Pending |
+| PYE-01 | Phase 3 | Complete |
+| PYE-02 | Phase 3 | Complete |
+| PYE-03 | Phase 3 | Complete |
+| PYE-04 | Phase 3 | Complete |
+| PYE-04a | Phase 3 | Complete |
+| PYE-05 | Phase 3 | Complete |
+| INT-01 | Phase 4 | Complete |
+| PIP-01 | Phase 4 | Complete |
+| PIP-02 | Phase 4 | Complete |
 | INT-02 | Phase 5 | Pending |
 | INT-03 | Phase 5 | Pending |
 | INT-04 | Phase 5 | Pending |

@@ -14,7 +14,7 @@ This milestone adds an **additive Python AI engine** to the existing Go educatio
 - [x] **Phase 2: pgvector Migration** - image swap, tenant-schema `ai_vectors` + HNSW, canonical embedding lock, Store impl, Qdrant cutover (completed 2026-08-01)
 - [ ] **Phase 3: Python AI Engine** - FastAPI service, multi-provider SDKs, document intelligence, prompt library, gRPC proto, tenant RAG
 - [ ] **Phase 4: SSE Streaming + Document Pipeline** - SSE relay route, async ingest pipeline, document endpoints
-- [ ] **Phase 5: Go Integration & Orchestrator** - providers status, rate limit/quota/audit/cache, ModelRouter wiring
+- [x] **Phase 5: Go Integration & Orchestrator** — providers status, rate limit/quota/audit/cache, ModelRouter wiring
 - [ ] **Phase 6: Observability, Security & Testing** - metrics/correlation, PII masking, RAG eval harness, cross-tenant probes
 - [ ] **Phase 7: Migration & Retirement** - feature flags, parallel run, Qdrant retirement, docs update
 
@@ -125,6 +125,6 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 2. pgvector Migration | 6/6 | Complete   | 2026-08-01 |
 | 3. Python AI Engine | TBD | Not started | - |
 | 4. SSE Streaming + Document Pipeline | TBD | Not started | - |
-| 5. Go Integration & Orchestrator | TBD | Not started | - |
+| 5. Go Integration & Orchestrator | 3/3 | Planning completed |
 | 6. Observability, Security & Testing | TBD | Not started | - |
 | 7. Migration & Retirement | TBD | Not started | - |

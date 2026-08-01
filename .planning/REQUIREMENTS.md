@@ -17,8 +17,8 @@
 
 - [x] **PGV-01**: Postgres image swapped to `pgvector/pgvector:pg18` (pin ≥0.8.2, CVE-2026-3172)
 - [x] **PGV-02**: `CREATE EXTENSION IF NOT EXISTS vector` in shared + tenant migrations
-- [ ] **PGV-03**: `internal/ai/vector/pgvector.go` implementing existing `vector.Store` interface (zero RAG/agent changes)
-- [ ] **PGV-04**: `ai_vectors` table in `school_{id}` TENANT schemas + metadata columns + HNSW index (schema-per-tenant; NOT shared+partial-indexes)
+- [x] **PGV-03**: `internal/ai/vector/pgvector.go` implementing existing `vector.Store` interface (zero RAG/agent changes)
+- [x] **PGV-04**: `ai_vectors` table in `school_{id}` TENANT schemas + metadata columns + HNSW index (schema-per-tenant; NOT shared+partial-indexes)
 - [x] **PGV-04a**: Canonical embedding model + dimension locked BEFORE DDL (Go+Python share; 1536-dim default; Nigerian-language multilingual eval first)
 - [ ] **PGV-05**: Qdrant → pgvector data migration tool (low risk: no live collections)
 - [ ] **PGV-06**: Config swapped `AI_QDRANT_*` → pgvector DSN, Qdrant container retired after cutover
@@ -96,8 +96,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | FND-05 | Phase 1 | Complete |
 | PGV-01 | Phase 2 | Complete |
 | PGV-02 | Phase 2 | Complete |
-| PGV-03 | Phase 2 | Pending |
-| PGV-04 | Phase 2 | Pending |
+| PGV-03 | Phase 2 | Complete |
+| PGV-04 | Phase 2 | Complete |
 | PGV-04a | Phase 2 | Complete |
 | PGV-05 | Phase 2 | Pending |
 | PGV-06 | Phase 2 | Pending |

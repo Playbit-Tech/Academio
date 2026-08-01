@@ -1,9 +1,10 @@
 """POST /v1/search — tenant-aware hybrid RAG (PYE-04/PYE-05, D-06/D-07/D-09).
 
 The request body carries the query + optional metadata filters; the tenant is
-passed via the ``X-School-Schema`` header (D-09) and validated
-(``^school_[0-9]+$`` + existence, no fallback — D-07) inside
-``hybrid_search`` BEFORE any SQL runs. Missing/invalid schema -> 400.
+passed via the ``X-School-Schema`` header (D-09) and validated inside
+``hybrid_search`` — its ``validate_schema_name`` gate (``^school_[0-9]+$`` +
+existence, no fallback — D-07) runs on the pooled connection BEFORE any SQL.
+Missing/invalid schema surfaces here as 400 (T-03-06-01).
 
 Response shape feeds the Go AI assistant (Phase 5): ``results[]`` with
 ``document_id#chunk_index`` citations + a pre-compressed ``context`` block

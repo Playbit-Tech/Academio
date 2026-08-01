@@ -1,5 +1,6 @@
+from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
-from typing import Literal, Protocol
+from typing import Any, Literal, Protocol
 
 ProviderKind = Literal["anthropic", "deepseek", "openrouter", "azure", "ollama"]
 
@@ -15,7 +16,12 @@ class ProviderInfo:
 
 
 class Provider(Protocol):
-    """Implemented by each provider client in plan 03-03."""
+    """Implemented by each provider client in plan 03-03.
 
-    def chat(self, model: str, messages: list[dict], max_tokens: int) -> tuple[str, int, int]: ...
-    def stream(self, model: str, messages: list[dict], max_tokens: int): ...
+    messages is ``list[Any]``: chat.py passes pydantic ``model_dump()`` dicts
+    whose keys/values are checked at runtime by the SDK TypedDict parsers.
+    stream() yields ``{"delta": str}`` events and a final ``{"usage": (in, out)}``.
+    """
+
+    def chat(self, model: str, messages: list[Any], max_tokens: int) -> tuple[str, int, int]: ...
+    def stream(self, model: str, messages: list[Any], max_tokens: int) -> AsyncIterator[dict]: ...

@@ -9,11 +9,17 @@ blocks in any template (T-03-07-01).
 """
 
 import shutil
+from collections.abc import AsyncGenerator
 from pathlib import Path
 from typing import Any
 
 import pytest
+from httpx import ASGITransport, AsyncClient
 
+import app.api.chat as chat_api
+from app.config import Settings
+from app.config import settings as app_settings
+from app.main import app
 from app.prompts import PROMPT_TYPES, PromptLibrary
 
 PROMPTS_DIR = Path(__file__).resolve().parents[1] / "prompts"
@@ -151,3 +157,136 @@ def test_no_control_blocks_in_templates() -> None:
     for prompt_type in PROMPT_TYPES:
         tpl = (PROMPTS_DIR / prompt_type / "template.txt").read_text(encoding="utf-8")
         assert "{%" not in tpl, f"{prompt_type}/template.txt contains a control block"
+
+
+# ---------------------------------------------------------------------------
+# Chat wiring tests (03-07 Task 3): optional prompt_type on /v1/chat and
+# /v1/chat/stream is additive — no prompt_type => byte-identical behavior.
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def settings() -> Settings:
+    s = Settings(AI_ENGINE_TOKEN="test-token-123")
+    # The app's require_token dependency reads the module-level singleton;
+    # share the test token with that same instance (mirrors test_chat.py).
+    app_settings.AI_ENGINE_TOKEN = s.AI_ENGINE_TOKEN
+    return s
+
+
+@pytest.fixture
+async def client(settings: Settings) -> AsyncGenerator[AsyncClient]:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c:
+        yield c
+
+
+def _headers(settings: Settings) -> dict[str, str]:
+    return {"X-AI-Engine-Token": settings.AI_ENGINE_TOKEN}
+
+
+class RecordingProvider:
+    """Records the (model, messages) it was asked to serve — no network."""
+
+    def __init__(self) -> None:
+        self.calls: list[tuple[str, list[Any]]] = []
+
+    async def chat(self, model: str, messages: list[Any], max_tokens: int | None = None):
+        self.calls.append((model, messages))
+        return "assistant reply", 5, 3
+
+
+class RecordingStreamProvider(RecordingProvider):
+    async def stream(self, model: str, messages: list[Any], max_tokens: int | None = None):
+        self.calls.append((model, messages))
+        yield {"delta": "assistant reply"}
+
+
+async def test_chat_without_prompt_type_unchanged(
+    client: AsyncClient, settings: Settings, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """(i) No prompt_type: request passes through untouched (additive wiring)."""
+    provider = RecordingProvider()
+    monkeypatch.setattr(chat_api, "_clients", lambda: {"anthropic": provider})
+    resp = await client.post(
+        "/v1/chat",
+        json={
+            "model": "anthropic:claude-3-5-sonnet-latest",
+            "messages": [{"role": "user", "content": "hi"}],
+        },
+        headers=_headers(settings),
+    )
+    assert resp.status_code == 200
+    assert provider.calls == [("claude-3-5-sonnet-latest", [{"role": "user", "content": "hi"}])]
+
+
+async def test_chat_with_prompt_type_prepends_system_and_falls_back_to_model_hint(
+    client: AsyncClient, settings: Settings, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """(j) prompt_type: system message rendered (lenient — no vars from the Go
+    contract, D-08) prepended; model omitted -> model_hint
+    (anthropic:claude-3-5-sonnet-latest) used."""
+    provider = RecordingProvider()
+    monkeypatch.setattr(chat_api, "_clients", lambda: {"anthropic": provider})
+    resp = await client.post(
+        "/v1/chat",
+        json={
+            "prompt_type": "report-comments",
+            "messages": [{"role": "user", "content": "hi"}],
+        },
+        headers=_headers(settings),
+    )
+    assert resp.status_code == 200
+    model, messages = provider.calls[0]
+    assert model == "claude-3-5-sonnet-latest"  # model_hint fallback (D-08)
+    assert messages[0]["role"] == "system"
+    assert "report card comments" in messages[0]["content"].lower()
+    assert "{{" not in messages[0]["content"]  # lenient render: no literal slot leak
+    assert messages[1] == {"role": "user", "content": "hi"}
+
+
+async def test_chat_unknown_prompt_type_is_400_without_provider_call(
+    client: AsyncClient, settings: Settings, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """(k) Unknown prompt_type -> 400 BEFORE any provider call (T-03-07-05)."""
+    provider = RecordingProvider()
+    monkeypatch.setattr(chat_api, "_clients", lambda: {"anthropic": provider})
+    resp = await client.post(
+        "/v1/chat",
+        json={
+            "prompt_type": "not-a-real-type",
+            "model": "anthropic:claude-3-5-sonnet-latest",
+            "messages": [{"role": "user", "content": "hi"}],
+        },
+        headers=_headers(settings),
+    )
+    assert resp.status_code == 400
+    assert "unknown prompt type" in resp.json()["detail"]
+    assert provider.calls == []
+
+
+async def test_stream_with_prompt_type_prepends_system(
+    client: AsyncClient, settings: Settings, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """(l) /chat/stream with prompt_type: same system-message wiring, SSE
+    envelope intact (delta + done events, no gzip)."""
+    provider = RecordingStreamProvider()
+    monkeypatch.setattr(chat_api, "_clients", lambda: {"anthropic": provider})
+    resp = await client.post(
+        "/v1/chat/stream",
+        json={
+            "prompt_type": "questions",
+            "model": "anthropic:claude-3-5-sonnet-latest",
+            "messages": [{"role": "user", "content": "hi"}],
+            "stream": True,
+        },
+        headers=_headers(settings),
+    )
+    assert resp.status_code == 200
+    assert resp.headers["content-type"].startswith("text/event-stream")
+    model, messages = provider.calls[0]
+    assert model == "claude-3-5-sonnet-latest"
+    assert messages[0]["role"] == "system"
+    assert "questions" in messages[0]["content"].lower()  # lenient-rendered template
+    assert "{{" not in messages[0]["content"]
+    assert 'data: {"type":"delta"' in resp.text
+    assert 'data: {"type":"done"' in resp.text

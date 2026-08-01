@@ -39,10 +39,15 @@ class ChatMessageIn(BaseModel):
 
 
 class ChatRequestIn(BaseModel):
-    model: str
+    model: str | None = None  # optional; model_hint fallback when prompt_type set (D-08)
     messages: list[ChatMessageIn]
     stream: bool = False
     max_tokens: int | None = None  # optional; capped by settings.AI_MAX_TOKENS (T-03-03-02)
+    # Optional prompt library wiring (D-08 / PYE-03): additive fields — Go
+    # never sends them, so the ChatRequest{model, messages, stream} shape
+    # stays 1:1 (Go's decoder ignores unknown JSON fields).
+    prompt_type: str | None = None
+    prompt_alias: str = "prod"  # dev/staging/prod version alias (D-08)
 
 
 class ChatResponseOut(BaseModel):
@@ -95,15 +100,48 @@ def _sanitize_error_message(message: str) -> str:
     return cleaned
 
 
+def _resolve_messages(req: ChatRequestIn) -> tuple[list[dict[str, Any]], str]:
+    """Optional D-08 prompt_type wiring: render a library prompt as the first
+    system message; model_hint fallback when model is not provided.
+
+    Returns (messages, model_composite). ``prompt_type`` is additive — Go never
+    sends it, so behavior is unchanged when absent (ChatRequest shape 1:1).
+    """
+    from app.prompts.prompt_library import library
+
+    messages = [m.model_dump() for m in req.messages]
+    model = req.model
+    if req.prompt_type:
+        try:
+            system_msg = library.render_system(req.prompt_type, alias=req.prompt_alias)
+            meta = library.get_prompt(req.prompt_type, req.prompt_alias)["meta"]
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e)) from None  # T-03-07-05: sanitized
+        messages = [{"role": "system", "content": system_msg}, *messages]
+        if model is None:
+            # documented convenience: explicit model always wins; model_hint
+            # only fills the gap (03-07 Task 3)
+            hint = meta.get("model_hint") if isinstance(meta, dict) else None
+            if isinstance(hint, str):
+                model = hint
+    if not model:
+        raise HTTPException(
+            status_code=400,
+            detail="model is required (or set prompt_type with a model_hint)",
+        )
+    return messages, model
+
+
 @router.post("/chat")
 async def chat(req: ChatRequestIn) -> ChatResponseOut:
-    provider_name, model = parse_model_composite(req.model)
+    messages, model = _resolve_messages(req)
+    provider_name, model = parse_model_composite(model)
     clients = _clients()
     if provider_name not in clients:
         raise HTTPException(status_code=503, detail=f"provider not configured: {provider_name}")
     max_tokens = min(req.max_tokens or settings.AI_MAX_TOKENS, settings.AI_MAX_TOKENS)
     text, itok, otok = await clients[provider_name].chat(
-        model, [m.model_dump() for m in req.messages], max_tokens
+        model, messages, max_tokens
     )
     return ChatResponseOut(
         message={"role": "assistant", "content": text},
@@ -119,7 +157,8 @@ async def chat(req: ChatRequestIn) -> ChatResponseOut:
 
 @router.post("/chat/stream")
 async def chat_stream(req: ChatRequestIn, request: Request) -> StreamingResponse:
-    provider_name, model = parse_model_composite(req.model)
+    messages, model = _resolve_messages(req)
+    provider_name, model = parse_model_composite(model)
     clients = _clients()
     if provider_name not in clients:
         raise HTTPException(status_code=503, detail=f"provider not configured: {provider_name}")
@@ -129,7 +168,7 @@ async def chat_stream(req: ChatRequestIn, request: Request) -> StreamingResponse
         yield heartbeat()  # immediate keep-alive (D-02; heartbeats <= 30s)
         try:
             async for evt in clients[provider_name].stream(
-                model, [m.model_dump() for m in req.messages], max_tokens
+                model, messages, max_tokens
             ):
                 if await request.is_disconnected():  # context-bound stream (T-03-03-06)
                     return

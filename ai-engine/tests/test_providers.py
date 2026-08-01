@@ -1,15 +1,21 @@
 """Provider health + /v1/providers route tests (D-10) — no live network.
 
 Part 1: ProviderHealth unit tests with a monkeypatched httpx client.
-Part 2 (extended in Task 3): GET /v1/providers route tests via ASGITransport.
+Part 2: GET /v1/providers route tests via ASGITransport (D-10 contract).
 """
 
 import time
+from collections.abc import AsyncGenerator
 from typing import Any
 
 import httpx
 import pytest
+from httpx import ASGITransport, AsyncClient
 
+import app.api.providers as providers_api
+from app.config import Settings
+from app.config import settings as app_settings
+from app.main import app
 from app.providers.healthcheck import ProviderHealth
 from app.providers.registry import ProviderInfo
 
@@ -126,3 +132,93 @@ async def test_ttl_expiry_triggers_reping(monkeypatch: pytest.MonkeyPatch) -> No
     health._cache["openrouter"].last_checked -= 31.0
     await health.check("openrouter", info)
     assert len(fake.calls) == 2
+
+
+# --------------------------------------------------------------------------
+# Part 2: GET /v1/providers route tests (D-10 contract; no live network)
+# --------------------------------------------------------------------------
+
+
+@pytest.fixture
+def settings() -> Settings:
+    s = Settings(AI_ENGINE_TOKEN="test-token-123")
+    # The app's require_token dependency reads the module-level singleton;
+    # share the test token with that same instance (mirrors test_embedding).
+    app_settings.AI_ENGINE_TOKEN = s.AI_ENGINE_TOKEN
+    return s
+
+
+@pytest.fixture
+async def client(settings: Settings) -> AsyncGenerator[AsyncClient]:
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as c:
+        yield c
+
+
+def _headers(settings: Settings) -> dict[str, str]:
+    return {"X-AI-Engine-Token": settings.AI_ENGINE_TOKEN}
+
+
+async def test_providers_route_requires_token(client: AsyncClient) -> None:
+    """(a) No service token -> 401 (T-03-04-01)."""
+    resp = await client.get("/v1/providers")
+    assert resp.status_code == 401
+
+
+async def test_providers_route_no_keys_all_unavailable(
+    client: AsyncClient, settings: Settings, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """(b) No provider keys -> 200 with all five providers, each
+    unavailable — never a 500 (RESEARCH Pitfall 5 / A3)."""
+    monkeypatch.setattr(app_settings, "AI_OLLAMA_BASE_URL", "")  # hermetic: no localhost ping
+    resp = await client.get("/v1/providers", headers=_headers(settings))
+    assert resp.status_code == 200
+    body = resp.json()
+    names = {p["provider"] for p in body["providers"]}
+    assert names == {"anthropic", "deepseek", "openrouter", "azure", "ollama"}
+    for p in body["providers"]:
+        assert p["status"] in {"unavailable", "cooldown"}
+        assert p["latency_ms"] is None
+
+
+async def test_providers_route_healthy(
+    client: AsyncClient, settings: Settings, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """(c) Key set + healthy ping -> openrouter reports healthy with
+    latency_ms >= 0 (D-10 contract, consumed by Go INT-02)."""
+    fake = FakeClient(200)
+    _patch_client(monkeypatch, fake)
+    monkeypatch.setattr(app_settings, "AI_OPENROUTER_API_KEY", "test-key")
+    monkeypatch.setattr(app_settings, "AI_OLLAMA_BASE_URL", "")
+    providers_api._health = ProviderHealth()  # fresh singleton (patched settings)
+    resp = await client.get("/v1/providers", headers=_headers(settings))
+    assert resp.status_code == 200
+    by_name = {p["provider"]: p for p in resp.json()["providers"]}
+    op = by_name["openrouter"]
+    assert op["status"] == "healthy"
+    assert op["latency_ms"] is not None and op["latency_ms"] >= 0
+    assert op["cooldown_until"] is None
+    assert fake.calls  # a ping actually happened
+
+
+async def test_providers_route_cooldown(
+    client: AsyncClient, settings: Settings, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """(d) 3 failing pings -> cooldown surfaces in the route response."""
+    fake = FakeClient(500)
+    _patch_client(monkeypatch, fake)
+    monkeypatch.setattr(app_settings, "AI_OPENROUTER_API_KEY", "test-key")
+    monkeypatch.setattr(app_settings, "AI_PROVIDER_TTL_SECONDS", 0)  # force a re-ping per call
+    monkeypatch.setattr(app_settings, "AI_PROVIDER_COOLDOWN_THRESHOLD", 3)
+    monkeypatch.setattr(app_settings, "AI_OLLAMA_BASE_URL", "")
+    providers_api._health = ProviderHealth()  # fresh singleton (patched settings)
+    resp: httpx.Response | None = None
+    for _ in range(3):
+        resp = await client.get("/v1/providers", headers=_headers(settings))
+        assert resp.status_code == 200
+    assert resp is not None
+    by_name = {p["provider"]: p for p in resp.json()["providers"]}
+    assert by_name["openrouter"]["status"] == "cooldown"
+    assert by_name["openrouter"]["cooldown_until"] is not None
+    assert len(fake.calls) == 3

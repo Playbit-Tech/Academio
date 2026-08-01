@@ -1,6 +1,7 @@
 from fastapi import Depends, FastAPI
 
 from app.api.embed import router as embed_router
+from app.api.providers import router as providers_router
 from app.security import require_token
 
 app = FastAPI(title="Academio AI Engine")
@@ -17,3 +18,4 @@ async def v1_health() -> dict:
 
 
 app.include_router(embed_router)
+app.include_router(providers_router)

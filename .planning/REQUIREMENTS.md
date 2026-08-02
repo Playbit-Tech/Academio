@@ -40,7 +40,7 @@
 ### Go Integration & API Surface
 
 - [x] **INT-01**: `POST /api/v2/ai/chat/stream` SSE route with failure-mode-safe relay (SSE-aware scanner, context propagation, bounded channel, in-band errors, `X-Accel-Buffering: no`, heartbeats, shared event envelope)
-- [ ] **INT-02**: `GET /api/v2/ai/providers` multi-provider status endpoint
+- [x] **INT-02**: `GET /api/v2/ai/providers` multi-provider status endpoint
 - [ ] **INT-03**: AI Orchestrator: rate limiting, quota enforcement, AI-usage audit events, Redis prompt/response caching, retries/circuit breakers on Python calls, strict timeout layering (Go→Python > Python→LLM)
 - [ ] **INT-04**: Python providers wired into Go `ModelRouter` as additional `providerEntry`s (two-level routing)
 
@@ -110,7 +110,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | INT-01 | Phase 4 | Complete |
 | PIP-01 | Phase 4 | Complete |
 | PIP-02 | Phase 4 | Complete |
-| INT-02 | Phase 5 | Pending |
+| INT-02 | Phase 5 | Complete |
 | INT-03 | Phase 5 | Pending |
 | INT-04 | Phase 5 | Pending |
 | OBS-01 | Phase 6 | Pending |

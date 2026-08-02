@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Phase 05 context gathered (all 5 gray areas decided by agent discretion)
-last_updated: "2026-08-01T19:18:59.292Z"
-last_activity: 2026-08-01 -- Phase 05 execution started
+status: verifying
+stopped_at: Completed 05-03-PLAN.md (INT-02 provider status endpoint)
+last_updated: "2026-08-02T01:46:41.681Z"
+last_activity: 2026-08-02
 progress:
   total_phases: 7
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 26
-  completed_plans: 23
-  percent: 88
+  completed_plans: 26
+  percent: 100
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-08-01)
 ## Current Position
 
 Phase: 05 (go-integration-orchestrator) — EXECUTING
-Plan: 1 of 3
-Status: Executing Phase 05
-Last activity: 2026-08-01 -- Phase 05 execution started
+Plan: 3 of 3
+Status: Phase complete — ready for verification
+Last activity: 2026-08-02
 
 Progress: [██████████] 100%
 
@@ -69,6 +69,7 @@ Progress: [██████████] 100%
 | Phase 03-python-ai-engine P04 | 14 | 3 tasks | 9 files |
 | Phase 03-python-ai-engine P05 | 25 | 3 tasks | 17 files |
 | Phase 03-python-ai-engine P03-06 | 14 | 3 tasks | 7 files |
+| Phase 05-go-integration-orchestrator P03 | 25min | 3 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -142,6 +143,8 @@ Recent decisions affecting current work:
 - [Phase 05-01]: Config adds AI_RATE_LIMIT_PER_SCHOOL (300), AI_RATE_LIMIT_PER_USER (60), AI_RATE_LIMIT_STREAM_PER_USER (20), AI_QUOTA_DAILY_SPEND_CENTS (0=unlimited), AI_QUOTA_MAX_REQUEST_CENTS (0=unlimited); validate() fails fast on <=0 rate limits and negative quota (Rule B12)
 - [Phase 05-01]: Handler post-call RecordUsage wired on Chat (real tokens + cost from engine usage) and Search (zero-cost ledger row for observability); WithOrchestrator attaches service; router setup instantiates orchestrator when AI enabled + Redis present
 - [Phase 05-01]: Streaming stays on the engine relay seam (engine.ChatStream) — context-bound (FND-03), preserves Phase 4 SSE envelope (delta/citation/usage); orchestrator GenerateText/GenerateTextStream wrappers are the D-16 routing seam that becomes active in 05-02 when Python providers join the ModelRouter (fixed Go-side timeout on a whole SSE session would kill legitimately long streams)
+- [Phase 05-go-integration-orchestrator]: Cache-hit pass-through: CheckQuota read-only, RecordUsage never called by GetProvidersStatus — cache hits never count against quota (T-05-06)
+- [Phase 05-go-integration-orchestrator]: entryBreaker resolves breaker from inside *guardedProvider (NewProvider wiring) — aggregator reports real breaker state, not unknown
 
 ### Pending Todos
 
@@ -154,6 +157,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-08-01T16:10:11.055Z
-Stopped at: Phase 05-01 (AI Orchestrator) implemented — middleware, service, ledger, config, router wiring, tests all green (go build + go vet clean; middleware/services/models/config/ai/modules-ai suites pass)
-Resume file: .planning/phases/05-go-integration-orchestrator/05-01-PLAN.md
+Last session: 2026-08-02T01:46:41.613Z
+Stopped at: Completed 05-03-PLAN.md (INT-02 provider status endpoint)
+Resume file: None

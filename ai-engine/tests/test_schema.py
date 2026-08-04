@@ -11,10 +11,13 @@ import uuid
 from unittest.mock import AsyncMock
 
 import pytest
+from httpx import ASGITransport, AsyncClient
 
+from app.config import settings as app_settings
 from app.db.pool import get_pool
 from app.db.schema import validate_schema_name
 from app.db.vectors import insert_chunks
+from app.main import app
 
 LIVE_DB = pytest.mark.skipif(
     not os.getenv("AI_PGVECTOR_DSN"),
@@ -90,3 +93,26 @@ async def test_insert_chunks_idempotent() -> None:
             await conn.execute(
                 "DELETE FROM school_1.ai_vectors WHERE document_id = %s", (doc_id,)
             )
+
+
+@LIVE_DB
+async def test_search_malformed_schema_400_no_fallback() -> None:
+    """(f) Live: malformed X-School-Schema -> 400 (D-06 no-fallback).
+
+    The API layer must reject a malformed schema with 400 — never silently
+    default the schema to something else. ``get_pool`` runs before the regex
+    gate inside hybrid_search, so this is DB-gated; the regex itself is
+    exercised hermetically by ``test_validate_schema_name_rejects_bad_names``.
+    """
+    app_settings.AI_ENGINE_TOKEN = "test-token-123"
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c:
+        for bad in ("not_a_schema", "school_abc", "school_1; DROP TABLE"):
+            resp = await c.post(
+                "/v1/search",
+                json={"query": "hello"},
+                headers={
+                    "X-AI-Engine-Token": app_settings.AI_ENGINE_TOKEN,
+                    "X-School-Schema": bad,
+                },
+            )
+            assert resp.status_code == 400, f"{bad}: got {resp.status_code}"

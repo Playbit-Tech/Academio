@@ -1,4 +1,4 @@
-from pydantic import field_validator
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -78,6 +78,30 @@ class Settings(BaseSettings):
         if v and not v.startswith(("http://", "https://")):
             raise ValueError("AI_*_BASE_URL/AI_AZURE_OPENAI_ENDPOINT must use http(s):// scheme")
         return v
+
+    @model_validator(mode="after")
+    def _validate_provider_partial_config(self) -> "Settings":
+        """Fail-fast on PARTIAL provider configuration (SEC-01 / D-05).
+
+        Provider keys are env-only and providers are optional by design
+        (unconfigured providers report unavailable via /v1/providers — Phase 3
+        decision). BUT a partially-configured provider is a misconfiguration
+        that would silently degrade at request time: e.g. Azure endpoint set
+        with no API key, or an API key set with no endpoint/deployment.
+        Detect the intent-to-use signals and fail fast at startup
+        (Rule B12) instead of silently running a broken provider.
+        """
+        azure_key = self.AI_AZURE_OPENAI_API_KEY
+        azure_endpoint = self.AI_AZURE_OPENAI_ENDPOINT
+        azure_deployment = self.AI_AZURE_OPENAI_DEPLOYMENT
+        azure_parts = sum(bool(p) for p in (azure_key, azure_endpoint, azure_deployment))
+        if azure_parts not in (0, 3):
+            raise RuntimeError(
+                "AI_AZURE_OPENAI partial configuration: set ALL of "
+                "AI_AZURE_OPENAI_API_KEY, AI_AZURE_OPENAI_ENDPOINT, "
+                "AI_AZURE_OPENAI_DEPLOYMENT together (or none)"
+            )
+        return self
 
 
 settings = Settings()

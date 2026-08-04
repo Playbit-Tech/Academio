@@ -102,7 +102,7 @@ Plans:
   2. PII masking is enforced (document contents and prompt bodies never appear in logs — sizes/hashes only); AI config secrets are encrypted at rest; every AI request is audited; all inputs validated; Python's `^school_\d+$` schema check runs on every query with no fallback.
   3. The RAG evaluation harness ships and runs in CI on every chunking/embedding/prompt change: golden set of 50-100 school-realistic QA pairs (collected from Phase 4's pipeline corpus), gating faithfulness ≥0.85 and context precision ≥0.75.
   4. The cross-tenant probe suite runs in CI on every deploy: canary chunks per tenant, adversarial queries across every retrieval entry point (search, cache, reranking, agent tools, worker paths) assert ZERO cross-tenant hits; the kill-worker-mid-pipeline test asserts zero duplicate vectors and exactly one notification; load/concurrency tests pass at 10× expected peak.
-**Plans**: TBD
+**Plans**: 06-01 (OBS-01, complete), 06-02 (SEC-01, complete), 06-03 (TES-01 RAG eval), 06-04 (TES-01 probes + hardening)
 
 ### Phase 7: Migration & Retirement
 **Goal**: Python capabilities go live safely behind feature flags with Go AI + Python running in parallel, Qdrant fully retired, and architecture docs reflecting the new engine.

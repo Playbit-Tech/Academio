@@ -46,7 +46,7 @@
 
 ### Observability, Security, Testing
 
-- [ ] **OBS-01**: Prometheus metrics + JSON logs + `X-Request-ID` correlation across Go→Python; token usage/cost/latency/cache metrics; Grafana dashboard
+- [x] **OBS-01**: Prometheus metrics + JSON logs + `X-Request-ID` correlation across Go→Python; token usage/cost/latency/cache metrics; Grafana dashboard
 - [ ] **SEC-01**: PII masking, AI config encryption, audit every AI request, rate limit AI endpoints, tenant isolation, input validation; Python validates `schema_name` `^school_\d+$` on every query; shared uploads volume
 - [ ] **TES-01**: Go + pytest test suites (unit, integration, AI-pipeline, embedding, RAG-accuracy, security, load, concurrency); RAG evaluation harness ships WITH pipeline; cross-tenant probe suite in CI
 
@@ -113,7 +113,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | INT-02 | Phase 5 | Complete |
 | INT-03 | Phase 5 | Complete |
 | INT-04 | Phase 5 | Complete |
-| OBS-01 | Phase 6 | Pending |
+| OBS-01 | Phase 6 | Complete |
 | SEC-01 | Phase 6 | Pending |
 | TES-01 | Phase 6 | Pending |
 | RET-01 | Phase 7 | Pending |

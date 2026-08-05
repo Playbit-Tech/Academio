@@ -33,6 +33,10 @@ dev = [
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+# tests/rag_eval/ is not a package (no __init__.py), so pytest's basedir
+# insertion does NOT cover the repo root; the ai-engine root must be on
+# sys.path for `app.*` imports in rag_eval tests (and in CI).
+pythonpath = ["."]
 
 [tool.ruff]
 line-length = 100

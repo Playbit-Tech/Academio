@@ -1,0 +1,92 @@
+name: RAG Eval (TES-01)
+on:
+  push:
+    branches: [main]
+    paths: ['ai-engine/tests/rag_eval/**', 'ai-engine/app/**', 'ai-engine/pyproject.toml', 'ai-engine/uv.lock', '.github/workflows/rag-eval.yml']
+  pull_request:
+    paths: ['ai-engine/tests/rag_eval/**', 'ai-engine/app/**', 'ai-engine/pyproject.toml', 'ai-engine/uv.lock', '.github/workflows/rag-eval.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rag-eval-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai-engine
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: academio
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      AI_PGVECTOR_DSN: postgres://postgres:postgres@localhost:5432/academio?sslmode=disable
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+      - name: Sync frozen lockfile
+        run: uv sync --frozen
+      - name: Provision tenant schema (school_1.ai_vectors)
+        run: |
+          uv run python - <<'PY'
+          import asyncio
+
+          from psycopg import AsyncConnection
+
+          DSN = "postgres://postgres:postgres@localhost:5432/academio?sslmode=disable"
+
+          DDL = """
+          CREATE TABLE IF NOT EXISTS school_1.ai_vectors (
+              id VARCHAR(255) PRIMARY KEY,
+              collection VARCHAR(255) NOT NULL,
+              embedding public.vector(1536) NOT NULL,
+              document_id VARCHAR(255) NOT NULL,
+              chunk_index VARCHAR(255) NOT NULL,
+              text TEXT NOT NULL,
+              embedding_model VARCHAR(255) NOT NULL,
+              model_version VARCHAR(255) NOT NULL,
+              chunking_version VARCHAR(255) NOT NULL,
+              created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+              updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+              CONSTRAINT uq_ai_vectors_doc_chunk UNIQUE (document_id, chunk_index)
+          )
+          """
+
+          async def main() -> None:
+              async with await AsyncConnection.connect(DSN) as conn:
+                  await conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
+                  await conn.execute("CREATE SCHEMA IF NOT EXISTS school_1")
+                  await conn.execute(DDL)
+                  await conn.execute(
+                      "CREATE INDEX IF NOT EXISTS idx_ai_vectors_collection "
+                      "ON school_1.ai_vectors (collection)"
+                  )
+                  await conn.commit()
+
+          asyncio.run(main())
+          PY
+      - name: Ruff lint (rag_eval)
+        run: uv run ruff check tests/rag_eval
+      - name: Hermetic eval (no live key needed)
+        env:
+          AI_PGVECTOR_DSN: ""
+        run: uv run pytest tests/rag_eval -q
+      - name: Live-DB eval (real hybrid pipeline)
+        run: uv run pytest tests/rag_eval -q

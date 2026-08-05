@@ -1,0 +1,60 @@
+{"question": "What is the capital city of Nigeria?", "expected_sources": ["geography_nigeria_chunk0"], "expected_answer_fragments": ["Abuja serves as the federal capital", "seat of government"]}
+{"question": "Which river is the longest in Nigeria and where does it flow?", "expected_sources": ["geography_nigeria_chunk1"], "expected_answer_fragments": ["Niger River", "flows through the country", "empties into the Atlantic Ocean"]}
+{"question": "Name three major ethnic groups in Nigeria.", "expected_sources": ["geography_nigeria_chunk1"], "expected_answer_fragments": ["Hausa", "Yoruba", "Igbo"]}
+{"question": "What is the formula for the area of a triangle?", "expected_sources": ["math_geometry_chunk0"], "expected_answer_fragments": ["one half of the base times the height", "A equals one half b h"]}
+{"question": "How do you compute the circumference of a circle?", "expected_sources": ["math_geometry_chunk1"], "expected_answer_fragments": ["pi times the diameter", "two pi times the radius"]}
+{"question": "What does the Pythagorean theorem state for a right triangle?", "expected_sources": ["math_geometry_chunk2"], "expected_answer_fragments": ["sum of the squares of the two legs", "square of the hypotenuse"]}
+{"question": "What is the value of pi rounded to two decimal places?", "expected_sources": ["math_geometry_chunk1"], "expected_answer_fragments": ["three point one four"]}
+{"question": "Who wrote the play Romeo and Juliet?", "expected_sources": ["lit_shakespeare_chunk0"], "expected_answer_fragments": ["William Shakespeare"]}
+{"question": "In which city is Romeo and Juliet mainly set?", "expected_sources": ["lit_shakespeare_chunk0"], "expected_answer_fragments": ["Verona", "Italian city"]}
+{"question": "What are the two feuding families in Romeo and Juliet?", "expected_sources": ["lit_shakespeare_chunk1"], "expected_answer_fragments": ["Montagues", "Capulets"]}
+{"question": "What is the main theme explored through the lovers in Romeo and Juliet?", "expected_sources": ["lit_shakespeare_chunk2"], "expected_answer_fragments": ["fate versus free will", "tragic love"]}
+{"question": "Who is the tragic hero in Shakespeare's Hamlet?", "expected_sources": ["lit_shakespeare_chunk0"], "expected_answer_fragments": ["Prince Hamlet", "the prince of Denmark"]}
+{"question": "What famous line begins Hamlet's soliloquy about existence?", "expected_sources": ["lit_shakespeare_chunk3"], "expected_answer_fragments": ["To be, or not to be, that is the question"]}
+{"question": "What is photosynthesis?", "expected_sources": ["science_biology_chunk0"], "expected_answer_fragments": ["plants convert sunlight", "carbon dioxide and water", "glucose and oxygen"]}
+{"question": "Which gas do plants release during photosynthesis?", "expected_sources": ["science_biology_chunk0"], "expected_answer_fragments": ["release oxygen"]}
+{"question": "What role do chloroplasts play in a plant cell?", "expected_sources": ["science_biology_chunk1"], "expected_answer_fragments": ["contain chlorophyll", "capture light energy"]}
+{"question": "What is the powerhouse of the cell?", "expected_sources": ["science_biology_chunk1"], "expected_answer_fragments": ["mitochondria"]}
+{"question": "How many chambers does the human heart have?", "expected_sources": ["science_biology_chunk2"], "expected_answer_fragments": ["four chambers", "two atria and two ventricles"]}
+{"question": "What is the function of red blood cells?", "expected_sources": ["science_biology_chunk2"], "expected_answer_fragments": ["carry oxygen"]}
+{"question": "What is the boiling point of water at sea level?", "expected_sources": ["science_chemistry_chunk0"], "expected_answer_fragments": ["one hundred degrees Celsius", "two hundred twelve degrees Fahrenheit"]}
+{"question": "What is the chemical formula for table salt?", "expected_sources": ["science_chemistry_chunk1"], "expected_answer_fragments": ["NaCl", "sodium chloride"]}
+{"question": "What is the chemical symbol for gold?", "expected_sources": ["science_chemistry_chunk1"], "expected_answer_fragments": ["chemical symbol for gold is Au"]}
+{"question": "What is the pH value of a neutral solution?", "expected_sources": ["science_chemistry_chunk2"], "expected_answer_fragments": ["pH value of seven", "neutral is pH 7"]}
+{"question": "What is Newton's first law of motion?", "expected_sources": ["science_physics_chunk0"], "expected_answer_fragments": ["stays at rest", "uniform motion unless acted upon by a net force"]}
+{"question": "What is the formula that relates force, mass and acceleration?", "expected_sources": ["science_physics_chunk0"], "expected_answer_fragments": ["F equals m a", "force equals mass times acceleration"]}
+{"question": "What is the acceleration due to gravity on Earth?", "expected_sources": ["science_physics_chunk1"], "expected_answer_fragments": ["nine point eight meters per second squared"]}
+{"question": "What is the speed of light in a vacuum?", "expected_sources": ["science_physics_chunk1"], "expected_answer_fragments": ["three hundred thousand kilometers per second", "three times ten to the eighth"]}
+{"question": "In which year did Nigeria gain independence from Britain?", "expected_sources": ["history_nigeria_chunk0"], "expected_answer_fragments": ["nineteen sixty"]}
+{"question": "Who was Nigeria's first Prime Minister?", "expected_sources": ["history_nigeria_chunk0"], "expected_answer_fragments": ["Abubakar Tafawa Balewa"]}
+{"question": "What event is celebrated on October 1st in Nigeria?", "expected_sources": ["history_nigeria_chunk0"], "expected_answer_fragments": ["Independence Day"]}
+{"question": "When was the Nigerian Civil War fought?", "expected_sources": ["history_nigeria_chunk1"], "expected_answer_fragments": ["nineteen sixty-seven to nineteen seventy"]}
+{"question": "What was the name of the breakaway republic in the Nigerian Civil War?", "expected_sources": ["history_nigeria_chunk1"], "expected_answer_fragments": ["Republic of Biafra"]}
+{"question": "What is the largest state by area in Nigeria?", "expected_sources": ["history_nigeria_chunk2"], "expected_answer_fragments": ["Niger State"]}
+{"question": "What is the highest mountain in Africa?", "expected_sources": ["geography_africa_chunk0"], "expected_answer_fragments": ["Mount Kilimanjaro"]}
+{"question": "Which desert covers much of northern Africa?", "expected_sources": ["geography_africa_chunk0"], "expected_answer_fragments": ["Sahara Desert"]}
+{"question": "Which is the longest river in Africa?", "expected_sources": ["geography_africa_chunk1"], "expected_answer_fragments": ["longest river in Africa is the Nile"]}
+{"question": "What is the capital of South Africa (administrative seat)?", "expected_sources": ["geography_africa_chunk2"], "expected_answer_fragments": ["administrative capital of South Africa is Pretoria"]}
+{"question": "What is the official language of Nigeria?", "expected_sources": ["geography_nigeria_chunk2"], "expected_answer_fragments": ["official language is English"]}
+{"question": "How many states does Nigeria currently have?", "expected_sources": ["geography_nigeria_chunk2"], "expected_answer_fragments": ["thirty-six states"]}
+{"question": "What is the unit of currency in Nigeria?", "expected_sources": ["geography_nigeria_chunk2"], "expected_answer_fragments": ["unit of currency is the Naira"]}
+{"question": "What is the name of the Nigerian national flag?", "expected_sources": ["history_nigeria_chunk3"], "expected_answer_fragments": ["vertical green-white green bands"]}
+{"question": "What does the green color on the Nigerian flag represent?", "expected_sources": ["history_nigeria_chunk3"], "expected_answer_fragments": ["represents agriculture and the natural wealth", "natural wealth"]}
+{"question": "Who is the author of Things Fall Apart?", "expected_sources": ["lit_african_chunk0"], "expected_answer_fragments": ["Chinua Achebe"]}
+{"question": "Who is the protagonist of Things Fall Apart?", "expected_sources": ["lit_african_chunk0"], "expected_answer_fragments": ["Okonkwo"]}
+{"question": "What is the setting of Things Fall Apart?", "expected_sources": ["lit_african_chunk1"], "expected_answer_fragments": ["Igbo village of Umuofia"]}
+{"question": "What is the main theme of the poem The Rime of the Ancient Mariner?", "expected_sources": ["lit_shakespeare_chunk4"], "expected_answer_fragments": ["guilt and redemption", "consequences of harming nature"]}
+{"question": "What is the value of the square root of 144?", "expected_sources": ["math_geometry_chunk2"], "expected_answer_fragments": ["square root of 144 is twelve"]}
+{"question": "What is the sum of the interior angles of a triangle?", "expected_sources": ["math_geometry_chunk1"], "expected_answer_fragments": ["one hundred eighty degrees"]}
+{"question": "What is the formula for the volume of a rectangular prism?", "expected_sources": ["math_geometry_chunk3"], "expected_answer_fragments": ["length times width times height"]}
+{"question": "What is the area of a rectangle with length 5 and width 3?", "expected_sources": ["math_geometry_chunk3"], "expected_answer_fragments": ["fifteen square units"]}
+{"question": "What is a prime number?", "expected_sources": ["math_geometry_chunk4"], "expected_answer_fragments": ["greater than one", "divisible only by one and itself"]}
+{"question": "Which of these is prime: 9, 11, or 15?", "expected_sources": ["math_geometry_chunk4"], "expected_answer_fragments": ["The number 11 is prime"]}
+{"question": "What is the main function of the roots of a plant?", "expected_sources": ["science_biology_chunk3"], "expected_answer_fragments": ["absorb water and nutrients", "anchor the plant in place"]}
+{"question": "What is the role of the stomata in a leaf?", "expected_sources": ["science_biology_chunk3"], "expected_answer_fragments": ["allow gas exchange", "carbon dioxide in and oxygen out"]}
+{"question": "What is an ecosystem?", "expected_sources": ["science_biology_chunk4"], "expected_answer_fragments": ["community of living organisms", "interacting with each other and with their environment"]}
+{"question": "What is the main cause of the seasons?", "expected_sources": ["geography_africa_chunk3"], "expected_answer_fragments": ["tilt of the Earth's axis"]}
+{"question": "Which ocean borders Nigeria to the south?", "expected_sources": ["geography_africa_chunk3"], "expected_answer_fragments": ["Atlantic Ocean borders West African countries"]}
+{"question": "What is the largest planet in our solar system?", "expected_sources": ["science_physics_chunk2"], "expected_answer_fragments": ["largest planet in our solar system"]}
+{"question": "What is the name given to the study of weather?", "expected_sources": ["geography_africa_chunk4"], "expected_answer_fragments": ["Meteorology is the study of weather"]}
+{"question": "What is the national animal of Nigeria?", "expected_sources": ["history_nigeria_chunk3"], "expected_answer_fragments": ["national animal of Nigeria is the eagle"]}

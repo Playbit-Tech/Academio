@@ -21,7 +21,11 @@ class OllamaProvider:
 
     @retry(**provider_retry)  # pyright: ignore[reportArgumentType]  # tenacity typing vs pyright (see 03-02 pattern)
     async def chat(
-        self, model: str, messages: list[Any], max_tokens: int | None = None
+        self,
+        model: str,
+        messages: list[Any],
+        max_tokens: int | None = None,
+        temperature: float | None = None,
     ) -> tuple[str, int, int]:
         async with httpx.AsyncClient(timeout=settings.AI_LLM_TIMEOUT_SECONDS) as c:
             r = await c.post(
@@ -31,6 +35,7 @@ class OllamaProvider:
                     "messages": messages,
                     "stream": False,
                     **(dict(max_tokens=max_tokens) if max_tokens else {}),
+                    **({"temperature": temperature} if temperature is not None else {}),
                 },
             )
             r.raise_for_status()
@@ -39,7 +44,13 @@ class OllamaProvider:
         u = data.get("usage", {})
         return text, u.get("prompt_tokens", 0), u.get("completion_tokens", 0)
 
-    async def stream(self, model: str, messages: list[Any], max_tokens: int | None = None) -> Any:
+    async def stream(
+        self,
+        model: str,
+        messages: list[Any],
+        max_tokens: int | None = None,
+        temperature: float | None = None,
+    ) -> Any:
         async with httpx.AsyncClient(timeout=settings.AI_LLM_TIMEOUT_SECONDS) as c:
             async with c.stream(
                 "POST",
@@ -49,6 +60,7 @@ class OllamaProvider:
                     "messages": messages,
                     "stream": True,
                     **(dict(max_tokens=max_tokens) if max_tokens else {}),
+                    **({"temperature": temperature} if temperature is not None else {}),
                 },
             ) as r:
                 r.raise_for_status()

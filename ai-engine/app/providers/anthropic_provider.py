@@ -31,13 +31,18 @@ class AnthropicProvider:
 
     @retry(**provider_retry)  # pyright: ignore[reportArgumentType]  # tenacity typing vs pyright (see 03-02 pattern)
     async def chat(
-        self, model: str, messages: list[Any], max_tokens: int | None = None
+        self,
+        model: str,
+        messages: list[Any],
+        max_tokens: int | None = None,
+        temperature: float | None = None,
     ) -> tuple[str, int, int]:
         system, msgs = self._system(messages)
         body: dict[str, Any] = {
             "model": model,
             "max_tokens": max_tokens or settings.AI_MAX_TOKENS,
             "messages": msgs,
+            **({"temperature": temperature} if temperature is not None else {}),
         }
         if system:
             body["system"] = system
@@ -46,12 +51,19 @@ class AnthropicProvider:
         usage = resp.usage
         return text, usage.input_tokens, usage.output_tokens
 
-    async def stream(self, model: str, messages: list[Any], max_tokens: int | None = None) -> Any:
+    async def stream(
+        self,
+        model: str,
+        messages: list[Any],
+        max_tokens: int | None = None,
+        temperature: float | None = None,
+    ) -> Any:
         system, msgs = self._system(messages)
         body: dict[str, Any] = {
             "model": model,
             "max_tokens": max_tokens or settings.AI_MAX_TOKENS,
             "messages": msgs,
+            **({"temperature": temperature} if temperature is not None else {}),
         }
         if system:
             body["system"] = system

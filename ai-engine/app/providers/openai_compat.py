@@ -54,22 +54,41 @@ class OpenAICompatProvider:
 
     @retry(**provider_retry)  # pyright: ignore[reportArgumentType]  # tenacity typing vs pyright (see 03-02 pattern)
     async def chat(
-        self, model: str, messages: list[Any], max_tokens: int | None = None
+        self,
+        model: str,
+        messages: list[Any],
+        max_tokens: int | None = None,
+        temperature: float | None = None,
     ) -> tuple[str, int, int]:
-        resp = await self._client.chat.completions.create(
-            model=model, messages=messages, max_tokens=max_tokens or settings.AI_MAX_TOKENS)
+        kwargs: dict[str, Any] = {
+            "model": model,
+            "messages": messages,
+            "max_tokens": max_tokens or settings.AI_MAX_TOKENS,
+        }
+        if temperature is not None:
+            kwargs["temperature"] = temperature
+        resp = await self._client.chat.completions.create(**kwargs)
         content = resp.choices[0].message.content or ""
         if resp.usage is None:
             return content, 0, 0
         return content, resp.usage.prompt_tokens, resp.usage.completion_tokens
 
-    async def stream(self, model: str, messages: list[Any], max_tokens: int | None = None) -> Any:
-        stream = await self._client.chat.completions.create(
-            model=model,
-            messages=messages,
-            max_tokens=max_tokens or settings.AI_MAX_TOKENS,
-            stream=True,
-        )
+    async def stream(
+        self,
+        model: str,
+        messages: list[Any],
+        max_tokens: int | None = None,
+        temperature: float | None = None,
+    ) -> Any:
+        kwargs: dict[str, Any] = {
+            "model": model,
+            "messages": messages,
+            "max_tokens": max_tokens or settings.AI_MAX_TOKENS,
+            "stream": True,
+        }
+        if temperature is not None:
+            kwargs["temperature"] = temperature
+        stream = await self._client.chat.completions.create(**kwargs)
         usage: tuple[int, int] | None = None
         async for chunk in stream:
             if chunk.choices and chunk.choices[0].delta and chunk.choices[0].delta.content:

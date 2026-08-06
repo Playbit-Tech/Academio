@@ -44,6 +44,7 @@ class ChatRequestIn(BaseModel):
     messages: list[ChatMessageIn]
     stream: bool = False
     max_tokens: int | None = None  # optional; capped by settings.AI_MAX_TOKENS (T-03-03-02)
+    temperature: float | None = None  # optional; omitted → provider default (MA-03)
     # Optional prompt library wiring (D-08 / PYE-03): additive fields — Go
     # never sends them, so the ChatRequest{model, messages, stream} shape
     # stays 1:1 (Go's decoder ignores unknown JSON fields).
@@ -141,8 +142,11 @@ async def chat(req: ChatRequestIn) -> ChatResponseOut:
     if provider_name not in clients:
         raise HTTPException(status_code=503, detail=f"provider not configured: {provider_name}")
     max_tokens = min(req.max_tokens or settings.AI_MAX_TOKENS, settings.AI_MAX_TOKENS)
+    kwargs: dict[str, Any] = {}
+    if req.temperature is not None:
+        kwargs["temperature"] = req.temperature
     text, itok, otok = await clients[provider_name].chat(
-        model, messages, max_tokens
+        model, messages, max_tokens, **kwargs
     )
     return ChatResponseOut(
         message={"role": "assistant", "content": text},
@@ -168,7 +172,10 @@ async def chat_stream(req: ChatRequestIn, request: Request) -> StreamingResponse
     async def gen() -> AsyncIterator[str]:
         yield heartbeat()  # immediate keep-alive (D-02; heartbeats <= 30s)
         try:
-            stream = clients[provider_name].stream(model, messages, max_tokens)
+            kwargs: dict[str, Any] = {}
+            if req.temperature is not None:
+                kwargs["temperature"] = req.temperature
+            stream = clients[provider_name].stream(model, messages, max_tokens, **kwargs)
             while True:
                 # F4: bound each upstream wait so a stalled provider cannot
                 # violate the D-02 heartbeat guarantee — emit a keep-alive on

@@ -119,7 +119,13 @@ async def test_chat_max_tokens_capped(
     seen: dict[str, Any] = {}
 
     class FakeProvider:
-        async def chat(self, model: str, messages: list[Any], max_tokens: int | None = None):
+        async def chat(
+            self,
+            model: str,
+            messages: list[Any],
+            max_tokens: int | None = None,
+            temperature: float | None = None,
+        ):
             seen["max_tokens"] = max_tokens
             return "hello from fake", 5, 3
 
@@ -144,6 +150,55 @@ async def test_chat_max_tokens_capped(
     assert body["usage"]["cost"] == 0.0  # ollama is local/free
 
 
+async def test_chat_temperature_passthrough(
+    client: AsyncClient, settings: Settings, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """(i) temperature flows to the provider when set; absent -> None (MA-03).
+
+    Mirrors test_chat_max_tokens_capped: hermetic fake provider records the
+    kwargs it received. A request WITHOUT temperature must not supply one —
+    backward compat (the route only populates kwargs when req.temperature is
+    not None).
+    """
+    seen: dict[str, Any] = {}
+
+    class FakeProvider:
+        async def chat(
+            self,
+            model: str,
+            messages: list[Any],
+            max_tokens: int | None = None,
+            temperature: float | None = None,
+        ):
+            seen["temperature"] = temperature
+            return "hello from fake", 5, 3
+
+    monkeypatch.setattr(chat_api, "_clients", lambda: {"ollama": FakeProvider()})
+    resp = await client.post(
+        "/v1/chat",
+        json={
+            "model": "ollama:qwen3.5:9b",
+            "messages": [{"role": "user", "content": "hi"}],
+            "temperature": 0.7,
+        },
+        headers=_headers(settings),
+    )
+    assert resp.status_code == 200
+    assert seen["temperature"] == 0.7
+
+    seen.clear()
+    resp = await client.post(
+        "/v1/chat",
+        json={
+            "model": "ollama:qwen3.5:9b",
+            "messages": [{"role": "user", "content": "hi"}],
+        },
+        headers=_headers(settings),
+    )
+    assert resp.status_code == 200
+    assert seen["temperature"] is None  # omitted → provider default
+
+
 async def test_stream_error_in_band_sanitized(
     client: AsyncClient, settings: Settings, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -151,7 +206,11 @@ async def test_stream_error_in_band_sanitized(
 
     class FailingProvider:
         async def stream(
-            self, model: str, messages: list[Any], max_tokens: int | None = None
+            self,
+            model: str,
+            messages: list[Any],
+            max_tokens: int | None = None,
+            temperature: float | None = None,
         ) -> AsyncIterator[dict]:
             key = app_settings.AI_OPENAI_API_KEY
             raise RuntimeError(

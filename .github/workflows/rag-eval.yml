@@ -2,9 +2,9 @@ name: RAG Eval (TES-01)
 on:
   push:
     branches: [main]
-    paths: ['ai-engine/tests/rag_eval/**', 'ai-engine/app/**', 'ai-engine/pyproject.toml', 'ai-engine/uv.lock', '.github/workflows/rag-eval.yml']
+    paths: ['ai-engine/tests/rag_eval/**', 'ai-engine/tests/test_cross_tenant.py', 'ai-engine/app/**', 'ai-engine/pyproject.toml', 'ai-engine/uv.lock', '.github/workflows/rag-eval.yml']
   pull_request:
-    paths: ['ai-engine/tests/rag_eval/**', 'ai-engine/app/**', 'ai-engine/pyproject.toml', 'ai-engine/uv.lock', '.github/workflows/rag-eval.yml']
+    paths: ['ai-engine/tests/rag_eval/**', 'ai-engine/tests/test_cross_tenant.py', 'ai-engine/app/**', 'ai-engine/pyproject.toml', 'ai-engine/uv.lock', 'backend/**', '.github/workflows/rag-eval.yml']
   workflow_dispatch:
 
 permissions:
@@ -43,7 +43,7 @@ jobs:
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
       - name: Sync frozen lockfile
         run: uv sync --frozen
-      - name: Provision tenant schema (school_1.ai_vectors)
+      - name: Provision tenant schemas (school_1 + school_2 ai_vectors)
         run: |
           uv run python - <<'PY'
           import asyncio
@@ -53,7 +53,7 @@ jobs:
           DSN = "postgres://postgres:postgres@localhost:5432/academio?sslmode=disable"
 
           DDL = """
-          CREATE TABLE IF NOT EXISTS school_1.ai_vectors (
+          CREATE TABLE IF NOT EXISTS {schema}.ai_vectors (
               id VARCHAR(255) PRIMARY KEY,
               collection VARCHAR(255) NOT NULL,
               embedding public.vector(1536) NOT NULL,
@@ -72,12 +72,13 @@ jobs:
           async def main() -> None:
               async with await AsyncConnection.connect(DSN) as conn:
                   await conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
-                  await conn.execute("CREATE SCHEMA IF NOT EXISTS school_1")
-                  await conn.execute(DDL)
-                  await conn.execute(
-                      "CREATE INDEX IF NOT EXISTS idx_ai_vectors_collection "
-                      "ON school_1.ai_vectors (collection)"
-                  )
+                  for schema in ("school_1", "school_2"):
+                      await conn.execute(f"CREATE SCHEMA IF NOT EXISTS {schema}")
+                      await conn.execute(DDL.format(schema=schema))
+                      await conn.execute(
+                          f"CREATE INDEX IF NOT EXISTS idx_ai_vectors_collection "
+                          f"ON {schema}.ai_vectors (collection)"
+                      )
                   await conn.commit()
 
           asyncio.run(main())
@@ -90,3 +91,5 @@ jobs:
         run: uv run pytest tests/rag_eval -q
       - name: Live-DB eval (real hybrid pipeline)
         run: uv run pytest tests/rag_eval -q
+      - name: Cross-tenant adversarial probes (D-08/D-09)
+        run: uv run pytest tests/test_cross_tenant.py -q --tb=short

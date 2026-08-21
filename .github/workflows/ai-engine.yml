@@ -57,8 +57,29 @@ jobs:
       - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
       - name: Sync frozen lockfile
         run: uv sync --frozen
-      - name: Pytest
-        run: uv run pytest -v
+      - name: Pytest with coverage
+        run: uv run pytest -v --cov=app --cov-report=xml --cov-report=term
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-engine-coverage
+          path: ai-engine/coverage.xml
+          if-no-files-found: warn
+
+  security:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai-engine
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+      - name: Sync frozen lockfile
+        run: uv sync --frozen
+      - name: Bandit security scan
+        run: uv run bandit -r app/ -x tests/
 
   docker-build:
     runs-on: ubuntu-latest

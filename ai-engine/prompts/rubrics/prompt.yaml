@@ -1,4 +1,0 @@
-name: rubrics
-version: "1.0"
-description: Build a criteria-based rubric for an assignment
-model_hint: anthropic:claude-3-5-sonnet-latest

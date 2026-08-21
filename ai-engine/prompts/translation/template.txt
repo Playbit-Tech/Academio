@@ -1,2 +1,0 @@
-Translate the following {{ source_language }} text into {{ target_language }}. Preserve meaning and tone.
-{{ text }}

@@ -1,4 +1,0 @@
-name: translation
-version: "1.0"
-description: Translate text between languages preserving meaning and tone
-model_hint: anthropic:claude-3-5-sonnet-latest

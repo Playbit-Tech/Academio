@@ -1,4 +1,0 @@
-name: attendance-analysis
-version: "1.0"
-description: Analyse a student's attendance patterns and risks
-model_hint: anthropic:claude-3-5-sonnet-latest

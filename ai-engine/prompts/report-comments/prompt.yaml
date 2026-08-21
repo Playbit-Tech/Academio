@@ -1,4 +1,0 @@
-name: report-comments
-version: "1.0"
-description: Generate report card comments for a student
-model_hint: anthropic:claude-3-5-sonnet-latest

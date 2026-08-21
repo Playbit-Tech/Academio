@@ -1,4 +1,0 @@
-name: meeting-minutes
-version: "1.0"
-description: Turn notes into structured meeting minutes with agenda, decisions, and actions
-model_hint: anthropic:claude-3-5-sonnet-latest

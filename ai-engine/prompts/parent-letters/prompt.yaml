@@ -1,4 +1,0 @@
-name: parent-letters
-version: "1.0"
-description: Draft a letter to a parent about a student
-model_hint: anthropic:claude-3-5-sonnet-latest

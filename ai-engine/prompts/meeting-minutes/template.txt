@@ -1,2 +1,0 @@
-Turn these notes into structured meeting minutes (agenda, decisions, actions):
-{{ notes }}

@@ -1,1 +1,0 @@
-Generate {{ question_count }} questions for {{ subject }} {{ level }} on {{ topic }} with an answer key.

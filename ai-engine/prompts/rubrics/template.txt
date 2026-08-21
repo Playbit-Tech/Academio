@@ -1,1 +1,0 @@
-Build a {{ criteria_count }}-criterion rubric for {{ assignment }} in {{ subject }} ({{ level }}).

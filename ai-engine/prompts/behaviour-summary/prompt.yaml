@@ -1,4 +1,0 @@
-name: behaviour-summary
-version: "1.0"
-description: Summarise a student's behaviour from teacher notes
-model_hint: anthropic:claude-3-5-sonnet-latest

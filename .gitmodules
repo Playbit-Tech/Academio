@@ -7,3 +7,6 @@
 [submodule "mobile"]
 	path = mobile
 	url = git@github.com:Playbits/academio-mobile.git
+[submodule "ai-engine"]
+	path = ai-engine
+	url = git@github.com:Playbits/Academio-ai-engine.git

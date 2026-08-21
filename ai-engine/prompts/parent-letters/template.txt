@@ -1,1 +1,0 @@
-Draft a {{ tone }} letter to {{ parent_name }} about {{ student_name }} regarding {{ topic }}.

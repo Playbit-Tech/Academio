@@ -1,10 +1,7 @@
 name: RAG Eval (TES-01)
+# CI disabled in parent repo — RAG eval runs in the ai-engine submodule's own CI.
+# Kept for reference; re-enable by restoring push/pull_request triggers.
 on:
-  push:
-    branches: [main]
-    paths: ['ai-engine/tests/rag_eval/**', 'ai-engine/tests/test_cross_tenant.py', 'ai-engine/app/**', 'ai-engine/pyproject.toml', 'ai-engine/uv.lock', '.github/workflows/rag-eval.yml']
-  pull_request:
-    paths: ['ai-engine/tests/rag_eval/**', 'ai-engine/tests/test_cross_tenant.py', 'ai-engine/app/**', 'ai-engine/pyproject.toml', 'ai-engine/uv.lock', 'backend/**', '.github/workflows/rag-eval.yml']
   workflow_dispatch:
 
 permissions:

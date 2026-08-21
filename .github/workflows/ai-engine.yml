@@ -1,10 +1,7 @@
 name: AI Engine CI
+# CI disabled in parent repo — ai-engine is now a submodule with its own CI.
+# Kept for reference; re-enable by restoring push/pull_request triggers.
 on:
-  push:
-    branches: [main]
-    paths: ['ai-engine/**', '.github/workflows/ai-engine.yml']
-  pull_request:
-    paths: ['ai-engine/**', '.github/workflows/ai-engine.yml']
   workflow_dispatch:
 
 permissions:

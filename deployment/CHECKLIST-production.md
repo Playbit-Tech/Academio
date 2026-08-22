@@ -41,8 +41,8 @@ Complete `CHECKLIST-staging.md` first.
 
 ## 5. CI/CD (GitHub Actions)
 
-- [ ] Backend repo secrets: `VPS_HOST`, `VPS_PORT`, `VPS_USER`, `VPS_SSH_KEY`, `SSH_PASSPHRASE` (if key has one), `PARENT_REPO_TOKEN` (PAT with read access to Playbits/Academio — workflows pull deploy scripts from parent repo)
-- [ ] AI engine repo secrets: same set (`VPS_*`, `SSH_PASSPHRASE`, `PARENT_REPO_TOKEN`)
+- [ ] Backend repo secrets: `VPS_HOST`, `VPS_PORT`, `VPS_USER`, `VPS_SSH_KEY`, `SSH_PASSPHRASE` (if key has one) — deploy scripts ship inside each repo (`deployment/`), no cross-repo token needed
+- [ ] AI engine repo secrets: same set (`VPS_*`, `SSH_PASSPHRASE`)
 - [ ] GitHub **environment: production** created with required reviewers
 - [ ] Concurrency group `deploy-prod`, `cancel-in-progress: false`
 - [ ] Build arch matches VPS (`uname -m`) — amd64 vs arm64

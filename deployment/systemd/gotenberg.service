@@ -1,0 +1,23 @@
+[Unit]
+Description=Gotenberg PDF service
+After=network.target
+
+[Service]
+Type=simple
+User=gotenberg
+Group=gotenberg
+Restart=always
+RestartSec=5s
+ExecStart=/usr/local/bin/gotenberg --api-port=3000 --api-timeout=60s
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=gotenberg
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

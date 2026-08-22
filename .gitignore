@@ -4,7 +4,9 @@ AGENTS.md
 docs/architecture/
 docs/audits/
 docs/ops/
+docs/FSD/
 docs/plans/
+docs/migration/
 docs/reports/
 docs/**.md
 scripts/

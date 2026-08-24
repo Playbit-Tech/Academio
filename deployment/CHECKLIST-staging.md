@@ -3,6 +3,10 @@
 Target: single VPS, native systemd services (no Docker), GitHub Actions CD.
 Staging mirrors production topology at reduced strictness.
 
+> **Note:** systemd unit files are owned by `backend/deployment/systemd/`
+> (shipped by CI) and the ai-engine repo — they are not mirrored in this
+> parent repo, which only publishes docs to GitHub Pages.
+
 ## 1. Infrastructure
 
 - [ ] VPS provisioned (Ubuntu 24.04), SSH key-only login confirmed

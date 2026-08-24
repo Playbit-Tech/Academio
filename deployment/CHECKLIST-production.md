@@ -4,6 +4,10 @@ Target: single VPS (`my-vps`), native systemd services (no Docker),
 nginx TLS passthrough, GitHub Actions CD.
 Complete `CHECKLIST-staging.md` first.
 
+> **Note:** systemd unit files are owned by `backend/deployment/systemd/`
+> (shipped by CI) and the ai-engine repo — they are not mirrored in this
+> parent repo, which only publishes docs to GitHub Pages.
+
 ## 1. Infrastructure & access
 
 - [ ] VPS sized for load (min 2 vCPU / 4GB for API + AI engine + PG + Redis + Gotenberg)

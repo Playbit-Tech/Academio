@@ -8,7 +8,15 @@ User=gotenberg
 Group=gotenberg
 Restart=always
 RestartSec=5s
-ExecStart=/usr/local/bin/gotenberg --api-port=3000 --api-timeout=60s
+# Native install: tool binaries are provided by apt (see bootstrap-vps.sh);
+# the gotenberg binary itself is built in CI and shipped in the deploy package
+# (upstream publishes no release binaries).
+Environment=CHROMIUM_BIN_PATH=/usr/bin/google-chrome
+Environment=EXIFTOOL_BIN_PATH=/usr/bin/exiftool
+Environment=QPDF_BIN_PATH=/usr/bin/qpdf
+Environment=PDFTK_BIN_PATH=/usr/bin/pdftk
+# Loopback only — Gotenberg must never be exposed publicly (docs: treat like a DB).
+ExecStart=/usr/local/bin/gotenberg --api-port=3000 --api-timeout=60s --api-bind-ip=127.0.0.1
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=gotenberg
@@ -18,6 +26,7 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
+RestrictSUIDSGID=true
 
 [Install]
 WantedBy=multi-user.target

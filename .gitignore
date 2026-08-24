@@ -15,3 +15,5 @@ tmp/
 start_schoolcare
 .planning/
 ACADEMIO_IMPLEMENTATION_PLAN.md
+go.work
+go.work.sum

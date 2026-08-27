@@ -36,7 +36,7 @@ cd frontend && yarn dev
 
 | Service | URL |
 |---------|-----|
-| Frontend | http://localhost:3000 |
+| Frontend | http://localhost:4000 |
 | Backend API | http://localhost:8080 |
 | API docs (Swagger) | http://localhost:8080/swagger/index.html |
 

@@ -10,3 +10,6 @@
 [submodule "ai-engine"]
 	path = ai-engine
 	url = git@github.com:Playbits/academio-ai-engine.git
+[submodule "academio-emails"]
+	path = academio-emails
+	url = git@github.com:Playbits/academio-email-stuio.git

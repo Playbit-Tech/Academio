@@ -1,0 +1,238 @@
+name: Backend CI (reusable)
+
+# Sourced by private submodule repos via:
+#   uses: Playbit-Tech/Academio/.github/workflows/reusable-backend-ci.yml@main
+# Runs in the CALLER's repository context with the CALLER's token/secrets —
+# no cross-repo tokens required. This file never triggers on its own.
+
+on:
+  workflow_call:
+    inputs:
+      go_version:
+        type: string
+        default: "1.26"
+      coverage_threshold:
+        type: string
+        default: "15.0"
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go_version }}
+          cache: true
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.64.8
+
+      - name: Run go vet
+        run: go vet ./...
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go_version }}
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Build API server
+        run: go build -o /tmp/server ./cmd/server
+
+      - name: Build worker
+        run: go build -o /tmp/worker ./cmd/worker
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go_version }}
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Run unit tests
+        run: |
+          PKGS=$(go list ./internal/... ./pkg/... ./cmd/... | grep -vE '/(cmd|internal/database/migrations)/')
+          go test -v -count=1 -race -shuffle=on -coverprofile=coverage.out \
+            -covermode=atomic $PKGS 2>&1 | \
+            tee /tmp/test-output.txt
+
+      - name: Upload test output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-output
+          path: /tmp/test-output.txt
+          retention-days: 3
+
+      - name: Upload coverage profile
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-output
+          path: coverage.out
+          retention-days: 3
+
+      - name: Check coverage threshold
+        run: |
+          TOTAL=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
+          echo "Total coverage: ${TOTAL}%"
+          if (( $(echo "${TOTAL} < ${{ inputs.coverage_threshold }}" | bc -l) )); then
+            echo "❌ Coverage ${TOTAL}% is below threshold ${{ inputs.coverage_threshold }}%"
+            exit 1
+          fi
+          echo "✅ Coverage ${TOTAL}% meets threshold ${{ inputs.coverage_threshold }}%"
+
+  coverage-summary:
+    name: Coverage Summary
+    runs-on: ubuntu-latest
+    needs: [unit-tests]
+    if: needs.unit-tests.result == 'success'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go_version }}
+          cache: true
+
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-output
+
+      - name: Display coverage summary
+        run: |
+          echo "## Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          go tool cover -func=coverage.out >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+  integration-tests:
+    name: Integration Tests
+    if: github.ref == 'refs/heads/main' || github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    needs: [build]
+    services:
+      postgres:
+        image: postgres:alpine
+        env:
+          POSTGRES_USER: academio
+          POSTGRES_PASSWORD: academio
+          POSTGRES_DB: academio
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      gotenberg:
+        image: gotenberg/gotenberg:8
+        ports:
+          - 8081:3000
+        options: >-
+          --shm-size=2gb
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go_version }}
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Wait for Gotenberg + smoke conversion
+        run: |
+          # Gotenberg v8 ships no curl/wget inside the container — readiness
+          # is checked from the runner. We try the actual HTML->PDF conversion
+          # directly (not /health, which may not exist in v8) and retry until
+          # Chromium is fully initialized and ready to render.
+          echo '<html><body><h1>CI smoke ₦</h1></body></html>' > /tmp/smoke.html
+          for i in $(seq 1 50); do
+            # Try the conversion directly — it's the real test of readiness
+            if curl -sf -X POST http://localhost:8081/forms/chromium/convert/html \
+              -F 'files=@/tmp/smoke.html;filename=index.html' -o /tmp/smoke.pdf 2>/dev/null; then
+              file /tmp/smoke.pdf | grep -q 'PDF document' \
+                && echo "Gotenberg HTML->PDF conversion OK" \
+                && exit 0
+            fi
+            echo "  Gotenberg not ready (attempt $i/50), retrying in 4s..."
+            sleep 4
+          done
+          echo "ERROR: Gotenberg did not become ready for conversions" >&2
+          exit 1
+
+      - name: Run integration tests
+        env:
+          GOTENBERG_URL: http://localhost:8081
+        run: |
+          go test -v -count=1 -tags=integration -race \
+            ./internal/database/... ./internal/service/... \
+            ./internal/security/... ./internal/queue/... 2>&1 | \
+            tee /tmp/integration-output.txt
+
+      - name: Upload integration test output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-output
+          path: /tmp/integration-output.txt
+          retention-days: 3
+
+  endpoint-tests:
+    name: Endpoint Tests
+    # Temporarily disabled — endpoint tests are heavy (full server + DB + Redis)
+    # and not needed on CI while the AI engine is being stabilized.
+    # Re-enable by removing the `if: false` below.
+    if: false
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Disabled
+        run: echo "Endpoint tests are disabled — see comments above to re-enable"

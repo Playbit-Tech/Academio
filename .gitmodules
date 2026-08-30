@@ -1,15 +1,15 @@
 [submodule "backend"]
 	path = backend
-	url = git@github.com:Playbits/Academio-be.git
+	url = git@github.com:Playbit-Tech/Academio-Be.git
 [submodule "frontend"]
 	path = frontend
-	url = git@github.com:Playbits/Academio-fe.git
+	url = git@github.com:Playbit-Tech/Academio-fe.git
 [submodule "mobile"]
 	path = mobile
-	url = git@github.com:Playbits/academio-mobile.git
+	url = git@github.com:Playbit-Tech/academio-mobile.git
 [submodule "ai-engine"]
 	path = ai-engine
-	url = git@github.com:Playbits/academio-ai-engine.git
+	url = git@github.com:Playbit-Tech/academio-ai-engine.git
 [submodule "academio-emails"]
 	path = academio-emails
-	url = git@github.com:Playbits/academio-email-stuio.git
+	url = git@github.com:Playbit-Tech/academio-email-stuio.git

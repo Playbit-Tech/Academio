@@ -5,11 +5,12 @@ name: Frontend CI (reusable)
 # Runs in the CALLER's repository context with the CALLER's token/secrets.
 # This file never triggers on its own.
 #
-# NOTE: do NOT pass `cache: yarn` to actions/setup-node here. setup-node's
-# yarn-cache pre-action runs `yarn cache dir`, which invokes the runner's
-# global Yarn 1.22.22 on PATH and fails on the packageManager: yarn@4.17.0
-# check before any step runs. Yarn 4 caches its own packages — drop the
-# flag rather than fight the PATH shadow.
+# Yarn 4 + Corepack: setup-node's `cache: yarn` pre-action runs `yarn cache dir`
+# via the runner's global Yarn 1.22.22 and fails on the packageManager:
+# yarn@4.17.0 check — UNLESS Corepack is enabled first. So we run setup-node
+# once to install Node, enable Corepack (shims land in the Node bin dir, which
+# is first on PATH), then run setup-node a second time with `cache: yarn` so
+# the cache pre-action resolves to Yarn 4. Keep this ordering.
 
 on:
   workflow_call:
@@ -39,6 +40,13 @@ jobs:
           corepack enable
           corepack prepare yarn@4.17.0 --activate
 
+      - name: Setup Node with Yarn cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
@@ -65,6 +73,13 @@ jobs:
           corepack enable
           corepack prepare yarn@4.17.0 --activate
 
+      - name: Setup Node with Yarn cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
@@ -88,6 +103,13 @@ jobs:
         run: |
           corepack enable
           corepack prepare yarn@4.17.0 --activate
+
+      - name: Setup Node with Yarn cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: yarn
+          cache-dependency-path: yarn.lock
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile

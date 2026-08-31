@@ -4,6 +4,12 @@ name: Frontend CI (reusable)
 #   uses: Playbit-Tech/Academio/.github/workflows/reusable-frontend-ci.yml@main
 # Runs in the CALLER's repository context with the CALLER's token/secrets.
 # This file never triggers on its own.
+#
+# NOTE: do NOT pass `cache: yarn` to actions/setup-node here. setup-node's
+# yarn-cache pre-action runs `yarn cache dir`, which invokes the runner's
+# global Yarn 1.22.22 on PATH and fails on the packageManager: yarn@4.17.0
+# check before any step runs. Yarn 4 caches its own packages — drop the
+# flag rather than fight the PATH shadow.
 
 on:
   workflow_call:
@@ -27,8 +33,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node_version }}
-          cache: yarn
-          cache-dependency-path: yarn.lock
 
       - name: Enable Corepack and activate Yarn 4
         run: |
@@ -55,8 +59,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node_version }}
-          cache: yarn
-          cache-dependency-path: yarn.lock
 
       - name: Enable Corepack and activate Yarn 4
         run: |
@@ -81,8 +83,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node_version }}
-          cache: yarn
-          cache-dependency-path: yarn.lock
 
       - name: Enable Corepack and activate Yarn 4
         run: |

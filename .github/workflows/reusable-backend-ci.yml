@@ -36,6 +36,11 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.64.8
+          # Build from source with the CI Go toolchain (1.26) — the pre-built
+          # v1.64.8 binary is compiled with Go 1.24 and refuses to run against
+          # go.mod targeting 1.26.1 ("Go language version used to build
+          # golangci-lint is lower than the targeted Go version").
+          install-mode: goinstall
 
       - name: Run go vet
         run: go vet ./...

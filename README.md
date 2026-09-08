@@ -4,6 +4,8 @@ School management system — monorepo with a Go/Gin API backend and a React 19 S
 
 <a href="https://playbits.github.io/Academio/" target="_blank"><img src="https://img.shields.io/badge/docs-github_pages-8DD290?style=flat&logo=github" alt="Docs"></a>
 <a href="https://github.com/Playbits/Academio" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github" alt="GitHub"></a>
+<img src="https://img.shields.io/badge/version-1.1.0-8DD290?style=flat" alt="Version">
+<a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-keep_a_changelog-8DD290?style=flat" alt="Changelog"></a>
 
 ## Repositories
 
@@ -72,13 +74,21 @@ Health → CSRF → Register → Login → School Create → Provisioning Poll �
 # Reset DB
 cd backend && make db-init DROP_TENANT=true && make migrate && make seed
 
-# Start server
-./bin/server &
+# Start server (Air hot reload — do NOT run ./bin/server directly, it may be a stale artifact)
+cd backend && air
 
 # Run tests
 bash scripts/test_endpoint.sh
 ```
 
-**Expected result:** 40 tests pass, 0 fail. The script provisions a school, creates curriculum/assessments/grade items, and validates sum-to-100 constraints.
+**Expected result:** 139 tests pass, 2 known cosmetic failures (missing verification email for a parent fixture; a result 404 for a combo with no result row — RBAC works). The script provisions a school, creates curriculum/assessments/grade items, and validates sum-to-100 constraints.
 
 > **Note for AI sessions:** Always use `scripts/test_endpoint.sh` for integration testing. It handles CSRF token acquisition, bearer auth, provisioning polling, and all academic endpoints. Don't write ad-hoc test scripts.
+
+## Versioning
+
+This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The current version is `1.1.0` (see `VERSION`). Each submodule tracks its own version in its `CHANGELOG.md`; the parent repo records submodule pointer bumps.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for the parent repo, and each submodule's `CHANGELOG.md` for component-level changes.

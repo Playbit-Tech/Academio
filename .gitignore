@@ -19,3 +19,5 @@ ACADEMIO_IMPLEMENTATION_PLAN.md
 go.work
 go.work.sum
 .playwright-mcp
+# Local planning docs (kept out of the repo)
+Academio Super Admin Dashboard Upgrade.md

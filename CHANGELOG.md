@@ -11,11 +11,9 @@ own `CHANGELOG.md` for detailed component changes.
 
 ## [Unreleased]
 
-### Added
-- Nothing yet.
-
 ### Changed
-- Nothing yet.
+- Bumped backend to `3cdb232` — v1.1 revenue-critical billing (subscription billing, dunning/gating, application fees, eligibility engine — `cf06184`), remaining 40% (reconciliation report, AI rescore, spelling rename, webhook k6 — `01404ed`), production-review fixes (rescore hardening, report bounds, `4461d0a`; test-fake fidelity, webhook shapes, rollback notes, `056ea9d`), public-admissions tenant resolution + Stripe nested ref (`3cdb232`).
+- Bumped frontend to `77265c5` — billing dashboard, fee prompt, eligibility UI (`bd0abf5`), AI score card + behavioral rename (`8745b5a`), rescore detail invalidation (`77265c5`).
 
 ### Fixed
 - Nothing yet.

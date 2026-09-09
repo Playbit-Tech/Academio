@@ -12,6 +12,14 @@ own `CHANGELOG.md` for detailed component changes.
 ## [Unreleased]
 
 ### Changed
+- Nothing yet.
+
+### Fixed
+- Nothing yet.
+
+## [1.2.0] - 2026-09-09
+
+### Changed
 - Bumped backend to `3cdb232` — v1.1 revenue-critical billing (subscription billing, dunning/gating, application fees, eligibility engine — `cf06184`), remaining 40% (reconciliation report, AI rescore, spelling rename, webhook k6 — `01404ed`), production-review fixes (rescore hardening, report bounds, `4461d0a`; test-fake fidelity, webhook shapes, rollback notes, `056ea9d`), public-admissions tenant resolution + Stripe nested ref (`3cdb232`).
 - Bumped frontend to `77265c5` — billing dashboard, fee prompt, eligibility UI (`bd0abf5`), AI score card + behavioral rename (`8745b5a`), rescore detail invalidation (`77265c5`).
 
@@ -37,6 +45,7 @@ own `CHANGELOG.md` for detailed component changes.
 Initial production release — foundation, auth, RBAC, curriculum, assessments,
 results, finance, communication, and multi-tenant provisioning (phases 01–06).
 
-[Unreleased]: https://github.com/Playbit-Tech/Academio/compare/1.1.0...main
+[Unreleased]: https://github.com/Playbit-Tech/Academio/compare/1.2.0...main
+[1.2.0]: https://github.com/Playbit-Tech/Academio/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/Playbit-Tech/Academio/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/Playbit-Tech/Academio/releases/tag/1.0.0

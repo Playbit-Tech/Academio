@@ -1244,6 +1244,70 @@
                         </ul>
                     </div>
 
+                    <!-- AI Engine Card -->
+                    <div class="card-hover p-6 rounded-2xl bg-teal-900/30 border border-teal-800/50 glow-sage"
+                        id="ai-engine">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-teal-500/20 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-teal-100">AI Engine (Python FastAPI :8085)</h4>
+                        </div>
+                        <ul class="space-y-2 text-sm text-teal-400">
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-teal-500"></span><span
+                                    class="font-medium text-teal-300">/v1 endpoints:</span> chat, embed, extract,
+                                search, providers (+ SSE streaming)</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-teal-500"></span>Multi-provider registry:
+                                OpenAI-compatible, Anthropic, Ollama — cost tracking + healthchecks</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-teal-500"></span>Tenant RAG: hybrid retrieval +
+                                rerank over pgvector school schemas</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-teal-500"></span>Doc intelligence: upload → chunk →
+                                embed → async ingest pipeline</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-teal-500"></span>Service-token auth
+                                (X-AI-Engine-Token, constant-time compare)</li>
+                        </ul>
+                    </div>
+
+                    <!-- Email Studio Card -->
+                    <div class="card-hover p-6 rounded-2xl bg-violet-900/30 border border-violet-800/50 glow-sage"
+                        id="email-studio">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-violet-500/20 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75">
+                                    </path>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-violet-100">Email Studio (React :4001)</h4>
+                        </div>
+                        <ul class="space-y-2 text-sm text-violet-400">
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-violet-500"></span>React Email template workbench:
+                                components, layouts, live preview</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-violet-500"></span>Template registry + studio
+                                renderer for every system email</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-violet-500"></span>Build pipeline
+                                (build-emails.mjs) feeding the notification service</li>
+                            <li class="flex items-center gap-2"><span
+                                    class="w-2 h-2 rounded-full bg-violet-500"></span>Dev bypass flag for instant
+                                editing; never honored in production builds</li>
+                        </ul>
+                    </div>
+
                     <!-- Multi-Tenancy Card -->
                     <div class="card-hover p-6 rounded-2xl bg-sky-900/30 border border-sky-800/50 glow-sky"
                         id="multi-tenancy">

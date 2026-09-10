@@ -65,7 +65,7 @@
         }
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/panzoom/9.4.3/panzoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/panzoom@9.4.3/dist/panzoom.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
@@ -1850,15 +1850,42 @@
 
         function initPanzoom() {
             const container = document.getElementById('diagramWrapper');
-            if (!container || typeof Panzoom === 'undefined') return;
+            // UMD global is lowercase `panzoom` (not `Panzoom`).
+            if (!container || typeof panzoom === 'undefined') return;
             const parent = container.parentElement;
-            pz = Panzoom(container, { maxZoom: 4, minZoom: 0.3, contain: 'outside', cursor: 'grab' });
-            parent.addEventListener('wheel', e => { if (e.ctrlKey) { e.preventDefault(); pz.zoomWithWheel(e); } });
+            pz = panzoom(container, { maxZoom: 4, minZoom: 0.3, contain: 'outside' });
+            // Ctrl+scroll zooms (passive:false so preventDefault works);
+            // plain scroll still pans natively via the overflow container.
+            parent.addEventListener('wheel', e => {
+                if (!e.ctrlKey || !pz) return;
+                e.preventDefault();
+                pz.zoomTo(e.clientX, e.clientY, e.deltaY < 0 ? 1.15 : 1 / 1.15);
+            }, { passive: false });
         }
 
-        function zoomIn() { if (pz) pz.zoomIn(); }
-        function zoomOut() { if (pz) pz.zoomOut(); }
-        function resetZoom() { if (pz) pz.reset({ animate: true }); }
+        // panzoom v9 has no zoomIn/zoomOut/reset — compose from zoomTo,
+        // smoothZoom and moveTo. Zoom anchors on the viewport center.
+        function pzViewportCenter() {
+            const parent = document.getElementById('diagramContainer');
+            const r = parent.getBoundingClientRect();
+            return [r.left + r.width / 2, r.top + r.height / 2];
+        }
+
+        function zoomIn() {
+            if (!pz) return;
+            const [x, y] = pzViewportCenter();
+            pz.smoothZoom(x, y, 1.3);
+        }
+        function zoomOut() {
+            if (!pz) return;
+            const [x, y] = pzViewportCenter();
+            pz.smoothZoom(x, y, 1 / 1.3);
+        }
+        function resetZoom() {
+            if (!pz) return;
+            pz.smoothZoomAbs(0, 0, 1);
+            pz.moveTo(0, 0);
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             try {

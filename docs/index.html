@@ -1513,9 +1513,14 @@
                 <div class="mt-6">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                         <h4 class="text-lg font-semibold text-slate-100">API Endpoints</h4>
-                        <input type="text" id="endpointSearch" placeholder="Filter endpoints..."
-                            oninput="filterEndpoints(this.value)"
-                            class="w-full sm:w-48 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:border-primary-500">
+                        <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                            <input type="text" id="apiBaseUrl" placeholder="API base URL (same-origin default)"
+                                onchange="setApiBase(this.value)"
+                                class="w-full sm:w-64 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:border-primary-500">
+                            <input type="text" id="endpointSearch" placeholder="Filter endpoints..."
+                                oninput="filterEndpoints(this.value)"
+                                class="w-full sm:w-48 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:border-primary-500">
+                        </div>
                     </div>
                     <div id="endpointGroups" class="space-y-3 max-h-[600px] overflow-y-auto pr-2"></div>
                 </div>
@@ -1552,7 +1557,22 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8080';
+        // No hardcoded host: same-origin by default, overridable via the
+        // input above (persisted per browser).
+        let API_BASE = '';
+        try {
+            const saved = localStorage.getItem('academio-docs-api-base');
+            if (saved) API_BASE = saved;
+        } catch (e) { /* private mode — same-origin default stands */ }
+
+        function setApiBase(value) {
+            API_BASE = (value || '').trim().replace(/\/+$/, '');
+            try {
+                if (API_BASE) localStorage.setItem('academio-docs-api-base', API_BASE);
+                else localStorage.removeItem('academio-docs-api-base');
+            } catch (e) { /* ignore */ }
+            loadSwaggerEndpoints();
+        }
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -1647,7 +1667,7 @@
                 }
                 groupsEl.innerHTML = html;
             } catch (err) {
-                groupsEl.innerHTML = '<div class="p-4 text-center text-rose-400">Failed to load: ' + err.message + '</div>';
+                groupsEl.innerHTML = '<div class="p-4 text-center text-rose-400">Failed to load: ' + err.message + '. Set the API base URL above to a reachable backend.</div>';
             }
         }
 
@@ -1807,6 +1827,10 @@
         function resetZoom() { if (pz) pz.reset({ animate: true }); }
 
         window.addEventListener('DOMContentLoaded', () => {
+            try {
+                const input = document.getElementById('apiBaseUrl');
+                if (input && API_BASE) input.value = API_BASE;
+            } catch (e) { /* ignore */ }
             loadSwaggerEndpoints();
             setTimeout(initPanzoom, 500);
         });

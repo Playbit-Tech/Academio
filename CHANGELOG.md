@@ -12,6 +12,14 @@ own `CHANGELOG.md` for detailed component changes.
 ## [Unreleased]
 
 ### Changed
+- Nothing yet.
+
+### Fixed
+- Nothing yet.
+
+## [1.2.1] - 2026-09-10
+
+### Changed
 - Bumped backend `3cdb232` → `6120bbe` — default free-plan enrollment (`28db495`), subscription self-read + schema guard (`04313eb`), Google OIDC `sub` fix (`35c2aa2`), security audit batches 1–4: C1/C2 registration + role scoping (`39d4f08`), H18/H21/H8 fail-fast secrets, Redis AUTH, authenticated uploads (`7d15d31`, `10d2687`), H1/H4 impersonation revoke + refresh-reuse kill (`a1c339b`), H2/H3 TOTP encryption + token strength (`73d494e`), changelog (`6120bbe`).
 - Bumped frontend `77265c5` → `2f2bc8c` — billing i18n/pagination (`08c4ab5`), verify/impersonation/billing labels (`aed8db8`), badges + plan column (`d79b191`), subscription self-read + Turnstile/Firebase CSP (`b144052`, `c6b970d`), push attestation wait (`d8d9f8a`), credentials:include SSO fix (`7b76403`), prod CSP (`54b54ac`), impersonation stop refresh (`363a550`), vercel.json removal (`94132f4`), changelog (`2f2bc8c`).
 

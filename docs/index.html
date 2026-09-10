@@ -66,6 +66,7 @@
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/panzoom@9.4.3/dist/panzoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
@@ -583,7 +584,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                     <div
                         class="card-hover p-4 sm:p-6 rounded-2xl bg-primary-900/30 border border-primary-800/50 text-center glow-sage">
-                        <div class="text-2xl sm:text-4xl font-bold text-primary-400 mb-1 sm:mb-2">42</div>
+                        <div class="text-2xl sm:text-4xl font-bold text-primary-400 mb-1 sm:mb-2">58</div>
                         <div class="text-xs sm:text-sm text-primary-300">Route Groups</div>
                     </div>
                     <div
@@ -609,10 +610,27 @@
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                     <div>
                         <h3 class="text-xl sm:text-2xl font-bold text-slate-100 mb-1 sm:mb-2">System Architecture</h3>
-                        <p class="text-xs sm:text-sm text-slate-400">Component hierarchy &bull; Ctrl+Scroll to zoom
+                        <p class="text-xs sm:text-sm text-slate-400">Component hierarchy &bull; Ctrl/Shift+Scroll to zoom
                             &bull; Drag to pan</p>
                     </div>
-                    <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+                    <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm" id="treeFilters">
+                        <input type="text" id="treeSearch" placeholder="Filter components..."
+                            oninput="filterTree(this.value)"
+                            class="px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-300 placeholder-slate-600 focus:outline-none focus:border-primary-500">
+                        <button data-layer="all" onclick="filterLayer('all', this)"
+                            class="tree-chip px-2 py-1 rounded-lg bg-primary-500/20 border border-primary-500/40 text-primary-300 text-xs">All</button>
+                        <button data-layer="1" onclick="filterLayer('1', this)"
+                            class="tree-chip px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs">L1</button>
+                        <button data-layer="2" onclick="filterLayer('2', this)"
+                            class="tree-chip px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs">L2</button>
+                        <button data-layer="3" onclick="filterLayer('3', this)"
+                            class="tree-chip px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs">L3</button>
+                        <button data-layer="4" onclick="filterLayer('4', this)"
+                            class="tree-chip px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs">L4</button>
+                        <button data-layer="5" onclick="filterLayer('5', this)"
+                            class="tree-chip px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs">L5</button>
+                        <button data-layer="6" onclick="filterLayer('6', this)"
+                            class="tree-chip px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs">L6</button>
                         <span class="flex items-center gap-1 text-slate-500"><span
                                 class="w-2 h-2 rounded-full bg-primary-500"></span> Server</span>
                         <span class="flex items-center gap-1 text-slate-500"><span
@@ -950,6 +968,61 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- System Views -->
+            <section id="system-views" class="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16">
+                <div class="flex items-center gap-3 mb-6 sm:mb-8">
+                    <div
+                        class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-teal-500/20 flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-teal-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-bold text-slate-100">System Views</h3>
+                        <p class="text-xs sm:text-sm text-slate-400">Where requests go, and what one request passes
+                            through</p>
+                    </div>
+                </div>
+                <div class="grid lg:grid-cols-2 gap-3 sm:gap-6">
+                    <div class="rounded-2xl bg-slate-900/50 border border-slate-800 p-4 sm:p-6">
+                        <h4 class="font-semibold text-slate-100 mb-1">Topology</h4>
+                        <p class="text-xs text-slate-500 mb-4">Clients, edge, services, data — and who talks to whom
+                        </p>
+                        <pre class="mermaid text-xs">
+flowchart TB
+    SPA[Browser SPA&lt;br/&gt;React 19] --&gt; CF
+    MOB[Flutter App&lt;br/&gt;admin teacher student] --&gt; CF
+    CF[Cloudflare Worker&lt;br/&gt;static + api + uploads proxy] --&gt; API[Go API&lt;br/&gt;APP_ROLE api]
+    CF --&gt; AI[AI Engine&lt;br/&gt;Python FastAPI]
+    API --&gt; PG[(PostgreSQL&lt;br/&gt;public + school_* schemas)]
+    API --&gt; RD[(Redis&lt;br/&gt;sessions queue cache)]
+    API --&gt; ST[/uploads&lt;br/&gt;local disk or S3/]
+    AI --&gt; PG
+    AI --&gt; PV[(pgvector&lt;br/&gt;tenant RAG)]
+    WRK[Go Worker&lt;br/&gt;APP_ROLE worker&lt;br/&gt;Asynq + crons] --&gt; RD
+    WRK --&gt; PG
+    ES[Email Studio&lt;br/&gt;React templates] -. build .-&gt; API
+                        </pre>
+                    </div>
+                    <div class="rounded-2xl bg-slate-900/50 border border-slate-800 p-4 sm:p-6">
+                        <h4 class="font-semibold text-slate-100 mb-1">Request Lifecycle</h4>
+                        <p class="text-xs text-slate-500 mb-4">One authenticated call, left to right through the stack
+                        </p>
+                        <pre class="mermaid text-xs">
+flowchart LR
+    C[Client&lt;br/&gt;JWT + school scope] --&gt; MW[Middleware chain&lt;br/&gt;JWTAuth - verified-email - school - tenant-resolver - RBAC]
+    MW --&gt; H[Handler&lt;br/&gt;parse + validate]
+    H --&gt; S[Service&lt;br/&gt;business rules]
+    S --&gt; R[(Tenant repo&lt;br/&gt;school_* schema)]
+    S -. domain events .-&gt; Q[(Asynq queue)]
+    Q --&gt; W[Worker&lt;br/&gt;dispatch + notify]
+                        </pre>
                     </div>
                 </div>
             </section>
@@ -1846,6 +1919,89 @@
             }
         }
 
+        // ── Mermaid diagrams ──
+        try {
+            if (typeof mermaid !== 'undefined') {
+                mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+            }
+        } catch (e) { /* diagrams stay as text */ }
+
+        // ── Architecture tree: collapse, layer highlight, search ──
+        // Group = a .ftree-line header (has .ftree-label/.ftree-badge) plus
+        // following siblings until the next header. Leaves never carry
+        // badges, so badge presence reliably spots the next group.
+        const collapsedGroups = new Set();
+
+        function treeGroups() {
+            const groups = [];
+            // Badge-bearing lines only: leaf middleware names reuse
+            // .ftree-label and must never become toggle handles.
+            const headers = Array.from(document.querySelectorAll('#diagramWrapper .ftree-badge'))
+                .map((el) => el.closest('.ftree-line'))
+                .filter(Boolean);
+            headers.forEach((header) => {
+                const badge = header.querySelector('.ftree-badge');
+                const layer = badge ? (badge.textContent.match(/Layer\s*(\d+)/) || [])[1] || '' : '';
+                const children = [];
+                let sib = header.nextElementSibling;
+                while (sib && !sib.querySelector('.ftree-badge')) {
+                    children.push(sib);
+                    sib = sib.nextElementSibling;
+                }
+                groups.push({ header, children, layer, id: header.textContent.trim().slice(0, 40) });
+            });
+            return groups;
+        }
+
+        function initTreeToggle() {
+            treeGroups().forEach((g) => {
+                if (g.header.dataset.toggleReady) return;
+                g.header.dataset.toggleReady = '1';
+                g.header.style.cursor = 'pointer';
+                const caret = document.createElement('span');
+                caret.textContent = '▾ ';
+                caret.className = 'tree-caret';
+                caret.style.cssText = 'color:#64748b;font-size:10px;';
+                g.header.prepend(caret);
+                g.header.addEventListener('click', () => {
+                    const hiding = !g.children.every((c) => c.classList.contains('hidden'));
+                    g.children.forEach((c) => c.classList.toggle('hidden', hiding));
+                    caret.textContent = hiding ? '▸ ' : '▾ ';
+                    if (hiding) collapsedGroups.add(g.id);
+                    else collapsedGroups.delete(g.id);
+                });
+            });
+        }
+
+        function filterLayer(layer, btn) {
+            document.querySelectorAll('#treeFilters .tree-chip').forEach((b) => {
+                b.className = 'tree-chip px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs';
+            });
+            if (btn) btn.className = 'tree-chip px-2 py-1 rounded-lg bg-primary-500/20 border border-primary-500/40 text-primary-300 text-xs';
+            treeGroups().forEach((g) => {
+                const dim = layer !== 'all' && g.layer !== '' && g.layer !== layer;
+                [g.header, ...g.children].forEach((el) => {
+                    el.style.opacity = dim ? '0.25' : '';
+                });
+            });
+        }
+
+        function filterTree(query) {
+            const q = (query || '').trim().toLowerCase();
+            const leaves = document.querySelectorAll('#diagramWrapper .ftree-node');
+            leaves.forEach((el) => {
+                if (el.querySelector('.ftree-label')) return; // group header, not a leaf
+                const hit = q === '' || el.textContent.toLowerCase().includes(q);
+                el.style.display = hit ? '' : 'none';
+                el.style.background = q !== '' && hit ? 'rgba(52,211,153,0.15)' : '';
+                el.style.borderRadius = q !== '' && hit ? '0.25rem' : '';
+            });
+            if (q !== '') {
+                // Expand everything while searching.
+                treeGroups().forEach((g) => g.children.forEach((c) => c.classList.remove('hidden')));
+            }
+        }
+
         let pz;
 
         function initPanzoom() {
@@ -1854,10 +2010,11 @@
             if (!container || typeof panzoom === 'undefined') return;
             const parent = container.parentElement;
             pz = panzoom(container, { maxZoom: 4, minZoom: 0.3, contain: 'outside' });
-            // Ctrl+scroll zooms (passive:false so preventDefault works);
-            // plain scroll still pans natively via the overflow container.
+            // Ctrl+scroll or Shift+scroll zooms (passive:false so
+            // preventDefault works); plain scroll still pans natively via
+            // the overflow container.
             parent.addEventListener('wheel', e => {
-                if (!e.ctrlKey || !pz) return;
+                if ((!e.ctrlKey && !e.shiftKey) || !pz) return;
                 e.preventDefault();
                 pz.zoomTo(e.clientX, e.clientY, e.deltaY < 0 ? 1.15 : 1 / 1.15);
             }, { passive: false });
@@ -1894,6 +2051,7 @@
             } catch (e) { /* ignore */ }
             loadSwaggerEndpoints();
             setTimeout(initPanzoom, 500);
+            initTreeToggle();
         });
     </script>
 </body>

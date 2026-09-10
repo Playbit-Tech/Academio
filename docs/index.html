@@ -2009,7 +2009,12 @@ flowchart LR
             // UMD global is lowercase `panzoom` (not `Panzoom`).
             if (!container || typeof panzoom === 'undefined') return;
             const parent = container.parentElement;
-            pz = panzoom(container, { maxZoom: 4, minZoom: 0.3, contain: 'outside' });
+            // beforeWheel vetoes panzoom's built-in plain-scroll zoom —
+            // only our Ctrl/Shift handler below may zoom.
+            pz = panzoom(container, {
+                maxZoom: 4, minZoom: 0.3, contain: 'outside',
+                beforeWheel: () => true,
+            });
             // Ctrl+scroll or Shift+scroll zooms (passive:false so
             // preventDefault works); plain scroll still pans natively via
             // the overflow container.

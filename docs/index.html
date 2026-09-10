@@ -1021,7 +1021,7 @@
                         <ul class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-slate-400">
                             <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span
                                     class="text-sky-400 font-medium shrink-0 text-[10px] sm:text-sm">Super Admin:</span>
-                                <span class="min-w-0 leading-snug">playbit / Password123!</span></li>
+                                <span class="min-w-0 leading-snug">playbit + SEED_PASSWORD env (never published)</span></li>
                             <li class="flex items-start gap-1.5 sm:gap-2 min-w-0"><span
                                     class="text-sky-400 font-medium shrink-0 text-[10px] sm:text-sm">Login:</span> <code
                                     class="text-sky-400 text-[10px] sm:text-xs min-w-0 break-all">POST /api/v2/auth/login</code>
@@ -1728,7 +1728,7 @@
         let authState = { token: '', csrf: '' };
 
         const TEST_DATA = {
-            'POST/api/v2/auth/login': { identifier: 'playbit', password: 'Password123!' },
+            'POST/api/v2/auth/login': { identifier: 'playbit', password: '••••••••' },
             'POST/api/v2/auth/register': { email: 'new@school.com', password: 'SecurePass1', firstname: 'New', lastname: 'User' },
             'POST/api/v2/auth/reset': { email: 'admin@academio.com' },
         };

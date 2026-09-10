@@ -4,7 +4,7 @@ School management system — monorepo with a Go/Gin API backend and a React 19 S
 
 <a href="https://playbits.github.io/Academio/" target="_blank"><img src="https://img.shields.io/badge/docs-github_pages-8DD290?style=flat&logo=github" alt="Docs"></a>
 <a href="https://github.com/Playbits/Academio" target="_blank"><img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github" alt="GitHub"></a>
-<img src="https://img.shields.io/badge/version-1.1.0-8DD290?style=flat" alt="Version">
+<img src="https://img.shields.io/badge/version-1.2.1-8DD290?style=flat" alt="Version">
 <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-keep_a_changelog-8DD290?style=flat" alt="Changelog"></a>
 
 ## Repositories
@@ -87,7 +87,7 @@ bash scripts/test_endpoint.sh
 
 ## Versioning
 
-This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The current version is `1.1.0` (see `VERSION`). Each submodule tracks its own version in its `CHANGELOG.md`; the parent repo records submodule pointer bumps.
+This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The current version is `1.2.1` (see `VERSION`). Each submodule tracks its own version in its `CHANGELOG.md`; the parent repo records submodule pointer bumps.
 
 ## Changelog
 

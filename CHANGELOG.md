@@ -14,6 +14,7 @@ own `CHANGELOG.md` for detailed component changes.
 ### Changed
 - Bumped frontend `7108f57` → `8f08e40` — super-admin mobile polish: `DataTable` mobile cards, Create School drawer, sticky `/school` tabs with icons/counts, role on mobile user rows, class descriptions, Email Studio external indicator (`8f08e40`).
 - Bumped backend `5d08842` → `2119b43` — `golangci-lint` clean: `seeddemo` errcheck handling + unused `nolint` removal (`1ef0b00`, `2119b43`).
+- Bumped backend `2119b43` → `e5ae24c` — `country` field for schools (DTOs, location/details merge) + full Lagos, Nigeria address on the demo-seed school (`51d8c42`, `e5ae24c`).
 
 ### Fixed
 - Nothing yet.

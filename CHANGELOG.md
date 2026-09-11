@@ -12,7 +12,7 @@ own `CHANGELOG.md` for detailed component changes.
 ## [Unreleased]
 
 ### Changed
-- Nothing yet.
+- Bumped frontend `7108f57` → `8f08e40` — super-admin mobile polish: `DataTable` mobile cards, Create School drawer, sticky `/school` tabs with icons/counts, role on mobile user rows, class descriptions, Email Studio external indicator (`8f08e40`).
 
 ### Fixed
 - Nothing yet.

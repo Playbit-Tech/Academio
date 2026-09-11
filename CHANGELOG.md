@@ -16,7 +16,9 @@ own `CHANGELOG.md` for detailed component changes.
 - Bumped backend `5d08842` → `2119b43` — `golangci-lint` clean: `seeddemo` errcheck handling + unused `nolint` removal (`1ef0b00`, `2119b43`).
 - Bumped backend `2119b43` → `e5ae24c` — `country` field for schools (DTOs, location/details merge) + full Lagos, Nigeria address on the demo-seed school (`51d8c42`, `e5ae24c`).
 - Bumped backend `e5ae24c` → `f6bf316` — super-admin `PUT /admin/schools/:id` update endpoint (`acad919`, `f6bf316`).
+- Bumped backend `f6bf316` → `647ef01` — `devops` lint clean (`647ef01`).
 - Bumped frontend `d7f1ddd` → `218fea5` — shared `SchoolDrawer` + super-admin edit, framework in form, billing `#` index column, `Card` typo fix (`218fea5`).
+- Bumped frontend `218fea5` → `1a58731` — `matchMedia` test mock, 347/347 green (`1a58731`).
 
 ### Fixed
 - Nothing yet.

@@ -21,6 +21,9 @@ own `CHANGELOG.md` for detailed component changes.
 - Bumped frontend `d7f1ddd` → `218fea5` — shared `SchoolDrawer` + super-admin edit, framework in form, billing `#` index column, `Card` typo fix (`218fea5`).
 - Bumped frontend `218fea5` → `1a58731` — `matchMedia` test mock, 347/347 green (`1a58731`).
 - Bumped frontend `1a58731` → `451247f` — AI Studio, gating UX, sidebar search, academics hub (local only, unpushed).
+- Bumped frontend `451247f` → `f1f6f02` — sticky headers, tab scroll arrows, admin mobile pass.
+- Bumped backend `647ef01` → `5c059b7` — prod deploy AI env block.
+- Bumped ai-engine `ee574b4` → `bcd9c7a` — CI engine `.env` + service-user ownership fix.
 
 ### Fixed
 - Nothing yet.

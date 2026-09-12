@@ -12,6 +12,9 @@ own `CHANGELOG.md` for detailed component changes.
 ## [Unreleased]
 
 ### Changed
+- Bumped backend to `40dfccb` — Phase 5: T1 seed AssessmentID fix + per-role demo rows (`0f73c9c`), T4a E2E fixes — tenant plan upgrade, enrollment LevelID resolution, result reset (`582ed2c`), backup/scheduler modules (`110b20e`, `e66f083`), T4a standalone 12-role E2E script (`c2af722`), tenant_backups uuid migration fix (`40dfccb`).
+- Bumped frontend to `99ed43c` — Phase 5: T2 staff My duties dashboard (`ef303f1`), T3 route-guard hardening + Can-gated write CTAs (`6fadb4a`), T4b frontend E2E vehicle 28 tests (`99ed43c`).
+- Added docs/role-dashboards — permission matrix, 12 per-role guides, cross-check report, multi-school semantics, backend-authoritative note, ops runbook (`a5bce86`).
 - Bumped frontend `7108f57` → `8f08e40` — super-admin mobile polish: `DataTable` mobile cards, Create School drawer, sticky `/school` tabs with icons/counts, role on mobile user rows, class descriptions, Email Studio external indicator (`8f08e40`).
 - Bumped backend `5d08842` → `2119b43` — `golangci-lint` clean: `seeddemo` errcheck handling + unused `nolint` removal (`1ef0b00`, `2119b43`).
 - Bumped backend `2119b43` → `e5ae24c` — `country` field for schools (DTOs, location/details merge) + full Lagos, Nigeria address on the demo-seed school (`51d8c42`, `e5ae24c`).
@@ -25,8 +28,8 @@ own `CHANGELOG.md` for detailed component changes.
 - Bumped backend `647ef01` → `5c059b7` — prod deploy AI env block.
 - Bumped ai-engine `ee574b4` → `bcd9c7a` — CI engine `.env` + service-user ownership fix.
 
-### Fixed
-- Nothing yet.
+### Added
+- Phase 5 (role dashboards): 12-role permission-driven UI, staff My duties, route-guard hardening, 75-test API E2E + 28-test frontend E2E, docs (`a5bce86`, `40dfccb`, `99ed43c`).
 
 ## [1.2.1] - 2026-09-10
 

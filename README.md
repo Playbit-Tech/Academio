@@ -83,7 +83,26 @@ bash scripts/test_endpoint.sh
 
 **Expected result:** 139 tests pass, 2 known cosmetic failures (missing verification email for a parent fixture; a result 404 for a combo with no result row — RBAC works). The script provisions a school, creates curriculum/assessments/grade items, and validates sum-to-100 constraints.
 
-> **Note for AI sessions:** Always use `scripts/test_endpoint.sh` for integration testing. It handles CSRF token acquisition, bearer auth, provisioning polling, and all academic endpoints. Don't write ad-hoc test scripts.
+### Phase 5 E2E — 12-Role API Matrix
+
+`backend/scripts/test_t4a.sh` is a standalone 12-role API E2E script (75 tests, idempotent). It resets seed data on each run and proves all role permissions, RBAC gates, D-C approve chain, PHI gate, forged-call 403s, issue→return chains, and admissions pipeline.
+
+**Run it** (requires backend server running with seed-demo data):
+```bash
+cd backend && bash scripts/test_t4a.sh
+```
+
+**Expected result:** 75/75 pass, 0 fail. Fully idempotent — rerun-safe.
+
+### Frontend E2E
+
+`frontend/src/__tests__/phase5-e2e.test.ts` covers 12-role branch resolution, nav subset-closure, staff sections, and specialist ordering (28 tests).
+
+```bash
+cd frontend && yarn vitest run src/__tests__/phase5-e2e.test.ts
+```
+
+> **Note for AI sessions:** Always use `scripts/test_endpoint.sh` for integration testing. For Phase 5 role verification, use `scripts/test_t4a.sh`. Don't write ad-hoc test scripts.
 
 ## Versioning
 
@@ -92,3 +111,7 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Th
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for the parent repo, and each submodule's `CHANGELOG.md` for component-level changes.
+
+## Documentation
+
+- `docs/role-dashboards/` — Permission matrix, per-role guides, cross-check report, multi-school semantics, backend-authoritative note, ops runbook.

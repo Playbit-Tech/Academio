@@ -4,6 +4,14 @@ name: AI Engine CI (reusable)
 #   uses: Playbit-Tech/Academio/.github/workflows/reusable-ai-ci.yml@main
 # Runs in the CALLER's repository context with the CALLER's token/secrets.
 # This file never triggers on its own.
+#
+# Runner requirements (self-hosted, least privilege):
+#   - The runner user MUST NOT have passwordless sudo. Therefore CI never
+#     runs apt-get — the system packages the test job needs are expected
+#     to be PRE-INSTALLED on the host once:
+#       poppler-utils  tesseract-ocr  libtesseract-dev
+#   - Everything else (uv, Python venv, action toolchains) installs into
+#     the workspace and runner toolcache only — it never touches the OS.
 
 on:
   workflow_call:
@@ -14,7 +22,7 @@ permissions:
 jobs:
   lint:
     name: Ruff Lint
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,7 +40,7 @@ jobs:
 
   typecheck:
     name: Pyright Typecheck
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -50,7 +58,7 @@ jobs:
 
   test:
     name: Pytest + Coverage
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -60,8 +68,9 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y -qq --no-install-recommends poppler-utils tesseract-ocr libtesseract-dev
+      # System deps (poppler-utils, tesseract-ocr, libtesseract-dev) are
+      # PRE-INSTALLED on the self-hosted runner — the runner user has no
+      # sudo, so CI must never apt-get install. See header comment.
 
       - name: Sync frozen lockfile
         run: uv sync --frozen
@@ -79,7 +88,7 @@ jobs:
 
   security:
     name: Bandit Security Scan
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

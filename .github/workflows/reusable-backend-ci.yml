@@ -4,6 +4,13 @@ name: Backend CI (reusable)
 #   uses: Playbit-Tech/Academio/.github/workflows/reusable-backend-ci.yml@main
 # Runs in the CALLER's repository context with the CALLER's token/secrets —
 # no cross-repo tokens required. This file never triggers on its own.
+#
+# Runner requirements (self-hosted, least privilege):
+#   - Docker daemon is REQUIRED for the integration-tests job's service
+#     containers (postgres/redis/gotenberg). The runner user must be a
+#     member of the docker group — that is its only elevated privilege.
+#   - The Redis service container is remapped to host port 16379 so CI
+#     never touches a platform Redis that may run on 6379 on the same host.
 
 on:
   workflow_call:
@@ -21,7 +28,7 @@ permissions:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 10
     steps:
       - name: Checkout code
@@ -48,7 +55,7 @@ jobs:
 
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 10
     steps:
       - name: Checkout code
@@ -79,7 +86,7 @@ jobs:
 
   unit-tests:
     name: Unit Tests
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 15
     steps:
       - name: Checkout code
@@ -137,7 +144,7 @@ jobs:
 
   coverage-summary:
     name: Coverage Summary
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 5
     needs: [unit-tests]
     if: needs.unit-tests.result == 'success'
@@ -166,7 +173,7 @@ jobs:
   integration-tests:
     name: Integration Tests
     if: github.ref == 'refs/heads/main' || github.base_ref == 'main'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 20
     needs: [build]
     services:
@@ -186,7 +193,10 @@ jobs:
       redis:
         image: redis:alpine
         ports:
-          - 6379:6379
+          # 16379 (not 6379): the platform Redis runs on 6379 on the
+          # self-hosted runner box — CI must never touch it. REDIS_ADDR /
+          # QUEUE_REDIS_ADDR below point the tests at this remapped port.
+          - 16379:6379
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
@@ -235,6 +245,8 @@ jobs:
 
       - name: Run integration tests
         env:
+          REDIS_ADDR: localhost:16379
+          QUEUE_REDIS_ADDR: localhost:16379
           GOTENBERG_URL: http://localhost:8081
         run: |
           go test -v -count=1 -tags=integration -race \
@@ -256,7 +268,7 @@ jobs:
     # and not needed on CI while the AI engine is being stabilized.
     # Re-enable by removing the `if: false` below.
     if: false
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 20
     needs: [build]
     steps:

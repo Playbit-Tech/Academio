@@ -28,7 +28,7 @@ permissions:
 jobs:
   lint:
     name: Lint
-    runs-on: self-hosted
+    runs-on: [self-hosted, server]
     timeout-minutes: 10
     steps:
       - name: Checkout code
@@ -55,7 +55,7 @@ jobs:
 
   build:
     name: Build
-    runs-on: self-hosted
+    runs-on: [self-hosted, server]
     timeout-minutes: 10
     steps:
       - name: Checkout code
@@ -86,7 +86,7 @@ jobs:
 
   unit-tests:
     name: Unit Tests
-    runs-on: self-hosted
+    runs-on: [self-hosted, server]
     timeout-minutes: 15
     steps:
       - name: Checkout code
@@ -144,7 +144,7 @@ jobs:
 
   coverage-summary:
     name: Coverage Summary
-    runs-on: self-hosted
+    runs-on: [self-hosted, server]
     timeout-minutes: 5
     needs: [unit-tests]
     if: needs.unit-tests.result == 'success'
@@ -173,7 +173,7 @@ jobs:
   integration-tests:
     name: Integration Tests
     if: github.ref == 'refs/heads/main' || github.base_ref == 'main'
-    runs-on: self-hosted
+    runs-on: [self-hosted, server]
     timeout-minutes: 20
     needs: [build]
     services:
@@ -268,7 +268,7 @@ jobs:
     # and not needed on CI while the AI engine is being stabilized.
     # Re-enable by removing the `if: false` below.
     if: false
-    runs-on: self-hosted
+    runs-on: [self-hosted, server]
     timeout-minutes: 20
     needs: [build]
     steps:

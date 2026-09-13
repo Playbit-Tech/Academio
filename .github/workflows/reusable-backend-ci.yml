@@ -172,7 +172,10 @@ jobs:
 
   integration-tests:
     name: Integration Tests
-    if: github.ref == 'refs/heads/main' || github.base_ref == 'main'
+    # Runs on every push/PR now — ephemeral per-job service containers make
+    # cancellation safe, and the caller's cancel-in-progress concurrency group
+    # means only the latest dev push pays for a full integration run. The
+    # main-only gate was a GitHub-hosted minute-frugality vestige.
     runs-on: [self-hosted, server]
     timeout-minutes: 20
     needs: [build]

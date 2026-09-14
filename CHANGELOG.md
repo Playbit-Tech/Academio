@@ -11,6 +11,8 @@ own `CHANGELOG.md` for detailed component changes.
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-14
+
 ### Changed
 - Bumped backend to `40dfccb` — Phase 5: T1 seed AssessmentID fix + per-role demo rows (`0f73c9c`), T4a E2E fixes — tenant plan upgrade, enrollment LevelID resolution, result reset (`582ed2c`), backup/scheduler modules (`110b20e`, `e66f083`), T4a standalone 12-role E2E script (`c2af722`), tenant_backups uuid migration fix (`40dfccb`).
 - Bumped frontend to `99ed43c` — Phase 5: T2 staff My duties dashboard (`ef303f1`), T3 route-guard hardening + Can-gated write CTAs (`6fadb4a`), T4b frontend E2E vehicle 28 tests (`99ed43c`).
@@ -27,6 +29,8 @@ own `CHANGELOG.md` for detailed component changes.
 - Bumped frontend `451247f` → `f1f6f02` — sticky headers, tab scroll arrows, admin mobile pass.
 - Bumped backend `647ef01` → `5c059b7` — prod deploy AI env block.
 - Bumped ai-engine `ee574b4` → `bcd9c7a` — CI engine `.env` + service-user ownership fix.
+- Bumped backend `eef1f7a` → `0a1756e` — re-provision contract (409, truthful swagger, DEV-ONLY gate), drop-first + dead recovery removal (−80 lines), message attachments via storage driver, `S3BackupStorage`→`Driver` merge, env-stamped `S3Path`, shared push/PR concurrency group, `golangci-lint` batch clean.
+- Bumped frontend `344cca3` → `a3a36a1` — `DEV ONLY` badge on re-provision button.
 
 ### Added
 - Phase 5 (role dashboards): 12-role permission-driven UI, staff My duties, route-guard hardening, 75-test API E2E + 28-test frontend E2E, docs (`a5bce86`, `40dfccb`, `99ed43c`).

@@ -22,8 +22,9 @@ School management system — monorepo with a Go/Gin API backend and a React 19 S
 git clone --recurse-submodules git@github.com:Playbits/Academio.git
 cd Academio
 
-# Start everything (Docker + backend + frontend + Antigravity IDE)
-start_schoolcare
+# Start everything (backend + frontend, separate terminals — see below)
+# Backend:  cd backend && make dev
+# Frontend: cd frontend && yarn dev
 ```
 
 Or start services individually:

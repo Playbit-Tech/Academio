@@ -38,7 +38,12 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ inputs.go_version }}
-          cache: true
+          # Self-hosted runners have persistent disks: the Go module and
+          # build caches survive between runs locally, so the upload/
+          # download cache dance is pure overhead (multi-minute tars that
+          # blow the job timeout). Keep it off; `go mod download` stays
+          # fast from the warm on-disk cache.
+          cache: false
 
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
@@ -65,15 +70,12 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ inputs.go_version }}
-          cache: true
-
-      - name: Cache Go build cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/go-build
-          key: go-build-${{ runner.os }}-${{ hashFiles('go.sum') }}
-          restore-keys: |
-            go-build-${{ runner.os }}-
+          # Self-hosted runners have persistent disks: the Go module and
+          # build caches survive between runs locally, so the upload/
+          # download cache dance is pure overhead (multi-minute tars that
+          # blow the job timeout). Keep it off; `go mod download` stays
+          # fast from the warm on-disk cache.
+          cache: false
 
       - name: Download dependencies
         run: go mod download
@@ -96,15 +98,12 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ inputs.go_version }}
-          cache: true
-
-      - name: Cache Go build cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/go-build
-          key: go-build-${{ runner.os }}-${{ hashFiles('go.sum') }}
-          restore-keys: |
-            go-build-${{ runner.os }}-
+          # Self-hosted runners have persistent disks: the Go module and
+          # build caches survive between runs locally, so the upload/
+          # download cache dance is pure overhead (multi-minute tars that
+          # blow the job timeout). Keep it off; `go mod download` stays
+          # fast from the warm on-disk cache.
+          cache: false
 
       - name: Download dependencies
         run: go mod download
@@ -156,7 +155,12 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ inputs.go_version }}
-          cache: true
+          # Self-hosted runners have persistent disks: the Go module and
+          # build caches survive between runs locally, so the upload/
+          # download cache dance is pure overhead (multi-minute tars that
+          # blow the job timeout). Keep it off; `go mod download` stays
+          # fast from the warm on-disk cache.
+          cache: false
 
       - name: Download coverage artifact
         uses: actions/download-artifact@v4
@@ -220,7 +224,12 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ inputs.go_version }}
-          cache: true
+          # Self-hosted runners have persistent disks: the Go module and
+          # build caches survive between runs locally, so the upload/
+          # download cache dance is pure overhead (multi-minute tars that
+          # blow the job timeout). Keep it off; `go mod download` stays
+          # fast from the warm on-disk cache.
+          cache: false
 
       - name: Download dependencies
         run: go mod download

@@ -1,8 +1,10 @@
 # Internal engineering — do not publish
 AGENTS.md
+.opencode/
 .commandcode/
 docs/architecture/
 docs/audits/
+docs/role-dashboards/
 docs/ops/
 docs/FSD/
 docs/plans/
